@@ -1,0 +1,59 @@
+﻿using BicBizz;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace BicGui
+{
+    /// <summary>
+    /// Interaction logic for UcCopyProject.xaml
+    /// </summary>
+    public partial class UcCopyProject : UserControl
+    {
+        public Bizz Bizz;
+        public UserControl UcRight;
+        public bool UcRightActive;
+
+        public UcCopyProject(Bizz bizz, UserControl ucRight, bool ucRightActive)
+        {
+            InitializeComponent();
+            this.Bizz = bizz;
+            this.UcRight = ucRight;
+            this.UcRightActive = ucRightActive;
+        }
+
+        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Vil du annullere kopiering af projektet?", "Annuller kopiering", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                //Close right UserControl
+                UcRightActive = false;
+                UcRight.Content = new UserControl();
+            }
+        }
+
+        private void ButtonEdit_Click(object sender, RoutedEventArgs e)
+        {
+            //To Create:
+            // Code that copies the current project into a new project
+
+            //Show Confirmation
+            MessageBox.Show("Projektet blev kopieret", "Kopier projekt", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            //Close right UserControl
+            UcRightActive = false;
+            UcRight.Content = new UserControl();
+        }
+    }
+}
