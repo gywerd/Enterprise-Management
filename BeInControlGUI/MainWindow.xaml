@@ -37,12 +37,16 @@
             <!-- Application Menu, located at the left-hand side (down arrow) -->
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu>
-                    <RibbonApplicationMenuItem x:Name="MenuItemQuit" 
-                                               Click="MenuItemQuit_Click"
-                                               Header = "Afslut" 
-                                               ImageSource="images/quit.png" />
                     <RibbonApplicationMenuItem x:Name="MenuItemLogOut" 
                                                Click="MenuItemLogout_Click"
+                                               Header = "Logout" 
+                                               ImageSource="images/logout.png" />
+                    <RibbonApplicationMenuItem x:Name="MenuItemChangePassWord" 
+                                               Click="MenuItemChangePassWord_Click"
+                                               Header = "Ændre password" 
+                                               ImageSource="images/logout.png" />
+                    <RibbonApplicationMenuItem x:Name="MenuItemQuit" 
+                                               Click="MenuItemQuit_Click"
                                                Header = "Afslut" 
                                                ImageSource="images/quit.png" />
                 </RibbonApplicationMenu>
@@ -204,8 +208,11 @@
             <StatusBar x:Name="statusBarBottom" Grid.Column="0" Grid.ColumnSpan="2" 
                        HorizontalAlignment="Left" 
                        Height="50" Width="1600"
-                       Margin="5,0,-5,0"
-                       VerticalAlignment="Bottom" Grid.RowSpan="2" />
+                       Margin="5,0,5,0"
+                       VerticalAlignment="Bottom" Grid.RowSpan="2">
+                <Label Name="User" Content="Bruger:" Grid.Column="1" />
+                <TextBlock Name="UserName" Grid.Column="1" />
+            </StatusBar>
         </Grid>
     </Grid>
 </Window>

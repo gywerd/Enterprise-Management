@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -26,6 +27,9 @@ namespace BicGui
         public Bizz Bizz;
         public RibbonTab TabOffer;
         public RibbonTab TabAdministration;
+        public RibbonApplicationMenuItem MenuItemChangePassWord;
+        public RibbonApplicationMenuItem MenuItemLogOut;
+        public TextBlock UserName;
         public UserControl UcRight;
         public UserControl UcLeft;
         public bool UcRightActive;
@@ -33,12 +37,15 @@ namespace BicGui
         public static Bizz CBZ = new Bizz();
         #endregion
 
-        public UcLogin(Bizz bizz, RibbonTab tabOffer, RibbonTab tabAdministration, UserControl ucLeft, UserControl ucRight, bool ucRightActive)
+        public UcLogin(Bizz bizz, RibbonTab tabOffer, RibbonTab tabAdministration, RibbonApplicationMenuItem menuitemChangePassWord, RibbonApplicationMenuItem menuItemLogOut, TextBlock userName, UserControl ucLeft, UserControl ucRight, bool ucRightActive)
         {
             InitializeComponent();
-            //this.Bizz = bizz;
+            this.Bizz = bizz;
             this.TabOffer = tabOffer;
             this.TabAdministration = tabAdministration;
+            this.MenuItemChangePassWord = menuitemChangePassWord;
+            this.MenuItemLogOut = menuItemLogOut;
+            this.UserName = userName;
             this.UcLeft = ucLeft;
             this.UcRight = ucRight;
             this.UcRightActive = ucRightActive;
@@ -46,10 +53,13 @@ namespace BicGui
 
         private void ButtonLogin_Click(object sender, RoutedEventArgs e)
         {
-            if (CBZ.CheckCredentials(TextBoxInitials.Text, TextBoxPassword.Password))
+            if (CBZ.CheckCredentials(Bizz, UserName, MenuItemChangePassWord, MenuItemLogOut, TextBoxInitials.Text, TextBoxPassword.Password))
             {
                 TabOffer.IsEnabled = true;
-                TabAdministration.IsEnabled = true;
+                if (Bizz.CurrentUser.Administrator)
+                {
+                    TabAdministration.IsEnabled = true;
+                }
                 UcRightActive = false;
                 UcLeft.Content = new UserControl();
                 UcRight.Content = new UserControl();

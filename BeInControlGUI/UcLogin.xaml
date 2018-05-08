@@ -28,7 +28,7 @@
                                TextWrapping="Wrap" 
                                Text=""
                                VerticalAlignment="Top" 
-                               Watermark="DGI" />
+                               Watermark="dgi" />
         <xctk:WatermarkPasswordBox x:Name="TextBoxPassword" 
                                    FontSize="36" 
                                    Height="65"  Width="500" 
@@ -41,7 +41,8 @@
                 Click="ButtonLogin_Click" 
                 FontSize="48" FontWeight="Bold" 
                 Height="100"  Width="250" 
-                HorizontalAlignment="Right" 
+                HorizontalAlignment="Right"
+                IsDefault="True" 
                 Margin="0,400,250,0" 
                 VerticalAlignment="Top" />
 

@@ -48,7 +48,7 @@ namespace BicGui
         private void OpenUcLogin()
         {
             UcRightActive = true;
-            ucLogin = new UcLogin(Bizz, TabOffer, TabAdministration, UcLeft, UcRight, UcRightActive);
+            ucLogin = new UcLogin(Bizz, TabOffer, TabAdministration, MenuItemChangePassWord, MenuItemLogOut, UserName, UcLeft, UcRight, UcRightActive);
             UcRight.Content = ucLogin;
         }
         #endregion
@@ -219,9 +219,21 @@ namespace BicGui
 
         private void MenuItemLogout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Endnu ikke implementeret", "Log ud", MessageBoxButton.OK, MessageBoxImage.Information);
+            TabOffer.IsEnabled = false;
+            TabAdministration.IsEnabled = false;
+            Bizz = new Bizz();
+            UserName.Text = "";
+            MenuItemChangePassWord.IsEnabled = false;
+            MenuItemLogOut.IsEnabled = false;
+            OpenUcLogin();
+            OpenUcLoginHelp();
         }
 
+        private void MenuItemChangePassWord_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Endnu ikke implementeret", "Ændre password", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
         #endregion
+
     }
 }

@@ -22,7 +22,7 @@
                  HorizontalAlignment="Left" 
                  Margin="25,60,0,0" 
                  TextWrapping="Wrap" 
-                 Text="1. Indtast brugernavn"
+                 Text="1. Indtast initialer"
                  VerticalAlignment="Top" />
         <TextBox x:Name="textBox2"
                  Background="{x:Null}" 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BicDataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,11 @@ namespace BicBizz
     public class Name
     {
         #region Fields
+        private string strConnection;
         private int nameId;
         private string givenName;
         private string surName;
+        private Executor executor;
         #endregion
 
         #region constructors
@@ -19,6 +22,12 @@ namespace BicBizz
         /// Empty Constructor
         /// </summary>
         public Name() { }
+
+        public Name(string strCon)
+        {
+            strConnection = strCon;
+            executor = new Executor(strConnection);
+        }
 
         /// <summary>
         /// Constructor to add new name
@@ -52,6 +61,21 @@ namespace BicBizz
             tempName = givenName + " " + surName;
             return tempName;
         }
+
+        public List<Name> GetNameList()
+        {
+            List<string> results = executor.ReadListFromDataBase("Names");
+            List<Name> names = new List<Name>();
+            foreach (string result in results)
+            {
+                string[] resultArray = new string[3];
+                resultArray = result.Split(';');
+                Name name = new Name(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2]);
+                names.Add(name);
+            }
+            return names;
+        }
+
         #endregion
 
         #region Fields
