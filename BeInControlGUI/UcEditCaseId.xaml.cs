@@ -23,14 +23,12 @@ namespace BicGui
     {
         public Bizz Bizz;
         public UserControl UcRight;
-        public bool UcRightActive;
 
-        public UcEditCaseId(Bizz bizz, UserControl ucRight, bool ucRightActive)
+        public UcEditCaseId(Bizz bizz, UserControl ucRight)
         {
             InitializeComponent();
             this.Bizz = bizz;
             this.UcRight = ucRight;
-            this.UcRightActive = ucRightActive;
         }
 
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
@@ -39,8 +37,8 @@ namespace BicGui
             if (MessageBox.Show("Vil du annullere redigering af SagsId?", "Annuller redigering", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 //Close right UserControl
-                UcRightActive = false;
                 UcRight.Content = new UserControl();
+                Bizz.UcRightActive = false;
             }
         }
 
@@ -53,8 +51,8 @@ namespace BicGui
             MessageBox.Show("Sagsnummer blev rettet", "Ret Sagsnummer", MessageBoxButton.OK, MessageBoxImage.Information);
 
             //Close right UserControl
-            UcRightActive = false;
             UcRight.Content = new UserControl();
+            Bizz.UcRightActive = false;
         }
     }
 }

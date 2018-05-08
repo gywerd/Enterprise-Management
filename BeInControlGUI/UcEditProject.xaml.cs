@@ -23,14 +23,12 @@ namespace BicGui
     {
         public Bizz Bizz;
         public UserControl UcRight;
-        public bool UcRightActive;
 
-        public UcEditProject(Bizz bizz, UserControl ucRight, bool ucRightActive)
+        public UcEditProject(Bizz bizz, UserControl ucRight)
         {
             InitializeComponent();
             this.Bizz = bizz;
             this.UcRight = ucRight;
-            this.UcRightActive = ucRightActive;
         }
 
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
@@ -39,8 +37,8 @@ namespace BicGui
             if (MessageBox.Show("Du er ved at lukke projektet. Alt, der ikke er gemt vil blive mistet!", "Luk Projekt", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
             {
                 //Close right UserControl
-                UcRightActive = false;
                 UcRight.Content = new UserControl();
+                Bizz.UcRightActive = false;
             }
         }
 
@@ -53,8 +51,8 @@ namespace BicGui
             MessageBox.Show("Projektoplysninger blev rettet", "Ret Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
 
             //Close right UserControl
-            UcRightActive = false;
             UcRight.Content = new UserControl();
+            Bizz.UcRightActive = false;
         }
 
     }

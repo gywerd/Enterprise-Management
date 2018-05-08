@@ -19,17 +19,18 @@
             <!-- Help Pane, located at the right-hand side -->
             <Ribbon.HelpPaneContent>
                 <RibbonSplitButton x:Name="ButtonHelpMenu"
+                                   Click="ButtonAbout_Click"
                                    SmallImageSource="images/three-dots.png" >
                     <RibbonButton x:Name="ButtonHelp" 
-                                   Click="ButtonHelp_Click"
+                                  Click="ButtonHelp_Click"
                                   Label = "Hjælp" 
                                   SmallImageSource="images/help.png" />
                     <RibbonButton x:Name="ButtonOptions" 
-                                   Click="ButtonOptions_Click"
+                                  Click="ButtonOptions_Click"
                                   Label = "Indstillinger" 
                                   SmallImageSource="images/options.png" />
                     <RibbonButton x:Name="ButtonAbout" 
-                                   Click="ButtonAbout_Click"
+                                  Click="ButtonAbout_Click"
                                   Label = "Om" 
                                   SmallImageSource="images/about.png" />
                 </RibbonSplitButton>
@@ -74,32 +75,38 @@
                 </RibbonGroup>
                 <!-- News Group-->
                 <RibbonGroup x:Name="News" Header="Nyheder">
-                    <RibbonSplitButton LargeImageSource="images/news.png" Label="Aktuelt">
+                    <RibbonSplitButton 
+                        Click="ButtonEnterpriseManagerV10_Click" 
+                        LargeImageSource="images/news.png" 
+                        Label="Aktuelt">
                         <RibbonButton x:Name="ButtonEnterpriseManagerV10" 
                                       Click="ButtonEnterpriseManagerV10_Click"
-                                      Label="Nyheder V. 2.0" 
+                                      Label="Enterprise Manager V. 1.0" 
                                       SmallImageSource="images/news-small.png" />
                     </RibbonSplitButton>
-                    <RibbonSplitButton LargeImageSource="images/news.png" Label="Ældre">
+                    <RibbonSplitButton 
+                        Click="ButtonBicV117_Click"
+                        LargeImageSource="images/news.png" 
+                        Label="Ældre">
                         <RibbonButton x:Name="ButtonBicV117" 
                                       Click="ButtonBicV117_Click"
                                       Label="BeInControl V. 1.1.7" 
                                       SmallImageSource="images/news-small.png" />
                         <RibbonButton x:Name="ButtonBicV116" 
                                       Click="ButtonBicV116_Click"
-                                      Label="Nyheder V. 1.1.6" 
+                                      Label="BeInControl V. 1.1.6" 
                                       SmallImageSource="images/news-small.png" />
                         <RibbonButton x:Name="ButtonNewsV115" 
                                       Click="ButtonNewsV115_Click"
-                                      Label="Nyheder V. 1.1.5" 
+                                      Label="BeInControl V. 1.1.5" 
                                       SmallImageSource="images/news-small.png" />
                     </RibbonSplitButton>
                 </RibbonGroup>
             </RibbonTab>
             <!-- Ribbon Tab #2: Administration -->
-            <RibbonTab x:Name="TabAdministration" Header="Administration" IsEnabled="True" >
+            <RibbonTab x:Name="TabAdministration" Header="Administration" >
                 <!-- User Group-->
-                <RibbonGroup x:Name="Users" Header="Brugere">
+                <RibbonGroup x:Name="Users" Header="Brugere" IsEnabled="False">
                     <RibbonButton x:Name="ButtonUserList"
                                   Click="ButtonUserList_Click"
                                   Label="Brugere" 
@@ -129,7 +136,7 @@
                                   SmallImageSource="images/enterprise-global-remove.png" />
                 </RibbonGroup>
                 <!-- Craft Group-->
-                <RibbonGroup x:Name="CraftGroup" Header="Faggrupper">
+                <RibbonGroup x:Name="CraftGroups" Header="Faggrupper">
                     <RibbonButton x:Name="ButtonGroupList" 
                                   Click="ButtonGroupList_Click"
                                   Label="Grupper" 
@@ -144,7 +151,7 @@
                                   SmallImageSource="images/craft-remove.png" />
                 </RibbonGroup>
                 <!-- Enterprise Form Group-->
-                <RibbonGroup x:Name="EnterpriseForm" Header="Enterpriseformer">
+                <RibbonGroup x:Name="EnterpriseForms" Header="Enterpriseformer">
                     <RibbonButton x:Name="ButtonFormList" 
                                   Click="ButtonFormList_Click"
                                   Label="Former" 

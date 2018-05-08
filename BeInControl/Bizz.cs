@@ -17,6 +17,7 @@ namespace BicBizz
         public Name tempName = new Name();
         public Address tempAddress = new Address();
         public ZipTown tempZipTown = new ZipTown();
+        public bool UcRightActive = false;
 
         public static Address CAD = new Address(strConnection);
         public static Name CNA = new Name(strConnection);
@@ -47,7 +48,7 @@ namespace BicBizz
             {
                 if (user.Initials == initials && user.PassWord == passWord)
                 {
-                    this.CurrentUser = user;
+                    bizz.CurrentUser = user;
                     userName.Text = GetUserName(user.Name);
                     menuItemChangePassWord.IsEnabled = true;
                     menuItemLogOut.IsEnabled = true;

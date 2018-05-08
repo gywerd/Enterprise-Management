@@ -23,14 +23,12 @@ namespace BicGui
     {
         public Bizz Bizz;
         public UserControl UcRight;
-        public bool UcRightActive;
 
-        public UcReactivateProject(Bizz bizz, UserControl ucRight, bool ucRightActive)
+        public UcReactivateProject(Bizz bizz, UserControl ucRight)
         {
             InitializeComponent();
             this.Bizz = bizz;
             this.UcRight = ucRight;
-            this.UcRightActive = ucRightActive;
         }
 
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
@@ -38,8 +36,8 @@ namespace BicGui
             if (MessageBox.Show("Vil du annullere reaktivering af projektet!", "Annuller reaktivering", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
             {
                 //Close right UserControl
-                UcRightActive = false;
                 UcRight.Content = new UserControl();
+                Bizz.UcRightActive = false;
             }
         }
 
@@ -52,8 +50,8 @@ namespace BicGui
             MessageBox.Show("Projektet blev reaktiveret", "Reaktiver Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
 
             //Close right UserControl
-            UcRightActive = false;
             UcRight.Content = new UserControl();
+            Bizz.UcRightActive = false;
         }
     }
 }

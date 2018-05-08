@@ -23,14 +23,12 @@ namespace BicGui
     {
         public Bizz Bizz;
         public UserControl UcRight;
-        public bool UcRightActive;
 
-        public UcCreateProject(Bizz bizz, UserControl ucRight, bool ucRightActive)
+        public UcCreateProject(Bizz bizz, UserControl ucRight)
         {
             InitializeComponent();
             this.Bizz = bizz;
             this.UcRight = ucRight;
-            this.UcRightActive = ucRightActive;
         }
 
         private void ButtonCreateClose_Click(object sender, RoutedEventArgs e)
@@ -42,7 +40,7 @@ namespace BicGui
             MessageBox.Show("Projektet blev oprettet", "Ret Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
 
             //Close right UserControl
-            UcRightActive = false;
+            Bizz.UcRightActive = false;
             UcRight.Content = new UserControl();
         }
 
@@ -52,7 +50,7 @@ namespace BicGui
             if (MessageBox.Show("Vil du annullere oprettelse af projektet?", "Luk Projekt", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 //Close right UserControl
-                UcRightActive = false;
+                Bizz.UcRightActive = false;
                 UcRight.Content = new UserControl();
             }
         }
@@ -63,7 +61,7 @@ namespace BicGui
             //Code that creates a new project
 
             //Show Confirmation
-            MessageBox.Show("Projektetr blev oprettet", "Ret Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Projektet blev oprettet", "Ret Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
 
             //Reset form
             TextBoxCaseId1.Text = "";

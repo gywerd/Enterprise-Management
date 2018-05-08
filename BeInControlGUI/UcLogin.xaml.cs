@@ -27,28 +27,34 @@ namespace BicGui
         public Bizz Bizz;
         public RibbonTab TabOffer;
         public RibbonTab TabAdministration;
+        public RibbonGroup Users;
+        public RibbonGroup CraftGroups;
+        public RibbonGroup EnterpriseForms;
+        public RibbonGroup Status;
         public RibbonApplicationMenuItem MenuItemChangePassWord;
         public RibbonApplicationMenuItem MenuItemLogOut;
         public TextBlock UserName;
         public UserControl UcRight;
         public UserControl UcLeft;
-        public bool UcRightActive;
 
         public static Bizz CBZ = new Bizz();
         #endregion
 
-        public UcLogin(Bizz bizz, RibbonTab tabOffer, RibbonTab tabAdministration, RibbonApplicationMenuItem menuitemChangePassWord, RibbonApplicationMenuItem menuItemLogOut, TextBlock userName, UserControl ucLeft, UserControl ucRight, bool ucRightActive)
+        public UcLogin(Bizz bizz, RibbonTab tabOffer, RibbonTab tabAdministration, RibbonGroup users, RibbonGroup craftGroups, RibbonGroup enterpriseForms, RibbonGroup status, RibbonApplicationMenuItem menuitemChangePassWord, RibbonApplicationMenuItem menuItemLogOut, TextBlock userName, UserControl ucLeft, UserControl ucRight)
         {
             InitializeComponent();
             this.Bizz = bizz;
             this.TabOffer = tabOffer;
             this.TabAdministration = tabAdministration;
+            this.Users = users;
+            this.CraftGroups = craftGroups;
+            this.EnterpriseForms = enterpriseForms;
+            this.Status = status;
             this.MenuItemChangePassWord = menuitemChangePassWord;
             this.MenuItemLogOut = menuItemLogOut;
             this.UserName = userName;
             this.UcLeft = ucLeft;
             this.UcRight = ucRight;
-            this.UcRightActive = ucRightActive;
         }
 
         private void ButtonLogin_Click(object sender, RoutedEventArgs e)
@@ -56,23 +62,29 @@ namespace BicGui
             if (CBZ.CheckCredentials(Bizz, UserName, MenuItemChangePassWord, MenuItemLogOut, TextBoxInitials.Text, TextBoxPassword.Password))
             {
                 TabOffer.IsEnabled = true;
+                TabAdministration.IsEnabled = true;
                 if (Bizz.CurrentUser.Administrator)
                 {
-                    TabAdministration.IsEnabled = true;
+                    Users.IsEnabled = true;
+                    CraftGroups.IsEnabled = true;
+                    EnterpriseForms.IsEnabled = true;
+                    Status.IsEnabled = true;
                 }
-                UcRightActive = false;
+                else
+                {
+                    Users.IsEnabled = false;
+                    CraftGroups.IsEnabled = false;
+                    EnterpriseForms.IsEnabled = false;
+                    Status.IsEnabled = false;
+                }
                 UcLeft.Content = new UserControl();
                 UcRight.Content = new UserControl();
+                Bizz.UcRightActive = false;
             }
             else
             {
                 MessageBox.Show("Initialer eller password er forkert.");
             }
-            //TabOffer.IsEnabled = true;
-            //TabAdministration.IsEnabled = true;
-            //UcRightActive = false;
-            //UcLeft.Content = new UserControl();
-            //UcRight.Content = new UserControl();
         }
     }
 }

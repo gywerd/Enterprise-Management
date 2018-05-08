@@ -23,7 +23,6 @@ namespace BicGui
         #region Fields
         public UcLogin UcLogin;
         public Bizz Bizz = new Bizz();
-        public bool UcRightActive = false;
         public UcLoginHelp ucLoginHelp;
         public UcLogin ucLogin;
         public UcProject ucProject;
@@ -34,6 +33,10 @@ namespace BicGui
             InitializeComponent();
             TabOffer.IsEnabled = false;
             TabAdministration.IsEnabled = false;
+            Users.IsEnabled = false;
+            CraftGroups.IsEnabled = false;
+            EnterpriseForms.IsEnabled = false;
+            Status.IsEnabled = false;
             OpenUcLogin();
             OpenUcLoginHelp();
         }
@@ -47,8 +50,8 @@ namespace BicGui
 
         private void OpenUcLogin()
         {
-            UcRightActive = true;
-            ucLogin = new UcLogin(Bizz, TabOffer, TabAdministration, MenuItemChangePassWord, MenuItemLogOut, UserName, UcLeft, UcRight, UcRightActive);
+            Bizz.UcRightActive = true;
+            ucLogin = new UcLogin(Bizz, TabOffer, TabAdministration, Users, CraftGroups, EnterpriseForms, Status, MenuItemChangePassWord, MenuItemLogOut, UserName, UcLeft, UcRight);
             UcRight.Content = ucLogin;
         }
         #endregion
@@ -131,18 +134,20 @@ namespace BicGui
 
         private void ButtonProjekt_Click(object sender, RoutedEventArgs e)
         {
-            ucProject = new UcProject(Bizz, UcLeft, UcRight, UcRightActive);
-            if (UcRightActive)
+            if (Bizz.UcRightActive)
             {
+                ucProject = new UcProject(Bizz, UcLeft, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Projekt'. Alt, der ikke er gemt vil blive mistet!", "Åbn Projekt", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
                     UcLeft.Content = ucProject;
-                    UcRightActive = false;
+                    Bizz.UcRightActive = false;
                     UcRight.Content = new UserControl();
                 }
             }
             else
             {
+                ucProject = new UcProject(Bizz, UcLeft, UcRight);
+                Bizz.UcRightActive = false;
                 UcLeft.Content = ucProject;
                 UcRight.Content = new UserControl();
             }
