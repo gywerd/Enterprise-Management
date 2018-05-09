@@ -24,15 +24,17 @@ namespace BicBizz
         public static CraftGroup CCG = new CraftGroup(strConnection);
         public static Contact CCP = new Contact(strConnection);
         public static LegalEntity CLG = new LegalEntity(strConnection);
+        public static Project CPRJ = new Project(strConnection);
         public static User CUS = new User(strConnection);
         public static ZipTown CZT = new ZipTown(strConnection);
 
-        public List<User> Users = CUS.GetUserList();
-        public List<Name> Names = CNA.GetNameList();
+        public List<Address> addresses = CAD.GetAddressList();
+        public List<Contact> contactPersons = CCP.GetContactPersonList();
         public List<CraftGroup> Groups = CCG.GetCraftGroupList();
         public List<LegalEntity> legalEntities = CLG.GetLegalEntityList();
-        public List<Contact> contactPersons = CCP.GetContactPersonList();
-        public List<Address> addresses = CAD.GetAddressList();
+        public List<Name> Names = CNA.GetNameList();
+        public List<Project> projects = CPRJ.GetProjectList();
+        public List<User> Users = CUS.GetUserList();
         public List<ZipTown> ZipCodeList = CZT.GetZipTownList();
 
         #endregion
