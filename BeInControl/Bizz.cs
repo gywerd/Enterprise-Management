@@ -71,6 +71,16 @@ namespace BicBizz
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Method, that checks credentials
+        /// </summary>
+        /// <param name="bizz">Bizz</param>
+        /// <param name="userName">TextBlock</param>
+        /// <param name="menuItemChangePassWord">RibbonApplicationMenuItem</param>
+        /// <param name="menuItemLogOut">RibbonApplicationMenuItem</param>
+        /// <param name="initials">string</param>
+        /// <param name="passWord">string</param>
+        /// <returns>bool</returns>
         public bool CheckCredentials(Bizz bizz, TextBlock userName, RibbonApplicationMenuItem menuItemChangePassWord, RibbonApplicationMenuItem menuItemLogOut, string initials, string passWord)
         {
             foreach (User user in Users)
@@ -86,19 +96,6 @@ namespace BicBizz
             }
 
             return false;
-        }
-
-        private string GetUserName(int? id)
-        {
-            string result = "";
-            foreach (Name name in Names)
-            {
-                if (name.NameId == id)
-                {
-                    result = name.ToString();
-                }
-            }
-            return result;
         }
 
         #endregion
