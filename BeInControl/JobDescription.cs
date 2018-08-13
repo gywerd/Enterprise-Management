@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BicDataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +12,11 @@ namespace BicBizz
         #region Fields
         private int jobDescriptionId;
         private string occupation;
-        private string expertise;
+        private string area;
         private bool procuration;
+
+        private static string strConnection;
+        private Executor executor;
         #endregion
 
         #region Constructors
@@ -20,6 +24,16 @@ namespace BicBizz
         /// Empty Constructor
         /// </summary>
         public JobDescription() { }
+
+        /// <summary>
+        /// Empty constructor, that activates Db-connection
+        /// </summary>
+        /// <param name="strCon">string</param>
+        public JobDescription(string strCon)
+        {
+            strConnection = strCon;
+            executor = new Executor(strConnection);
+        }
 
         /// <summary>
         /// Constructor for adding a new job descripton
@@ -30,7 +44,7 @@ namespace BicBizz
         public JobDescription(string jobTitle, string expertise, bool procuration = false)
         {
             this.occupation = jobTitle;
-            this.expertise = expertise;
+            this.area = expertise;
             this.procuration = procuration;
         }
         /// <summary>
@@ -44,7 +58,7 @@ namespace BicBizz
         {
             this.jobDescriptionId = id;
             this.occupation = jobTitle;
-            this.expertise = expertise;
+            this.area = expertise;
             this.procuration = procuration;
         }
         #endregion
@@ -61,12 +75,40 @@ namespace BicBizz
                 procuration = true;
             }
         }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return occupation;
+        }
+
+        /// <summary>
+        /// Retrieves a list of regions from Db
+        /// </summary>
+        /// <returns></returns>
+        public List<JobDescription> GetJobDescriptions()
+        {
+            List<string> results = executor.ReadListFromDataBase("JobDescriptions");
+            List<JobDescription> jobDescriptions = new List<JobDescription>();
+            foreach (string result in results)
+            {
+                string[] resultArray = new string[4];
+                resultArray = result.Split(';');
+                JobDescription jobDescription = new JobDescription(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2], Convert.ToBoolean(resultArray[3]));
+                jobDescriptions.Add(jobDescription);
+            }
+            return jobDescriptions;
+        }
+
         #endregion
 
         #region Properties
         public int JobDescriptionId { get => jobDescriptionId; }
         public string Occupation { get => occupation; set => occupation = value; }
-        public string Expertise { get => expertise; set => expertise = value; }
+        public string Area { get => area; set => area = value; }
         public bool Procuration { get => procuration; }
         #endregion
 

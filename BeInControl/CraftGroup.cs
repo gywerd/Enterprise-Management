@@ -11,15 +11,13 @@ namespace BicBizz
     public class CraftGroup
     {
         #region Fields
-        private static string strConnection;
-        private int id;
-        private bool active;
-        private int sort;
-        private int field;
         private string abbreviation;
-        private string designation;
+        private bool active;
+        private int category;
         private string description;
+        private string designation;
 
+        private static string strConnection;
         private Executor executor;
         #endregion
 
@@ -40,74 +38,127 @@ namespace BicBizz
         }
 
         /// <summary>
-        /// Constructor to add new field group
+        /// Constructor to add craft group
         /// </summary>
-        /// <param name="active">bool</param>
-        /// <param name="sort">int</param>
-        /// <param name="field">int</param>
         /// <param name="abbreviation">string</param>
+        /// <param name="active">bool</param>
+        /// <param name="category">int</param>
         /// <param name="designation">string</param>
         /// <param name="description">string</param>
-        public CraftGroup(bool active, int sort, int field, string abbreviation, string designation, string description)
+        public CraftGroup(string abbreviation, bool active, int category, string description, string designation)
         {
             this.active = active;
-            this.sort = sort;
-            this.field = field;
+            this.category = category;
             this.abbreviation = abbreviation;
-            this.designation = designation;
             this.description = description;
-        }
-        /// <summary>
-        /// Constructor to add field group from Db to list
-        /// </summary>
-        /// <param name="id">int</param>
-        /// <param name="active">bool</param>
-        /// <param name="sort">int</param>
-        /// <param name="field">int</param>
-        /// <param name="abbreviation">string</param>
-        /// <param name="designation">string</param>
-        /// <param name="description">string</param>
-        public CraftGroup(int id, bool active, int sort, int field, string abbreviation, string designation, string description)
-        {
-            this.id = id;
-            this.active = active;
-            this.sort = sort;
-            this.field = field;
-            this.abbreviation = abbreviation;
             this.designation = designation;
-            this.description = description;
         }
+
         #endregion
 
         #region Methods
+        public override string ToString()
+        {
+            return designation;
+        }
+
         public List<CraftGroup> GetCraftGroupList()
         {
             List<string> results = executor.ReadListFromDataBase("CraftGroups");
             List<CraftGroup> craftGroups = new List<CraftGroup>();
             foreach (string result in results)
             {
-                string[] resultArray = new string[7];
+                string[] resultArray = new string[5];
                 resultArray = result.Split(';');
-                CraftGroup craftGroup = new CraftGroup(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToInt32(resultArray[2]), Convert.ToInt32(resultArray[3]), resultArray[4], resultArray[5], resultArray[6]);
+                CraftGroup craftGroup = new CraftGroup(resultArray[0], Convert.ToBoolean(resultArray[1]), Convert.ToInt32(resultArray[2]), resultArray[3], resultArray[4]);
                 craftGroups.Add(craftGroup);
             }
             return craftGroups;
         }
 
-
         #endregion
 
         #region Properties
-        public int Id { get => id;  }
-        public int Sort { get => sort; set => sort = value; }
-        public int Field { get => field; set => field = value; }
-        public string Abbreviation { get => abbreviation; set => abbreviation = value; }
-        public string Designation { get => designation; set => designation = value; }
-        public string Description { get => description; set => description = value; }
+        public string Abbreviation { get => abbreviation; }
+
         public bool Active
         {
             get => active;
-            set => active = value;
+            set
+            {
+                try
+                {
+                    if (value.Equals(true) || value.Equals(false))
+                    {
+                        active = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public int Category
+        {
+            get => category;
+            set
+            {
+                try
+                {
+                    if (value <= 0)
+                    {
+                        category = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public string Description
+        {
+            get => description;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        description = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public string Designation
+        {
+            get => designation;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        designation = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
         }
         #endregion
     }

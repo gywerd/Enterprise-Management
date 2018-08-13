@@ -10,12 +10,12 @@ namespace BicBizz
     public class Address
     {
         #region Fields
-        private static string strConnection;
         private int addressId;
         private string street;
         private string place;
-        private int zip;
+        private string zip;
 
+        private static string strConnection;
         private Executor executor;
 
         public static ZipTown CZT = new ZipTown(strConnection);
@@ -28,6 +28,10 @@ namespace BicBizz
         /// </summary>
         public Address() { }
 
+        /// <summary>
+        /// Empty constructor, that activates Db-connection
+        /// </summary>
+        /// <param name="strCon">string</param>
         public Address(string strCon)
         {
             strConnection = strCon;
@@ -39,9 +43,8 @@ namespace BicBizz
         /// </summary>
         /// <param name="street">string</param>
         /// <param name="zip">int</param>
-        /// <param name="town">string</param>
         /// <param name="place">string</param>
-        public Address(string street, int zip, string place = null)
+        public Address(string street, string zip, string place = "")
         {
             this.street = street;
             this.place = place;
@@ -54,9 +57,8 @@ namespace BicBizz
         /// <param name="id">int</param>
         /// <param name="street">string</param>
         /// <param name="zip">int</param>
-        /// <param name="town">string</param>
         /// <param name="place">string</param>
-        public Address(int id, string street, string place, int zip)
+        public Address(int id, string street, string place, string zip)
         {
             this.addressId = id;
             this.street = street;
@@ -75,20 +77,6 @@ namespace BicBizz
             return tempAddress;
         }
 
-        public ZipTown GetZipTown(int id)
-        {
-            ZipTown result = new ZipTown();
-            List<ZipTown> zips = CZT.GetZipTownList();
-            foreach (ZipTown zip in zips)
-            {
-                if (zip.Id == id)
-                {
-                    return zip;
-                }
-            }
-            return result;
-        }
-
         public List<Address> GetAddressList()
         {
             List<string> results = executor.ReadListFromDataBase("Addresses");
@@ -97,10 +85,25 @@ namespace BicBizz
             {
                 string[] resultArray = new string[4];
                 resultArray = result.Split(';');
-                Address address = new Address(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2], Convert.ToInt32(resultArray[3]));
+                Address address = new Address(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2], resultArray[3]);
                 addresses.Add(address);
             }
             return addresses;
+        }
+
+        public ZipTown GetZipTown(string zip)
+        {
+            ZipTown result = new ZipTown();
+            List<ZipTown> zips = CZT.GetZipTownList();
+            foreach (ZipTown zip2 in zips)
+            {
+                if (zip2.Zip.Equals(zip))
+                {
+                    result = zip2;
+                    return result;
+                }
+            }
+            return result;
         }
 
         #endregion
@@ -146,14 +149,14 @@ namespace BicBizz
                 }
             }
         }
-        public int Zip
+        public string Zip
         {
             get => zip;
             set
             {
                 try
                 {
-                    if (value < 0)
+                    if (value != null)
                     {
                         zip = value;
                     }

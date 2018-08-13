@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BicDataAccess;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,79 +10,90 @@ namespace BicBizz
     public class Offer
     {
         #region Fields
-        private int fieldId;
-        private bool request;
-        private DateTime requestDate;
+        private int offerId;
         private bool received;
-        private DateTime receivedDate;
-        private bool chosen;
+        private DateTime? receivedDate;
         private double price;
+        private bool chosen;
+
+        private static string strConnection;
+        private Executor executor;
+
         #endregion
 
         #region Constructors
         /// <summary>
         /// Empty constructor
         /// </summary>
-        public Offer() { }
-
-        /// <summary>
-        /// Constructor used for new offer with all data
-        /// </summary>
-        /// <param name="request">bool</param>
-        /// <param name="requestDate">DateTime</param>
-        /// <param name="received">bool</param>
-        /// <param name="receivedDate">DateTime</param>
-        /// <param name="chosen">bool</param>
-        /// <param name="price">double</param>
-        public Offer(bool request, DateTime requestDate, bool received, DateTime receivedDate, bool chosen, double price)
+        public Offer()
         {
-            this.request = request;
-            this.requestDate = requestDate;
-            this.received = received;
-            this.receivedDate = receivedDate;
-            this.chosen = chosen;
-            this.price = price;
+            this.received = false;
+            this.receivedDate = null;
+            this.price = 0;
+            this.chosen = false;
         }
 
         /// <summary>
-        /// Constructor used to add record from Db to list
+        /// Empty constructor, that activates Db-connection
         /// </summary>
-        /// <param name="id">int</param>
-        /// <param name="request">bool</param>
-        /// <param name="requestDate">DateTime</param>
-        /// <param name="received">bool</param>
-        /// <param name="receivedDate">DateTime</param>
-        /// <param name="chosen">bool</param>
-        /// <param name="price">double</param>
-        public Offer(int id, bool request, DateTime requestDate, bool received, DateTime receivedDate, bool chosen, double price)
+        /// <param name="strCon">string</param>
+        public Offer(string strCon)
         {
-            this.fieldId = id;
-            this.request = request;
-            this.requestDate = requestDate;
+            strConnection = strCon;
+            executor = new Executor(strConnection);
+        }
+
+        /// <summary>
+        /// Constructor used to add new offer with all data
+        /// </summary>
+        /// <param name="received">bool</param>
+        /// <param name="receivedDate">DateTime?</param>
+        /// <param name="price">double</param>
+        /// <param name="chosen">bool</param>
+        public Offer(bool received, DateTime? receivedDate, double price, bool chosen)
+        {
             this.received = received;
             this.receivedDate = receivedDate;
+            this.price = Price;
             this.chosen = chosen;
-            this.price = price;
+        }
+
+        /// <summary>
+        /// Constructor used to add offer from Db to list
+        /// </summary>
+        /// <param name="id">int</param>
+        /// <param name="received">bool</param>
+        /// <param name="receivedDate">DateTime?</param>
+        /// <param name="price">double</param>
+        /// <param name="chosen">bool</param>
+        public Offer(int id, bool received, double price, bool chosen, DateTime? receivedDate = null)
+        {
+            this.offerId = id;
+            this.received = received;
+            this.receivedDate = receivedDate;
+            this.price = Price;
+            this.chosen = chosen;
         }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Methods that adds request info to record
+        /// Method to add received and received date to 
         /// </summary>
-        /// <param name="request">bool</param>
-        /// <param name="requestDate">DateTime</param>
-        public void AddRequest(bool request, DateTime requestDate)
+        /// <param name="receivedDate">DateTime?</param>
+        public void AddReceived(DateTime? receivedDate = null)
         {
-            this.request = request;
-            this.requestDate = requestDate;
-        }
-
-        public void AddReceived(bool received, DateTime receivedDate)
-        {
-            this.received = received;
+            if (receivedDate == null)
+            {
+                receivedDate = DateTime.Now;
+            }
+            this.received = true;
             this.receivedDate = receivedDate;
         }
+
+        /// <summary>
+        /// Method that toggles chosen state
+        /// </summary>
         public void ToggleChosen()
         {
             if (chosen)
@@ -93,16 +105,77 @@ namespace BicBizz
                 chosen = true;
             }
         }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (received)
+            {
+                string result = "Offer received: " + receivedDate.Value.ToString("d");
+                return result;
+            }
+            else
+            {
+                string result = "Offer not received";
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a list of regions from Db
+        /// </summary>
+        /// <returns></returns>
+        public List<Offer> GetOfferList()
+        {
+            List<string> results = executor.ReadListFromDataBase("Offers");
+            List<Offer> offers = new List<Offer>();
+            foreach (string result in results)
+            {
+                string[] resultArray = new string[4];
+                resultArray = result.Split(';');
+                if (resultArray[2] != null)
+                {
+                    Offer offer = new Offer(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToInt32(resultArray[3]), Convert.ToBoolean(resultArray[4]), Convert.ToDateTime(resultArray[2]));
+                    offers.Add(offer);
+                }
+                else
+                {
+                    Offer offer = new Offer(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToInt32(resultArray[3]), Convert.ToBoolean(resultArray[4]));
+                    offers.Add(offer);
+                }
+            }
+            return offers;
+        }
+
         #endregion
 
         #region Properties
-        public int FieldId { get => fieldId; }
-        public bool Request { get => request; }
-        public DateTime RequestDate { get => requestDate; }
+        public int OfferId { get => offerId; }
         public bool Received { get => received; }
-        public DateTime ReceivedDate { get => receivedDate; }
+        public DateTime? ReceivedDate { get => receivedDate; }
+        public double Price
+        {
+            get => price;
+            set
+            {
+                try
+                {
+                    if (value >= 0)
+                    {
+                        price = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
         public bool Chosen { get => chosen; }
-        public double Price { get => price; set => price = value; }
         #endregion
     }
 }

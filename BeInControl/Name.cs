@@ -10,10 +10,11 @@ namespace BicBizz
     public class Name
     {
         #region Fields
-        private string strConnection;
         private int nameId;
         private string givenName;
         private string surName;
+
+        private string strConnection;
         private Executor executor;
         #endregion
 
@@ -32,9 +33,9 @@ namespace BicBizz
         /// <summary>
         /// Constructor to add new name
         /// </summary>
-        /// <param name="givenName">string</param>
         /// <param name="surName">string</param>
-        public Name(string givenName, string surName)
+        /// <param name="givenName">string</param>
+        public Name(string surName, string givenName = "")
         {
             this.givenName = givenName;
             this.surName = surName;

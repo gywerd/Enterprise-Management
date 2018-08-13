@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BicGui"
         xmlns:Custom="http://schemas.microsoft.com/winfx/2006/xaml/presentation/ribbon" x:Class="BicGui.BicGui"
         mc:Ignorable="d"
-        Title="Underentrepenører" 
+        Title="Jorton Underentrepenør Database" 
         Height="900" Width="1600" 
         MaxWidth="1920" MaxHeight="1080"
         Background="LightGray" >
@@ -62,7 +62,7 @@
                                   LargeImageSource="images/project.png" />
                     <RibbonButton x:Name="ButtonEnterprise" 
                                   Click="ButtonEnterprise_Click"
-                                  Label="Entreprise"
+                                  Label="Entrepriser"
                                   LargeImageSource="images/enterprise.png"  />
                     <RibbonButton x:Name="ButtonSubEntrepeneurs" 
                                   Click="ButtonSubEntrepeneurs_Click"

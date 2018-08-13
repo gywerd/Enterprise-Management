@@ -10,10 +10,10 @@ namespace BicBizz
     public class ZipTown
     {
         #region Fields
-        private static string strConnection;
-        private int id;
         private string zip;
         private string town;
+
+        private static string strConnection;
         private Executor executor;
         #endregion
 
@@ -34,7 +34,7 @@ namespace BicBizz
         }
 
         /// <summary>
-        /// Constructor for adding new ZipTown to db
+        /// Constructor for adding ZipTown to Db or List
         /// </summary>
         /// <param name="zip">string</param>
         /// <param name="town">string</param>
@@ -44,58 +44,71 @@ namespace BicBizz
             this.town = town;
         }
 
-        /// <summary>
-        /// Constructor for adding ZipTown fron db to list
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="zip"></param>
-        /// <param name="town"></param>
-        public ZipTown(int id, string zip, string town)
-        {
-            this.id = id;
-            this.zip = zip;
-            this.town = town;
-        }
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Method that return class content as string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return zip + " " + town;
+        }
+
         public List<ZipTown> GetZipTownList()
         {
             List<string> results = executor.ReadListFromDataBase("ZipTown");
             List<ZipTown> zips = new List<ZipTown>();
             foreach (string result in results)
             {
-                string[] resultArray = new string[3];
+                string[] resultArray = new string[2];
                 resultArray = result.Split(';');
-                ZipTown zipTown = new ZipTown(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2]);
+                ZipTown zipTown = new ZipTown(resultArray[0], resultArray[1]);
                 zips.Add(zipTown);
             }
             return zips;
         }
 
-        public override string ToString()
-        {
-            return zip + " " + town;
-        }
         #endregion
 
         #region Properties
-        public int Id
-        {
-            get => id;
-            set => id = value;
-        }
-
         public string Zip
         {
             get => zip;
-            set => zip = value;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        zip = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
         }
 
         public string Town
         {
             get => town;
-            set => town = value;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        town = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
         }
         #endregion
     }

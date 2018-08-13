@@ -67,17 +67,18 @@
   <ItemGroup>
     <Compile Include="Address.cs" />
     <Compile Include="Bizz.cs" />
+    <Compile Include="Category.cs" />
     <Compile Include="Enterprise.cs" />
+    <Compile Include="EnterpriseForm.cs" />
     <Compile Include="Project.cs" />
-    <Compile Include="ProjectPhase.cs" />
     <Compile Include="ProjectStatus.cs" />
+    <Compile Include="Region.cs" />
+    <Compile Include="Request.cs" />
     <Compile Include="SubEntrepeneur.cs" />
-    <Compile Include="TenderForm.cs" />
     <Compile Include="User.cs" />
     <Compile Include="CraftGroup.cs" />
     <Compile Include="JobDescription.cs" />
     <Compile Include="LegalEntity.cs" />
-    <Compile Include="ContactInformation.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="Name.cs" />
     <Compile Include="ZipTown.cs" />

@@ -10,17 +10,19 @@ namespace BicBizz
     public class Project
     {
         #region Fields
-        private static string strConnection;
-        private int id;
+        private int projectId;
         private string name;
         private int builder;
+        private bool enterpriseList;
         private int status;
-        private int enterpriseForm;
-        private int executive;
         private string tenderForm;
+        private string enterpriseForm;
+        private string executive;
         private bool copy;
-        private bool active;
+
+        private static string strConnection;
         private Executor executor;
+
         #endregion
 
         #region Constructors
@@ -39,23 +41,23 @@ namespace BicBizz
         /// Constructor to add new project
         /// </summary>
         /// <param name="name">string</param>
-        /// <param name="builder">int</param>
         /// <param name="status">int</param>
-        /// <param name="enterpriseForm">int</param>
+        /// <param name="enterpriseForm">string</param>
         /// <param name="executive">int</param>
+        /// <param name="builder">int</param>
+        /// <param name="enterPriseList">int</param>
         /// <param name="tenderForm">string</param>
         /// <param name="copy">bool</param>
-        /// <param name="active">bool</param>
-        public Project(string name, int builder, int status, int enterpriseForm, int executive, string tenderForm = "", bool copy = false, bool active = true)
+        public Project(string name, int status, string enterpriseForm, string executive, int builder = 0, bool enterPriseList = false, string tenderForm = "", bool copy = false)
         {
-            this.status = status;
             this.name = name;
             this.builder = builder;
+            this.status = status;
+            this.enterpriseList = enterPriseList;
             this.tenderForm = tenderForm;
             this.enterpriseForm = enterpriseForm;
             this.executive = executive;
             this.copy = copy;
-            this.active = active;
         }
 
         /// <summary>
@@ -63,24 +65,23 @@ namespace BicBizz
         /// </summary>
         /// <param name="id">int</param>
         /// <param name="name">string</param>
-        /// <param name="builder">int</param>
+        /// <param name="enterPriseList">int</param>
         /// <param name="status">int</param>
-        /// <param name="enterpriseForm">int</param>
+        /// <param name="enterpriseForm">string</param>
         /// <param name="executive">int</param>
         /// <param name="tenderForm">int</param>
         /// <param name="copy">bool</param>
-        /// <param name="active">bool</param>
-        public Project(int id, string name, int builder, int status, int enterpriseForm, int executive, string tenderForm = "", bool copy = false, bool active = true)
+        public Project(int id, string name, int builder, bool enterPriseList, int status, string tenderForm, string enterpriseForm, string executive, bool copy = false)
         {
-            this.id = id;
+            this.projectId = id;
             this.name = name;
             this.builder = builder;
+            this.enterpriseList = enterPriseList;
             this.status = status;
+            this.tenderForm = tenderForm;
             this.enterpriseForm = enterpriseForm;
             this.executive = executive;
-            this.tenderForm = tenderForm;
             this.copy = copy;
-            this.active = active;
         }
         #endregion
 
@@ -97,6 +98,11 @@ namespace BicBizz
             }
         }
 
+        public void AddEnterpriseList()
+        {
+            enterpriseList = true;
+        }
+
         public List<Project> GetProjectList()
         {
             List<string> results = executor.ReadListFromDataBase("Projects");
@@ -105,23 +111,128 @@ namespace BicBizz
             {
                 string[] resultArray = new string[9];
                 resultArray = result.Split(';');
-                Project project = new Project(Convert.ToInt32(resultArray[0]), resultArray[1], Convert.ToInt32(resultArray[2]), Convert.ToInt32(resultArray[3]), Convert.ToInt32(resultArray[4]), Convert.ToInt32(resultArray[5]), resultArray[6], Convert.ToBoolean(resultArray[7]), Convert.ToBoolean(resultArray[8]));
+                Project project = new Project(Convert.ToInt32(resultArray[0]), resultArray[1], Convert.ToInt32(resultArray[2]), Convert.ToBoolean(resultArray[3]), Convert.ToInt32(resultArray[4]), resultArray[5], resultArray[6], resultArray[7], Convert.ToBoolean(resultArray[8]));
                 projects.Add(project);
             }
             return projects;
         }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string result = Convert.ToString(projectId) + " " + name;
+            return result;
+        }
+
         #endregion
 
         #region Properties
-        public int Id { get => id; }
-        public int Status { get => status; set => status = value; }
-        public string TenderForm { get => tenderForm; set => tenderForm = value; }
-        public int EnterpriseForm { get => enterpriseForm; set => enterpriseForm = value; }
-        public int Executive { get => executive; set => executive = value; }
+        public int Id { get => projectId; }
+
+        public string Name
+        {
+            get => name;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        name = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public bool EnterpriseList { get => enterpriseList; }
+
+        public int Status
+        {
+            get => status;
+            set
+            {
+                try
+                {
+                    if (value >= 0)
+                    {
+                        status = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public string TenderForm
+        {
+            get => tenderForm;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        tenderForm = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public string EnterpriseForm
+        {
+            get => enterpriseForm;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        enterpriseForm = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public string Executive
+        {
+            get => executive;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        executive = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
         public bool Copy { get => copy; }
-        public string Name { get => name; set => name = value; }
-        public int Builder { get => builder; set => builder = value; }
-        public bool Active {  get => active; set => active = value; }
         #endregion
     }
 }
