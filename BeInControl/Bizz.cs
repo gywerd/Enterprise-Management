@@ -88,7 +88,7 @@ namespace BicBizz
                 if (user.Initials == initials && user.PassWord == passWord)
                 {
                     bizz.CurrentUser = user;
-                    userName.Text = CUS.GetName(user.Name);
+                    userName.Text = GetUserName(user.Name);
                     menuItemChangePassWord.IsEnabled = true;
                     menuItemLogOut.IsEnabled = true;
                     return true;
@@ -96,6 +96,23 @@ namespace BicBizz
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Method, that retrieves Username
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string GetUserName(int? name)
+        {
+            foreach (Name tempName in Names)
+            {
+                if (tempName.NameId == name)
+                {
+                    return tempName.ToString();
+                }
+            }
+            return "";
         }
 
         #endregion

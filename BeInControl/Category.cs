@@ -52,7 +52,7 @@ namespace BicBizz
 
         public List<Category> GetCategoryList()
         {
-            List<string> results = executor.ReadListFromDataBase("CraftGroups");
+            List<string> results = executor.ReadListFromDataBase("Categories");
             List<Category> cats = new List<Category>();
             foreach (string result in results)
             {

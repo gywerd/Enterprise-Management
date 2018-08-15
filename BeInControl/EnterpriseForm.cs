@@ -10,7 +10,6 @@ namespace BicBizz
     public class EnterpriseForm
     {
         #region Fields
-        private int formId;
         private string abbreviation;
         private string name;
 
@@ -36,25 +35,12 @@ namespace BicBizz
         }
 
         /// <summary>
-        /// Constructor to add new EnterpriseForm
+        /// Constructor to add EnterpriseForm
         /// </summary>
         /// <param name="abbreviation">string</param>
         /// <param name="name">string</param>
         public EnterpriseForm(string abbreviation, string name)
         {
-            this.abbreviation = abbreviation;
-            this.name = name;
-        }
-
-        /// <summary>
-        /// Constructor to add Enterprise Form from Db
-        /// </summary>
-        /// <param name="id">int</param>
-        /// <param name="abbreviation">string</param>
-        /// <param name="name">string</param>
-        public EnterpriseForm(int id, string abbreviation, string name)
-        {
-            this.formId = id;
             this.abbreviation = abbreviation;
             this.name = name;
         }
@@ -77,13 +63,13 @@ namespace BicBizz
         /// <returns></returns>
         public List<EnterpriseForm> GetEnterpriseFormList()
         {
-            List<string> results = executor.ReadListFromDataBase("EnterpriseForm");
+            List<string> results = executor.ReadListFromDataBase("EnterpriseForms");
             List<EnterpriseForm> enterpriseForms = new List<EnterpriseForm>();
             foreach (string result in results)
             {
                 string[] resultArray = new string[3];
                 resultArray = result.Split(';');
-                EnterpriseForm address = new EnterpriseForm(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2]);
+                EnterpriseForm address = new EnterpriseForm(resultArray[0], resultArray[1]);
                 enterpriseForms.Add(address);
             }
             return enterpriseForms;
@@ -92,8 +78,6 @@ namespace BicBizz
         #endregion
 
         #region Properties
-        public int FormId { get => formId; }
-
         public string Abbreviation
         {
             get => abbreviation;

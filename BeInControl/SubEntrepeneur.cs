@@ -163,7 +163,7 @@ namespace BicBizz
         /// <returns></returns>
         public List<SubEntrepeneur> GetSubEntrepeneurList()
         {
-            List<string> results = executor.ReadListFromDataBase("Requests");
+            List<string> results = executor.ReadListFromDataBase("SubEntrepeneurs");
             List<SubEntrepeneur> subs = new List<SubEntrepeneur>();
             foreach (string sub in results)
             {

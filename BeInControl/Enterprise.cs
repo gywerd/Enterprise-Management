@@ -98,7 +98,7 @@ namespace BicBizz
 
         public List<Enterprise> GetEnterpriseList()
         {
-            List<string> results = executor.ReadListFromDataBase("EnterpriseList");
+            List<string> results = executor.ReadListFromDataBase("EnterpriseLists");
             List<Enterprise> enterprises = new List<Enterprise>();
             foreach (string result in results)
             {
