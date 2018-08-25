@@ -7,115 +7,116 @@ using System.Threading.Tasks;
 
 namespace BicBizz
 {
-    public class Contact
+    public class Builder
     {
         #region Fields
         private int id;
-        private string legalEntity;
+        private string cvr;
         private string name;
-        private string description;
+        private int address;
         private int contactInfo;
+        private string url;
 
         private static string strConnection;
         private Executor executor;
-
         #endregion
 
         #region Constructors
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public Contact() { }
+        public Builder()
+        {
+        }
 
         /// <summary>
         /// Constructor for access to db methods
         /// </summary>
-        /// <param name="strCon"></param>
-        public Contact(string strCon)
+        public Builder(string strCon)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
-            legalEntity = "";
+            cvr = "0";
             name = "";
-            description = "";
+            address = 0;
             contactInfo = 0;
+            url = "";
         }
 
         /// <summary>
-        /// Constructor for adding ContactPerson
+        /// Constructor for adding new legal entity
         /// </summary>
-        /// <param name="legalEntity">int</param>
-        /// <param name="name">int</param>
-        /// <param name="description">string</param>
-        /// <param name="email">string</param>
-        /// <param name="mobile">string</param>
-        public Contact(string legalEntity, string name, string description = "", int contactInfo = 0)
+        /// <param name="name">string</param>
+        /// <param name="address">int</param>
+        /// <param name="contactInfo">int</param>
+        /// <param name="craftGroup1">int</param>
+        public Builder(string cvr, string name, int address = 0, int contactInfo = 0, string url = "")
         {
-            this.legalEntity = legalEntity;
+            this.cvr = cvr;
             this.name = name;
-            this.description = description;
+            this.address = address;
             this.contactInfo = contactInfo;
+            this.url = url;
         }
 
         /// <summary>
-        /// Constructor for adding ContactPerson from Db
+        /// Constructor for adding a legal entity from Db to list
         /// </summary>
         /// <param name="id">int</param>
-        /// <param name="legalEntityId">int</param>
-        /// <param name="name">int</param>
-        /// <param name="description">string</param>
-        /// <param name="email">string</param>
-        /// <param name="mobile">string</param>
-        public Contact(int id, string legalEntity, string name, string description, int contactInfo)
+        /// <param name="companyName">string</param>
+        /// <param name="address">int</param>
+        /// <param name="contact">int</param>
+        /// <param name="craftGroup">int</param>
+        public Builder(int id, string cvr, string name, int address, int contactInfo, string url)
         {
             this.id = id;
-            this.legalEntity = legalEntity;
             this.name = name;
-            this.description = description;
+            this.address = address;
             this.contactInfo = contactInfo;
+            this.url = url;
         }
-
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            string tempName = name;
-            if (description != "")
-            {
-                tempName += " (" + description + ")";
-            }
-            return tempName;
+            string result = name;
+            return result;
         }
 
-        public List<Contact> GetContacts()
+        public List<Builder> GetBuilders()
         {
-            List<string> results = executor.ReadListFromDataBase("Contacts");
-            List<Contact> contacts = new List<Contact>();
+            List<string> results = executor.ReadListFromDataBase("Builders");
+            List<Builder> entities = new List<Builder>();
             foreach (string result in results)
             {
-                string[] resultArray = new string[5];
+                string[] resultArray = new string[6];
                 resultArray = result.Split(';');
-                Contact contact = new Contact(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2], resultArray[3], Convert.ToInt32(resultArray[4]));
-                contacts.Add(contact);
+                Builder legalEntity = new Builder(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2], Convert.ToInt32(resultArray[3]), Convert.ToInt32(resultArray[4]), resultArray[5]);
+                entities.Add(legalEntity);
             }
-            return contacts;
+            return entities;
         }
 
         #endregion
 
         #region Properties
         public int Id { get => id; }
-        public string LegalEntity
+
+        public string Cvr
         {
-            get => legalEntity;
+            get => cvr;
             set
             {
                 try
                 {
                     if (value != null)
                     {
-                        legalEntity = value;
+                        cvr = value;
                     }
                 }
                 catch (Exception ex)
@@ -146,16 +147,16 @@ namespace BicBizz
             }
         }
 
-        public string Description
+        public int Address
         {
-            get => description;
+            get => address;
             set
             {
                 try
                 {
-                    if (value != null)
+                    if (value >= 0)
                     {
-                        description = value;
+                        address = value;
                     }
                 }
                 catch (Exception ex)
@@ -186,7 +187,28 @@ namespace BicBizz
             }
         }
 
+        public string Url
+        {
+            get => url;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        url = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
         #endregion
 
     }
 }
+

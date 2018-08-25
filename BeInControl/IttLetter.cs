@@ -12,7 +12,7 @@ namespace BicBizz
         #region Fields
         private int ittLetterId;
         private bool sent;
-        private DateTime sentDate;
+        private DateTime? sentDate;
 
         private static string strConnection;
         private Executor executor;
@@ -39,7 +39,7 @@ namespace BicBizz
         /// </summary>
         /// <param name="sent">bool</param>
         /// <param name="sentDate">DateTime</param>
-        public IttLetter(bool sent, DateTime sentDate)
+        public IttLetter(bool sent, DateTime? sentDate)
         {
             this.sent = sent;
             this.sentDate = sentDate;
@@ -51,7 +51,7 @@ namespace BicBizz
         /// <param name="id"></param>
         /// <param name="sent"></param>
         /// <param name="sentDate"></param>
-        public IttLetter(int id, bool sent, DateTime sentDate)
+        public IttLetter(int id, bool sent, DateTime? sentDate)
         {
             this.ittLetterId = id;
             this.sent = sent;
@@ -68,7 +68,7 @@ namespace BicBizz
         {
             if (sent)
             {
-                string result = "Tilbudsbrev sendt: " + sentDate.ToShortDateString();
+                string result = "Tilbudsbrev sendt: " + sentDate.Value.ToShortDateString();
                 return result;
             }
             else
@@ -88,9 +88,17 @@ namespace BicBizz
             List<IttLetter> ittLetters = new List<IttLetter>();
             foreach (string result in results)
             {
+                IttLetter ittLetter;
                 string[] resultArray = new string[3];
                 resultArray = result.Split(';');
-                IttLetter ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDateTime(resultArray[2]));
+                if (resultArray[2] != "")
+                {
+                    ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDateTime(resultArray[2]));
+                }
+                else
+                {
+                    ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), null);
+                }
                 ittLetters.Add(ittLetter);
             }
             return ittLetters;
@@ -101,7 +109,7 @@ namespace BicBizz
         #region Properties
         public int IttLetterId { get => ittLetterId; }
         public bool Sent { get => sent; }
-        public DateTime SentDate { get => sentDate; set => sentDate = value; }
+        public DateTime? SentDate { get => sentDate; set => sentDate = value; }
         #endregion
     }
 }

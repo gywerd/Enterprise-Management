@@ -28,9 +28,9 @@
                VerticalAlignment="Top" />
         <ComboBox x:Name="ComboBoxCaseId" 
                   FontSize="30" 
-                  Height="50" Width="131"
-                  HorizontalAlignment="Center" 
-                  Margin="0,125,70,0" 
+                  Height="50" Width="130"
+                  HorizontalAlignment="Right" 
+                  Margin="0,125,620,0" 
                   VerticalAlignment="Top" >
             <ComboBoxItem Content="171.225 Tradium Talent College"/>
             <ComboBoxItem Content="171.338 NY Regnbuevænget i Skanderborg. Genudbud"/>
@@ -44,31 +44,16 @@
             <ComboBoxItem Content="181090 AAAB afd. 15 - Petersborg 29-56, Aabenraa"/>
             <ComboBoxItem Content="181.116 Toftlund Distriktskole - anlægsentreprisen"/>
         </ComboBox>
-        <xctk:WatermarkTextBox x:Name="TextBoxCaseId1" 
+        <xctk:WatermarkTextBox x:Name="TextBoxCaseId" 
                                Background="White"  
                                FontSize="30" 
-                               Height="50" Width="60"
-                               HorizontalAlignment="Center" 
-                               Margin="0,185,140,0" 
+                               Height="50" Width="130"
+                               HorizontalAlignment="Right" 
+                               Margin="0,185,620,0" 
                                TextWrapping="Wrap" 
                                Text=""
-                               Watermark="123"
+                               Watermark="123456"
                                VerticalAlignment="Top"/>
-        <Label x:Name="LabelDot" Content="." 
-               FontSize="30" 
-               Height="50" Width="20"
-               HorizontalAlignment="Center" 
-               Margin="0,185,65,0" 
-               VerticalAlignment="Top" />
-        <xctk:WatermarkTextBox x:Name="TextBoxCaseId2" 
-                               FontSize="30" 
-                               Height="50" Width="60"
-                               HorizontalAlignment="Center" 
-                               Margin="0,185,-15,0" 
-                               TextWrapping="Wrap" 
-                               Text=""
-                               Watermark="456"
-                               VerticalAlignment="Top" ToolTip="" />
         <Button x:Name="ButtonCancel" Content="Annuller"
                 Click="ButtonCancel_Click" 
                 FontSize="48" FontWeight="Bold" 

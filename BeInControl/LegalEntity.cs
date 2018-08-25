@@ -10,18 +10,17 @@ namespace BicBizz
     public class LegalEntity
     {
         #region Fields
-        private string entityid;
-        private string companyName;
+        private string id;
+        private string name;
         private int address;
-        private string phone;
-        private string fax;
+        private int contactInfo;
         private string url;
-        private string craftGroup1;
-        private string craftGroup2;
-        private string craftGroup3;
-        private string craftGroup4;
+        private int craftGroup1;
+        private int craftGroup2;
+        private int craftGroup3;
+        private int craftGroup4;
+        private int region;
         private bool countryWide;
-        private int area;
         private bool cooperative;
         private bool active;
 
@@ -42,28 +41,39 @@ namespace BicBizz
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
+            name = "";
+            address = 0;
+            contactInfo = 0;
+            url = "";
+            craftGroup1 = 0;
+            craftGroup2 = 0;
+            craftGroup3 = 0;
+            craftGroup4 = 0;
+            region = 0;
+            countryWide = false;
+            cooperative = false;
+            active = false;
         }
 
         /// <summary>
         /// Constructor for adding new legal entity
         /// </summary>
-        /// <param name="companyName">string</param>
+        /// <param name="name">string</param>
         /// <param name="address">int</param>
-        /// <param name="phone">int</param>
+        /// <param name="contactInfo">int</param>
         /// <param name="craftGroup1">int</param>
-        public LegalEntity(string companyName, int address, string phone, string fax, string url, string craftGroup1, int area, bool countryWide = false, bool cooperative = false, bool active=true, string craftGroup2 = "", string craftGroup3 = "", string craftGroup4 = "")
+        public LegalEntity(string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int area, bool countryWide = false, bool cooperative = false, bool active=false)
         {
-            this.companyName = companyName;
+            this.name = name;
             this.address = address;
-            this.phone = phone;
-            this.fax = fax;
+            this.contactInfo = contactInfo;
             this.url = url;
             this.craftGroup1 = craftGroup1;
             this.craftGroup2 = craftGroup2;
             this.craftGroup3 = craftGroup3;
             this.craftGroup4 = craftGroup4;
+            this.region = area;
             this.countryWide = countryWide;
-            this.area = area;
             this.cooperative = cooperative;
             this.active = active;
         }
@@ -76,20 +86,19 @@ namespace BicBizz
         /// <param name="address">int</param>
         /// <param name="contact">int</param>
         /// <param name="craftGroup">int</param>
-        public LegalEntity(string id, string companyName, int address, string phone, string fax, string url, string craftGroup1, string craftGroup2, string craftGroup3, string craftGroup4, bool countryWide, int area, bool cooperative, bool active)
+        public LegalEntity(string id, string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int area, bool countryWide, bool cooperative, bool active)
         {
-            this.entityid = id;
-            this.companyName = companyName;
+            this.id = id;
+            this.name = name;
             this.address = address;
-            this.phone = phone;
-            this.fax = fax;
+            this.contactInfo = contactInfo;
             this.url = url;
             this.craftGroup1 = craftGroup1;
             this.craftGroup2 = craftGroup2;
             this.craftGroup3 = craftGroup3;
             this.craftGroup4 = craftGroup4;
+            this.region = area;
             this.countryWide = countryWide;
-            this.area = area;
             this.cooperative = cooperative;
             this.active = active;
         }
@@ -102,7 +111,8 @@ namespace BicBizz
         /// <returns></returns>
         public override string ToString()
         {
-            return companyName;
+            string result = name + ", (" + id + ")";
+            return result;
         }
 
         public List<LegalEntity> GetLegalEntities()
@@ -111,9 +121,9 @@ namespace BicBizz
             List<LegalEntity> entities = new List<LegalEntity>();
             foreach (string result in results)
             {
-                string[] resultArray = new string[14];
+                string[] resultArray = new string[13];
                 resultArray = result.Split(';');
-                LegalEntity legalEntity = new LegalEntity(resultArray[0], resultArray[1], Convert.ToInt32(resultArray[2]), resultArray[3], resultArray[4], resultArray[5], resultArray[6], resultArray[7], resultArray[8], resultArray[9], Convert.ToBoolean(resultArray[10]), Convert.ToInt32(resultArray[11]), Convert.ToBoolean(resultArray[12]), Convert.ToBoolean(resultArray[13]));
+                LegalEntity legalEntity = new LegalEntity(resultArray[0], resultArray[1], Convert.ToInt32(resultArray[2]), Convert.ToInt32(resultArray[3]), resultArray[4], Convert.ToInt32(resultArray[5]), Convert.ToInt32(resultArray[6]), Convert.ToInt32(resultArray[7]), Convert.ToInt32(resultArray[8]), Convert.ToInt32(resultArray[9]), Convert.ToBoolean(resultArray[10]), Convert.ToBoolean(resultArray[11]), Convert.ToBoolean(resultArray[12]));
                 entities.Add(legalEntity);
             }
             return entities;
@@ -122,18 +132,18 @@ namespace BicBizz
         #endregion
 
         #region Properties
-        public string EntityId { get => entityid; }
+        public string Id { get => id; }
 
-        public string CompanyName
+        public string Name
         {
-            get => companyName;
+            get => name;
             set
             {
                 try
                 {
                     if (value != null)
                     {
-                        companyName = value;
+                        name = value;
                     }
                 }
                 catch (Exception ex)
@@ -164,36 +174,16 @@ namespace BicBizz
             }
         }
 
-        public string Phone
+        public int ContactInfo
         {
-            get => phone;
+            get => contactInfo;
             set
             {
                 try
                 {
-                    if (value != null)
+                    if (value >= 0)
                     {
-                        phone = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
-
-        public string Fax
-        {
-            get => fax;
-            set
-            {
-                try
-                {
-                    if (value != null)
-                    {
-                        fax = value;
+                        contactInfo = value;
                     }
                 }
                 catch (Exception ex)
@@ -224,14 +214,14 @@ namespace BicBizz
             }
         }
 
-        public string CraftGroup1
+        public int CraftGroup1
         {
             get => craftGroup1;
             set
             {
                 try
                 {
-                    if (value != null)
+                    if (value >= 0)
                     {
                         craftGroup1 = value;
                     }
@@ -244,14 +234,14 @@ namespace BicBizz
             }
         }
 
-        public string CraftGroup2
+        public int CraftGroup2
         {
             get => craftGroup2;
             set
             {
                 try
                 {
-                    if (value != null)
+                    if (value >= 0)
                     {
                         craftGroup2 = value;
                     }
@@ -264,14 +254,14 @@ namespace BicBizz
             }
         }
 
-        public string CraftGroup3
+        public int CraftGroup3
         {
             get => craftGroup3;
             set
             {
                 try
                 {
-                    if (value != null)
+                    if (value >= 0)
                     {
                         craftGroup3 = value;
                     }
@@ -284,16 +274,36 @@ namespace BicBizz
             }
         }
 
-        public string CraftGroup4
+        public int CraftGroup4
         {
             get => craftGroup4;
             set
             {
                 try
                 {
-                    if (value != null)
+                    if (value >= 0)
                     {
                         craftGroup4 = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public int Region
+        {
+            get => region;
+            set
+            {
+                try
+                {
+                    if (value >= 0)
+                    {
+                        region = value;
                     }
                 }
                 catch (Exception ex)
@@ -314,26 +324,6 @@ namespace BicBizz
                     if (value.Equals(true) || value.Equals(false))
                     {
                         countryWide = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
-
-        public int Area
-        {
-            get => area;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        area = value;
                     }
                 }
                 catch (Exception ex)

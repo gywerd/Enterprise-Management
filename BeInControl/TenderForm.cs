@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BicBizz
 {
-    public class ProjectStatus
+    public class TenderForm
     {
         #region Fields
         private int id;
@@ -21,19 +21,21 @@ namespace BicBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public ProjectStatus() { }
+        public TenderForm()
+        {
+        }
 
         /// <summary>
         /// Empty constructor, that activates Db-connection
         /// </summary>
         /// <param name="strCon">string</param>
-        public ProjectStatus(string strCon)
+        public TenderForm(string strCon)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
         }
 
-        public ProjectStatus(int id, string description)
+        public TenderForm(int id, string description)
         {
             this.id = id;
             this.description = description;
@@ -55,15 +57,15 @@ namespace BicBizz
         /// Retrieves a list of project statuses from Db
         /// </summary>
         /// <returns></returns>
-        public List<ProjectStatus> GetProjectStatusList()
+        public List<TenderForm> GetTenderForms()
         {
-            List<string> results = executor.ReadListFromDataBase("ProjectStatusList");
-            List<ProjectStatus> statuses = new List<ProjectStatus>();
+            List<string> results = executor.ReadListFromDataBase("TenderForms");
+            List<TenderForm> statuses = new List<TenderForm>();
             foreach (string result in results)
             {
                 string[] resultArray = new string[2];
                 resultArray = result.Split(';');
-                ProjectStatus status = new ProjectStatus(Convert.ToInt32(resultArray[0]), resultArray[1]);
+                TenderForm status = new TenderForm(Convert.ToInt32(resultArray[0]), resultArray[1]);
                 statuses.Add(status);
             }
             return statuses;
@@ -72,7 +74,10 @@ namespace BicBizz
         #endregion
 
         #region Properties
-        public int Id { get => id; }
+        public int Id
+        {
+            get => id;
+        }
 
         public string Description
         {
@@ -92,6 +97,6 @@ namespace BicBizz
                 }
             }
         }
-        #endregion
     }
+    #endregion
 }

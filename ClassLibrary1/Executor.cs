@@ -23,6 +23,7 @@ namespace BicDataAccess
         {
             StrConnectionString = strCon;
         }
+
         public List<string> ReadListFromDataBase(string table)
         {
             List<string> listRes = new List<string>();
@@ -40,5 +41,13 @@ namespace BicDataAccess
             }
             return listRes;
         }
+
+        public bool WriteToDataBase(string table, string strSql)
+        {
+            bool result = true;
+            FunctionExecuteNonQuery(strSql);
+            return result;
+        }
+
     }
 }

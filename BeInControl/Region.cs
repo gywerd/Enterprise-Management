@@ -10,8 +10,8 @@ namespace BicBizz
     public class Region
     {
         #region Fields
-        private int regionId;
-        private string regionName;
+        private int id;
+        private string region;
         private string zips;
 
         private static string strConnection;
@@ -44,7 +44,7 @@ namespace BicBizz
         /// <param name="zips">string</param>
         public Region(string regionName, string zips)
         {
-            this.regionName = regionName;
+            this.region = regionName;
             this.zips = zips;
         }
 
@@ -56,8 +56,8 @@ namespace BicBizz
         /// <param name="zips">string</param>
         public Region(int id, string regionName, string zips)
         {
-            this.regionId = id;
-            this.regionName = regionName;
+            this.id = id;
+            this.region = regionName;
             this.zips = zips;
         }
 
@@ -70,7 +70,7 @@ namespace BicBizz
         /// <returns></returns>
         public override string ToString()
         {
-            return regionName;
+            return region;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace BicBizz
         /// <returns></returns>
         public List<Region> GetGeography()
         {
-            List<string> results = executor.ReadListFromDataBase("Geography");
+            List<string> results = executor.ReadListFromDataBase("Regions");
             List<Region> geography = new List<Region>();
             foreach (string result in results)
             {
@@ -94,21 +94,18 @@ namespace BicBizz
         #endregion
 
         #region Properties
-        public int RegionId
-        {
-            get => regionId;
-        }
+        public int Id { get => id; }
 
         public string RegionName
         {
-            get => regionName;
+            get => region;
             set
             {
                 try
                 {
                     if (value != null)
                     {
-                        regionName = value;
+                        region = value;
                     }
                 }
                 catch (Exception ex)

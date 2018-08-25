@@ -10,7 +10,7 @@ namespace BicBizz
     public class Address
     {
         #region Fields
-        private int addressId;
+        private int id;
         private string street;
         private string place;
         private string zip;
@@ -18,7 +18,7 @@ namespace BicBizz
         private static string strConnection;
         private Executor executor;
 
-        public static ZipTown CZT = new ZipTown(strConnection);
+        public static ZipTown CZT = new ZipTown();
 
         #endregion
 
@@ -36,6 +36,12 @@ namespace BicBizz
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
+
+            CZT = new ZipTown(strConnection);
+
+            this.street = "";
+            this.place = "";
+            this.zip = "";
         }
 
         /// <summary>
@@ -60,7 +66,7 @@ namespace BicBizz
         /// <param name="place">string</param>
         public Address(int id, string street, string place, string zip)
         {
-            this.addressId = id;
+            this.id = id;
             this.street = street;
             this.place = place;
             this.zip = zip;
@@ -73,11 +79,16 @@ namespace BicBizz
         {
             ZipTown zipTown = GetZipTown(zip);
             string tempAddress;
-            tempAddress = street + "\n" + place + "\n" + zipTown.ToString();
+            tempAddress = street;
+            if (place != "" && place != null)
+            {
+                tempAddress += "\n" + place;
+            }
+            tempAddress += "\n" + zipTown.ToString();
             return tempAddress;
         }
 
-        public List<Address> GetAddressList()
+        public List<Address> GetAddresses()
         {
             List<string> results = executor.ReadListFromDataBase("Addresses");
             List<Address> addresses = new List<Address>();
@@ -110,7 +121,8 @@ namespace BicBizz
 
 
         #region Properties
-        public int AddressId { get => addressId; }
+        public int Id { get => id; }
+
         public string Street
         {
             get => street;
@@ -130,6 +142,7 @@ namespace BicBizz
                 }
             }
         }
+
         public string Place
         {
             get => place;
@@ -149,6 +162,7 @@ namespace BicBizz
                 }
             }
         }
+
         public string Zip
         {
             get => zip;
@@ -168,6 +182,7 @@ namespace BicBizz
                 }
             }
         }
+
         #endregion
     }
 }

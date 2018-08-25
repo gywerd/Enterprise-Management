@@ -141,7 +141,7 @@ namespace BicBizz
         /// Retrieves a list of regions from Db
         /// </summary>
         /// <returns></returns>
-        public List<Request> GetRequestList()
+        public List<Request> GetRequests()
         {
             List<string> results = executor.ReadListFromDataBase("Requests");
             List<Request> requests = new List<Request>();

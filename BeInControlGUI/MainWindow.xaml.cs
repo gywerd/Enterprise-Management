@@ -21,11 +21,10 @@ namespace BicGui
     public partial class BicGui : Window
     {
         #region Fields
-        public UcLogin UcLogin;
         public Bizz Bizz = new Bizz();
-        public UcLoginHelp ucLoginHelp;
-        public UcLogin ucLogin;
-        public UcProject ucProject;
+        public UcLogin UcLogin;
+        public UcLoginHelp UcLoginHelp;
+        public UcProject UcProject;
         #endregion
 
         public BicGui()
@@ -42,29 +41,25 @@ namespace BicGui
         }
 
         #region Methods
-        private void OpenUcLoginHelp()
-        {
-            ucLoginHelp = new UcLoginHelp();
-            UcLeft.Content = ucLoginHelp;
-        }
-
         private void OpenUcLogin()
         {
             Bizz.UcRightActive = true;
-            ucLogin = new UcLogin(Bizz, TabOffer, TabAdministration, Users, CraftGroups, EnterpriseForms, Status, MenuItemChangePassWord, MenuItemLogOut, UserName, UcLeft, UcRight);
-            UcRight.Content = ucLogin;
+            UcLogin = new UcLogin(Bizz, TabOffer, TabAdministration, Users, CraftGroups, EnterpriseForms, Status, MenuItemChangePassWord, MenuItemLogOut, UserName, UcLeft, UcRight);
+            UcRight.Content = UcLogin;
         }
+
+        private void OpenUcLoginHelp()
+        {
+            UcLoginHelp = new UcLoginHelp();
+            UcLeft.Content = UcLoginHelp;
+        }
+
         #endregion
 
         #region Buttons
         private void ButtonAbout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Entreprise Manager V. 0.1 ALPHA\n\n©Jorton\n©2018 Daniel Giversen", "Om Underentrepenører", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void ButtonNewsV115_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Endnu ikke implementeret", "BeInControl 1.1.5", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Jorton Underentrepenør Database V. 0.2 ALPHA\n\n©2018 Jorton\n©2018 Daniel Giversen", "Om Jorton Underentrepenør Database", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ButtonBicV116_Click(object sender, RoutedEventArgs e)
@@ -89,7 +84,7 @@ namespace BicGui
 
         private void ButtonEnterpriseManagerV10_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Endnu ikke implementeret", "Enterprise Manager 1.0", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Endnu ikke implementeret", "Jorton Underentrepenør Database 1.0", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ButtonFormList_Click(object sender, RoutedEventArgs e)
@@ -127,6 +122,11 @@ namespace BicGui
             MessageBox.Show("Endnu ikke implementeret", "Hjælp", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        private void ButtonNewsV115_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Endnu ikke implementeret", "BeInControl 1.1.5", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
         private void ButtonOptions_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Endnu ikke implementeret", "Indstillinger", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -136,19 +136,19 @@ namespace BicGui
         {
             if (Bizz.UcRightActive)
             {
-                ucProject = new UcProject(Bizz, UcLeft, UcRight);
+                UcProject = new UcProject(Bizz, UcLeft, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Projekt'. Alt, der ikke er gemt vil blive mistet!", "Åbn Projekt", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    UcLeft.Content = ucProject;
+                    UcLeft.Content = UcProject;
                     Bizz.UcRightActive = false;
                     UcRight.Content = new UserControl();
                 }
             }
             else
             {
-                ucProject = new UcProject(Bizz, UcLeft, UcRight);
+                UcProject = new UcProject(Bizz, UcLeft, UcRight);
                 Bizz.UcRightActive = false;
-                UcLeft.Content = ucProject;
+                UcLeft.Content = UcProject;
                 UcRight.Content = new UserControl();
             }
         }
@@ -177,6 +177,7 @@ namespace BicGui
         {
             MessageBox.Show("Endnu ikke implementeret", "Tilføj Entrepenør", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
         private void ButtonSubEntrepeneurRemove_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Endnu ikke implementeret", "Fjern Entrepenør", MessageBoxButton.OK, MessageBoxImage.Information);

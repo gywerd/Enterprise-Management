@@ -10,15 +10,15 @@ namespace BicBizz
     public class Enterprise
     {
         #region Fields
-        private int enterpriseId;
+        private int id;
         private int project;
         private string name;
         private string elaboration;
         private string offerList;
-        private string craftGroup1;
-        private string craftGroup2;
-        private string craftGroup3;
-        private string craftGroup4;
+        private int craftGroup1;
+        private int craftGroup2;
+        private int craftGroup3;
+        private int craftGroup4;
 
         private static string strConnection;
         private Executor executor;
@@ -52,7 +52,7 @@ namespace BicBizz
         /// <param name="craftGroup2">string</param>
         /// <param name="craftGroup3">string</param>
         /// <param name="craftGroup4">string</param>
-        public Enterprise(int project, string name, string craftGroup1, string elaboration = "", string offerList = "", string craftGroup2 ="", string craftGroup3 = "", string craftGroup4 = "")
+        public Enterprise(int project, string name, int craftGroup1, string elaboration = "", string offerList = "", int craftGroup2 = 0, int craftGroup3 = 0, int craftGroup4 = 0)
         {
             this.project = project;
             this.name = name;
@@ -76,9 +76,9 @@ namespace BicBizz
         /// <param name="craftGroup2">string</param>
         /// <param name="craftGroup3">string</param>
         /// <param name="craftGroup4">string</param>
-        public Enterprise(int id, int project, string name, string elaboration, string offerList, string craftGroup1, string craftGroup2, string craftGroup3, string craftGroup4)
+        public Enterprise(int id, int project, string name, string elaboration, string offerList, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4)
         {
-            this.enterpriseId = id;
+            this.id = id;
             this.project = project;
             this.name = name;
             this.elaboration = elaboration;
@@ -98,13 +98,13 @@ namespace BicBizz
 
         public List<Enterprise> GetEnterpriseList()
         {
-            List<string> results = executor.ReadListFromDataBase("EnterpriseLists");
+            List<string> results = executor.ReadListFromDataBase("EnterpriseList");
             List<Enterprise> enterprises = new List<Enterprise>();
             foreach (string result in results)
             {
                 string[] resultArray = new string[9];
                 resultArray = result.Split(';');
-                Enterprise enterprise = new Enterprise(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), resultArray[2], resultArray[3], resultArray[4], resultArray[5], resultArray[6], resultArray[7], resultArray[8]);
+                Enterprise enterprise = new Enterprise(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), resultArray[2], resultArray[3], resultArray[4], Convert.ToInt32(resultArray[5]), Convert.ToInt32(resultArray[6]), Convert.ToInt32(resultArray[7]), Convert.ToInt32(resultArray[8]));
                 enterprises.Add(enterprise);
             }
             return enterprises;
@@ -113,7 +113,7 @@ namespace BicBizz
         #endregion
 
         #region Properties
-        public int EnterpriseId { get => enterpriseId; }
+        public int Id { get => id; }
         public int Project
         {
             get => project;

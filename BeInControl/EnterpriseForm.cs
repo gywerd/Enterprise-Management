@@ -61,7 +61,7 @@ namespace BicBizz
         /// Retrieves a list of Enterprise Forms from Db
         /// </summary>
         /// <returns></returns>
-        public List<EnterpriseForm> GetEnterpriseFormList()
+        public List<EnterpriseForm> GetEnterpriseForms()
         {
             List<string> results = executor.ReadListFromDataBase("EnterpriseForms");
             List<EnterpriseForm> enterpriseForms = new List<EnterpriseForm>();

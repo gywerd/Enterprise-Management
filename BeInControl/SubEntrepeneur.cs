@@ -161,7 +161,7 @@ namespace BicBizz
         /// Retrieves a list of subentrepeneurs from Db
         /// </summary>
         /// <returns></returns>
-        public List<SubEntrepeneur> GetSubEntrepeneurList()
+        public List<SubEntrepeneur> GetSubEntrepeneurs()
         {
             List<string> results = executor.ReadListFromDataBase("SubEntrepeneurs");
             List<SubEntrepeneur> subs = new List<SubEntrepeneur>();
@@ -185,9 +185,9 @@ namespace BicBizz
             List<LegalEntity> entrepeneurs = CLE.GetLegalEntities();
             foreach (LegalEntity entrepeneur in entrepeneurs)
             {
-                if (entrepeneur.EntityId == this.entrepeneur)
+                if (entrepeneur.Id == this.entrepeneur)
                 {
-                    result = entrepeneur.CompanyName;
+                    result = entrepeneur.Name;
                     return result;
                 }
             }

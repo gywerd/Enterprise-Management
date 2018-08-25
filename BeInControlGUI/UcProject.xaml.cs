@@ -21,9 +21,11 @@ namespace BicGui
     /// </summary>
     public partial class UcProject : UserControl
     {
+        #region Fields
         public Bizz Bizz;
         public UserControl UcRight;
         public UserControl UcLeft;
+        #endregion
 
         public UcProject(Bizz bizz, UserControl ucLeft, UserControl ucRight)
         {
@@ -33,18 +35,19 @@ namespace BicGui
             this.UcRight = ucRight;
         }
 
+        #region Buttons
+        private void ButtonCopyProject_Click(object sender, RoutedEventArgs e)
+        {
+            Bizz.UcRightActive = true;
+            UcCopyProject ucCopyProject = new UcCopyProject(Bizz, UcRight);
+            UcRight.Content = ucCopyProject;
+        }
+
         private void ButtonCreateProject_Click(object sender, RoutedEventArgs e)
         {
             Bizz.UcRightActive = true;
             UcCreateProject ucCreateProject = new UcCreateProject(Bizz, UcRight);
             UcRight.Content = ucCreateProject;
-        }
-
-        private void ButtonEditProject_Click(object sender, RoutedEventArgs e)
-        {
-            Bizz.UcRightActive = true;
-            UcEditProject ucEditProject = new UcEditProject(Bizz, UcRight);
-            UcRight.Content = ucEditProject;
         }
 
         private void ButtonEditCaseId_Click(object sender, RoutedEventArgs e)
@@ -54,6 +57,13 @@ namespace BicGui
             UcRight.Content = ucEditCaseId;
         }
 
+        private void ButtonEditProject_Click(object sender, RoutedEventArgs e)
+        {
+            Bizz.UcRightActive = true;
+            UcEditProject ucEditProject = new UcEditProject(Bizz, UcRight);
+            UcRight.Content = ucEditProject;
+        }
+
         private void ButtonReactivateProject_Click(object sender, RoutedEventArgs e)
         {
             Bizz.UcRightActive = true;
@@ -61,11 +71,6 @@ namespace BicGui
             UcRight.Content = ucReactivateProject;
         }
 
-        private void ButtonCopyProject_Click(object sender, RoutedEventArgs e)
-        {
-            Bizz.UcRightActive = true;
-            UcCopyProject ucCopyProject = new UcCopyProject(Bizz, UcRight);
-            UcRight.Content = ucCopyProject;
-        }
+        #endregion
     }
 }

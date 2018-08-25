@@ -10,7 +10,7 @@ namespace BicBizz
     public class Category
     {
         #region Fields
-        private int categoryId;
+        private int id;
         private string name;
 
         private static string strConnection;
@@ -38,7 +38,7 @@ namespace BicBizz
         /// <param name="name">string</param>
         public Category(int id, string name)
         {
-            this.categoryId = id;
+            this.id = id;
             this.name = name;
         }
 
@@ -50,7 +50,7 @@ namespace BicBizz
             return name;
         }
 
-        public List<Category> GetCategoryList()
+        public List<Category> GetCategories()
         {
             List<string> results = executor.ReadListFromDataBase("Categories");
             List<Category> cats = new List<Category>();
@@ -69,7 +69,7 @@ namespace BicBizz
         #endregion
 
         #region Properties
-        public int CategoryId { get => categoryId; }
+        public int Id { get => id; }
 
         public string Name
         {
@@ -90,6 +90,7 @@ namespace BicBizz
                 }
             }
         }
+
         #endregion
 
     }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BicBizz</RootNamespace>
     <AssemblyName>BicBizz</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -65,8 +65,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActiveProject.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="Bizz.cs" />
+    <Compile Include="Builder.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="Enterprise.cs" />
     <Compile Include="EnterpriseForm.cs" />
@@ -75,12 +77,12 @@
     <Compile Include="Region.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="SubEntrepeneur.cs" />
+    <Compile Include="TenderForm.cs" />
     <Compile Include="User.cs" />
     <Compile Include="CraftGroup.cs" />
     <Compile Include="JobDescription.cs" />
     <Compile Include="LegalEntity.cs" />
     <Compile Include="Contact.cs" />
-    <Compile Include="Name.cs" />
     <Compile Include="ZipTown.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Offer.cs" />

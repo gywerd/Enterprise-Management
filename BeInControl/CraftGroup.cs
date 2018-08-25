@@ -11,11 +11,11 @@ namespace BicBizz
     public class CraftGroup
     {
         #region Fields
-        private string abbreviation;
-        private bool active;
+        private int id;
         private int category;
-        private string description;
         private string designation;
+        private string description;
+        private bool active;
 
         private static string strConnection;
         private Executor executor;
@@ -35,23 +35,27 @@ namespace BicBizz
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
+            category = 0;
+            designation = "";
+            description = "";
+            active = false;
         }
 
         /// <summary>
         /// Constructor to add craft group
         /// </summary>
-        /// <param name="abbreviation">string</param>
+        /// <param name="id">string</param>
         /// <param name="active">bool</param>
         /// <param name="category">int</param>
         /// <param name="designation">string</param>
         /// <param name="description">string</param>
-        public CraftGroup(string abbreviation, bool active, int category, string description, string designation)
+        public CraftGroup(int id, int category, string designation, string description, bool active)
         {
-            this.active = active;
+            this.id = id;
             this.category = category;
-            this.abbreviation = abbreviation;
-            this.description = description;
             this.designation = designation;
+            this.description = description;
+            this.active = active;
         }
 
         #endregion
@@ -62,7 +66,7 @@ namespace BicBizz
             return designation;
         }
 
-        public List<CraftGroup> GetCraftGroupList()
+        public List<CraftGroup> GetCraftGroups()
         {
             List<string> results = executor.ReadListFromDataBase("CraftGroups");
             List<CraftGroup> craftGroups = new List<CraftGroup>();
@@ -70,7 +74,7 @@ namespace BicBizz
             {
                 string[] resultArray = new string[5];
                 resultArray = result.Split(';');
-                CraftGroup craftGroup = new CraftGroup(resultArray[0], Convert.ToBoolean(resultArray[1]), Convert.ToInt32(resultArray[2]), resultArray[3], resultArray[4]);
+                CraftGroup craftGroup = new CraftGroup(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), resultArray[2], resultArray[3], Convert.ToBoolean(resultArray[4]));
                 craftGroups.Add(craftGroup);
             }
             return craftGroups;
@@ -79,27 +83,7 @@ namespace BicBizz
         #endregion
 
         #region Properties
-        public string Abbreviation { get => abbreviation; }
-
-        public bool Active
-        {
-            get => active;
-            set
-            {
-                try
-                {
-                    if (value.Equals(true) || value.Equals(false))
-                    {
-                        active = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
+        public int Id { get => id; }
 
         public int Category
         {
@@ -111,6 +95,26 @@ namespace BicBizz
                     if (value <= 0)
                     {
                         category = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public string Designation
+        {
+            get => designation;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        designation = value;
                     }
                 }
                 catch (Exception ex)
@@ -141,16 +145,16 @@ namespace BicBizz
             }
         }
 
-        public string Designation
+        public bool Active
         {
-            get => designation;
+            get => active;
             set
             {
                 try
                 {
-                    if (value != null)
+                    if (value.Equals(true) || value.Equals(false))
                     {
-                        designation = value;
+                        active = value;
                     }
                 }
                 catch (Exception ex)
@@ -160,6 +164,8 @@ namespace BicBizz
                 }
             }
         }
+
         #endregion
+
     }
 }

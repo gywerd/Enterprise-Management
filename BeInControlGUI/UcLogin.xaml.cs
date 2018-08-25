@@ -34,8 +34,8 @@ namespace BicGui
         public RibbonApplicationMenuItem MenuItemChangePassWord;
         public RibbonApplicationMenuItem MenuItemLogOut;
         public TextBlock UserName;
-        public UserControl UcRight;
         public UserControl UcLeft;
+        public UserControl UcRight;
 
         public static Bizz CBZ = new Bizz();
         #endregion
