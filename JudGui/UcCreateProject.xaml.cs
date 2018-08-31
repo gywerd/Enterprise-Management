@@ -40,7 +40,7 @@ namespace JudGui
         #region Buttons
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
-            //Warnig about lost changes before closing
+            //Warning about lost changes before closing
             if (MessageBox.Show("Vil du annullere oprettelse af projektet?", "Luk Projekt", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 //Close right UserControl
@@ -173,7 +173,7 @@ namespace JudGui
             }
         }
 
-       /// <summary>
+        /// <summary>
         /// Method, that reloads list of active projects
         /// </summary>
         private void ReloadListActiveProjects()

@@ -17,6 +17,7 @@ namespace JudBizz
         public static string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=JortonSubEnt;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public User CurrentUser = new User(strConnection);
         public Address tempAddress = new Address(strConnection);
+        public Enterprise tempEnterprise = new Enterprise(strConnection);
         public ZipTown tempZipTown = new ZipTown(strConnection);
         public Project tempProject = new Project(strConnection);
         public bool UcRightActive = false;

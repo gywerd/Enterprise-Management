@@ -62,9 +62,9 @@
                                   Click="ButtonProject_Click"
                                   Label="Projekt" 
                                   LargeImageSource="images/project.png" />
-                    <RibbonButton x:Name="ButtonEnterprise" 
-                                  Click="ButtonEnterprise_Click"
-                                  Label="Entreprise"
+                    <RibbonButton x:Name="ButtonEnterprises" 
+                                  Click="ButtonEnterprises_Click"
+                                  Label="Entrepriser"
                                   LargeImageSource="images/enterprise.png"  />
                     <RibbonButton x:Name="ButtonSubEntrepeneurs" 
                                   Click="ButtonSubEntrepeneurs_Click"

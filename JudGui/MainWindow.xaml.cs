@@ -195,7 +195,7 @@ namespace JudGui
             }
         }
 
-        private void ButtonEnterprise_Click(object sender, RoutedEventArgs e)
+        private void ButtonEnterprises_Click(object sender, RoutedEventArgs e)
         {
             if (Bizz.UcRightActive)
             {

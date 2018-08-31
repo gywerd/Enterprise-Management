@@ -33,26 +33,47 @@ namespace JudBizz
         public Enterprise() { }
 
         /// <summary>
-        /// Executor, that activates Db-connection
+        /// Empty Constructor with Db-connection
         /// </summary>
         /// <param name="strCon">string</param>
         public Enterprise(string strCon)
         {
+
             strConnection = strCon;
             executor = new Executor(strConnection);
         }
 
         /// <summary>
+        /// Constructor for that accepts data from existing Enterprise
+        /// </summary>
+        /// <param name="enterprise">Enterprise</param>
+        public Enterprise(Enterprise enterprise)
+        {
+            if (enterprise != null)
+            {
+                this.id = enterprise.id;
+                this.project = enterprise.Project;
+                this.name = enterprise.Name;
+                this.elaboration = enterprise.Elaboration;
+                this.offerList = enterprise.OfferList;
+                this.craftGroup1 = enterprise.CraftGroup1;
+                this.craftGroup2 = enterprise.CraftGroup2;
+                this.craftGroup3 = enterprise.CraftGroup3;
+                this.craftGroup4 = enterprise.CraftGroup4;
+            }
+        }
+
+        /// <summary>
         /// Constructor for adding new Enterprise
         /// </summary>
-        /// <param name="name">string</param>
         /// <param name="project">int</param>
-        /// <param name="craftGroup1">string</param>
+        /// <param name="name">string</param>
+        /// <param name="craftGroup1">int</param>
         /// <param name="elaboration">string</param>
         /// <param name="offerList">string</param>
-        /// <param name="craftGroup2">string</param>
-        /// <param name="craftGroup3">string</param>
-        /// <param name="craftGroup4">string</param>
+        /// <param name="craftGroup2">int</param>
+        /// <param name="craftGroup3">int</param>
+        /// <param name="craftGroup4">int</param>
         public Enterprise(int project, string name, int craftGroup1, string elaboration = "", string offerList = "", int craftGroup2 = 0, int craftGroup3 = 0, int craftGroup4 = 0)
         {
             this.project = project;
@@ -69,14 +90,14 @@ namespace JudBizz
         /// Constructor for adding Enterprise from Db
         /// </summary>
         /// <param name="id">int</param>
-        /// <param name="name">string</param>
         /// <param name="project">int</param>
+        /// <param name="name">string</param>
         /// <param name="elaboration">string</param>
         /// <param name="offerList">string</param>
-        /// <param name="craftGroup1">string</param>
-        /// <param name="craftGroup2">string</param>
-        /// <param name="craftGroup3">string</param>
-        /// <param name="craftGroup4">string</param>
+        /// <param name="craftGroup1">int</param>
+        /// <param name="craftGroup2">int</param>
+        /// <param name="craftGroup3">int</param>
+        /// <param name="craftGroup4">int</param>
         public Enterprise(int id, int project, string name, string elaboration, string offerList, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4)
         {
             this.id = id;
@@ -85,13 +106,56 @@ namespace JudBizz
             this.elaboration = elaboration;
             this.offerList = offerList;
             this.craftGroup1 = craftGroup1;
-            this.craftGroup2 = craftGroup1;
+            this.craftGroup2 = craftGroup2;
             this.craftGroup3 = craftGroup3;
             this.craftGroup4 = craftGroup4;
         }
+
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Method, that creates a Delete SQL-Query
+        /// </summary>
+        /// <param name="enterprise">int</param>
+        /// <returns>string</returns>
+        private string CreateDeleteFromSqlQuery(int enterprise)
+        {
+            //DELETE FROM table_name WHERE condition;
+            string result = @"DELETE FROM dbo.EnterpriseList WHERE Project = " + enterprise + ";";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that creates an Insert Into SQL-Query
+        /// </summary>
+        /// <param name="enterprise">Enterprise</param>
+        /// <returns>string</returns>
+        private string CreateInsertIntoSqlQuery(Enterprise enterprise)
+        {
+            //INSERT INTO table_name (column1, column2, column3, ...) VALUES(value1, value2, value3, ...);
+            string dataString = GetDataStringFromEnterprise(enterprise);
+            string result = @"INSERT INTO dbo.EnterpriseList(Project, Name, Elaboration, OfferList, CraftGroup1, CraftGroup2, CraftGroup3, CraftGroup4) VALUES(";
+            result += dataString + @");";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that creates an Update SQL-Query
+        /// </summary>
+        /// <param name="enterprise">Enterprise</param>
+        /// <returns>string</returns>
+        private string CreateUpdateSqlQuery(Enterprise enterprise)
+        {
+            //UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+            string result = @"UPDATE dbo.EnterpriseList SET Project = " + enterprise.Project.ToString() + ", Name = '" + enterprise.Name + "', Elaboration = '" + enterprise.Elaboration + "', OfferList = '" + enterprise.OfferList + "', CraftGroup1 = " + enterprise.CraftGroup1.ToString() + ", CraftGroup2 = " + enterprise.CraftGroup2.ToString() + ", CraftGroup3 = " + enterprise.CraftGroup3.ToString() + ", CraftGroup4 = " + enterprise.CraftGroup4.ToString() + " WHERE Id = " + enterprise.Id + ";";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that removes an Enterprise from Db
+        /// </summary>
+        /// <param name="enterprise">int</param>
         public void DeleteFromEnterpriseList(int enterprise)
         {
             try
@@ -106,18 +170,21 @@ namespace JudBizz
             }
         }
 
-        private string CreateDeleteFromSqlQuery(int enterprise)
+        /// <summary>
+        /// Method, converts an Enterprise into a data string
+        /// </summary>
+        /// <param name="enterprise">Enterprise</param>
+        /// <returns>string</returns>
+        private string GetDataStringFromEnterprise(Enterprise enterprise)
         {
-            //DELETE FROM table_name WHERE condition;
-            string result = @"DELETE FROM dbo.EnterpriseList WHERE Project = " + enterprise + ";";
+            string result = enterprise.Project.ToString() + @", '" + enterprise.Name + @"', '" + enterprise.Elaboration + @"', '" + enterprise.OfferList + @"', " + enterprise.CraftGroup1.ToString() + @", " + enterprise.CraftGroup2.ToString() + @", " + enterprise.CraftGroup3.ToString() + @", " + enterprise.CraftGroup4.ToString();
             return result;
         }
 
-        public override string ToString()
-        {
-            return name;
-        }
-
+        /// <summary>
+        /// Method, that loads the Enterprise List from Db
+        /// </summary>
+        /// <returns>List<Enterprise></returns>
         public List<Enterprise> GetEnterpriseList()
         {
             List<string> results = executor.ReadListFromDataBase("EnterpriseList");
@@ -132,10 +199,46 @@ namespace JudBizz
             return enterprises;
         }
 
+        /// <summary>
+        /// Method, that adds an Enterprise to Db
+        /// </summary>
+        /// <param name="tempEnterprise">Enterprise</param>
+        /// <returns>bool</returns>
+        public bool InsertIntoEnterpriseList(Enterprise tempEnterprise)
+        {
+            bool result;
+            string strSql = CreateInsertIntoSqlQuery(tempEnterprise);
+            result = executor.WriteToDataBase(strSql);
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that returns main info as a string
+        /// </summary>
+        /// <returns>string</returns>
+        public override string ToString()
+        {
+            return name;
+        }
+
+        /// <summary>
+        /// Method, that updates an Enterprise in Db
+        /// </summary>
+        /// <param name="tempEnterprise"></param>
+        /// <returns>bool</returns>
+        public bool UpdateEnterpriseList(Enterprise tempEnterprise)
+        {
+            bool result;
+            string strSql = CreateUpdateSqlQuery(tempEnterprise);
+            result = executor.WriteToDataBase(strSql);
+            return result;
+        }
+
         #endregion
 
         #region Properties
         public int Id { get => id; }
+
         public int Project
         {
             get => project;
@@ -155,6 +258,7 @@ namespace JudBizz
                 }
             }
         }
+
         public string Name
         {
             get => name;
@@ -174,6 +278,7 @@ namespace JudBizz
                 }
             }
         }
+
         public string Elaboration
         {
             get => elaboration;
@@ -193,6 +298,7 @@ namespace JudBizz
                 }
             }
         }
+
         public string OfferList
         {
             get => offerList;
@@ -212,6 +318,87 @@ namespace JudBizz
                 }
             }
         }
+
+        public int CraftGroup1
+        {
+            get => craftGroup1;
+            set
+            {
+                try
+                {
+                    if (value >= 0)
+                    {
+                        craftGroup1 = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public int CraftGroup2
+        {
+            get => craftGroup2;
+            set
+            {
+                try
+                {
+                    if (value >= 0)
+                    {
+                        craftGroup2 = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public int CraftGroup3
+        {
+            get => craftGroup3;
+            set
+            {
+                try
+                {
+                    if (value >= 0)
+                    {
+                        craftGroup3 = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
+        public int CraftGroup4
+        {
+            get => craftGroup4;
+            set
+            {
+                try
+                {
+                    if (value >= 0)
+                    {
+                        craftGroup4 = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+        }
+
         #endregion
     }
 }

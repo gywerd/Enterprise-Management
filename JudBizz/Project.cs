@@ -32,6 +32,10 @@ namespace JudBizz
         /// </summary>
         public Project() { }
 
+        /// <summary>
+        /// Empty Constructor with Db Connection
+        /// </summary>
+        /// <param name="strCon"></param>
         public Project(string strCon)
         {
             strConnection = strCon;
@@ -48,6 +52,10 @@ namespace JudBizz
             copy = false;
         }
 
+        /// <summary>
+        /// Constructor that receives data from an existing Project
+        /// </summary>
+        /// <param name="project"></param>
         public Project(Project project)
         {
             this.id = project.Id;
@@ -116,23 +124,72 @@ namespace JudBizz
         #endregion
 
         #region Methods
-        public void ToggleCopy()
+        /// <summary>
+        /// Method, that Create a Delete From SQL-Query
+        /// </summary>
+        /// <param name="project">Project</param>
+        /// <returns>string</returns>
+        private string CreateDeleteFromSqlQuery(int id)
         {
-            if (copy)
-            {
-                copy = false;
-            }
-            else
-            {
-                copy = true;
-            }
+            //DELETE FROM table_name WHERE condition;
+            string result = @"DELETE FROM dbo.Projects WHERE Id = " + id + ";";
+            return result;
         }
 
-        public void AddEnterpriseList()
+        /// <summary>
+        /// Method, that Create a Insert Into SQL-Query
+        /// </summary>
+        /// <param name="project">Project</param>
+        /// <returns>string</returns>
+        private string CreateInsertIntoSqlQuery(Project project)
         {
-            enterpriseList = true;
+            //INSERT INTO table_name (column1, column2, column3, ...) VALUES(value1, value2, value3, ...);
+            string dataString = GetDataStringFromProject(project);
+            string result = @"INSERT INTO dbo.Projects(CaseId, Name, Builder, Status, TenderForm, EnterpriseForm, Executive, EnterpriseList, Copy) VALUES(";
+            result += dataString + @");";
+            return result;
         }
 
+        /// <summary>
+        /// Method, that Create an Update SQL-Query
+        /// </summary>
+        /// <param name="project">Project</param>
+        /// <returns>string</returns>
+        private string CreateUpdateSqlQuery(Project project)
+        {
+            //UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+            string result = @"UPDATE dbo.Projects SET CaseId = " + project.CaseId + ", Name = '" + project.Name + "', Builder = " + project.Builder + ", Status = " + project.Status + ", TenderForm = " + project.TenderForm + ", EnterpriseForm = " + project.EnterpriseForm + ", Executive = " + project.Executive + ", EnterpriseList = '" + project.EnterpriseList + "', Copy = '" + project.Copy + "' WHERE Id = " + project.Id + ";";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that deletes a Project from the Db
+        /// </summary>
+        /// <param name="id">int</param>
+        /// <returns>bool</returns>
+        public bool DeleteFromProject(int id)
+        {
+            bool result;
+            string strSql = CreateDeleteFromSqlQuery(id);
+            result = executor.WriteToDataBase(strSql);
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that converts a project into a data string for SQL-Query
+        /// </summary>
+        /// <param name="project">Project</param>
+        /// <returns></returns>
+        private string GetDataStringFromProject(Project project)
+        {
+            string result = project.CaseId + @", '" + project.Name + @"', " + project.Builder + @", " + project.Status + @", " + project.TenderForm + @", " + project.EnterpriseForm + @", " + project.Executive + @", 'false', 'false'";
+            return result;
+        }
+
+        /// <summary>
+        /// Method that loads a Project List from Db
+        /// </summary>
+        /// <returns></returns>
         public List<Project> GetProjects()
         {
             List<string> results = executor.ReadListFromDataBase("Projects");
@@ -147,6 +204,11 @@ namespace JudBizz
             return projects;
         }
 
+        /// <summary>
+        /// Method, that adds a project to Db
+        /// </summary>
+        /// <param name="tempProject">Project</param>
+        /// <returns>bool</returns>
         public bool InsertIntoProject(Project tempProject)
         {
             bool result;
@@ -155,6 +217,44 @@ namespace JudBizz
             return result;
         }
 
+        /// <summary>
+        /// Methods that toggles value of Copy field
+        /// </summary>
+        public void ToggleCopy()
+        {
+            if (copy)
+            {
+                copy = false;
+            }
+            else
+            {
+                copy = true;
+            }
+        }
+
+        /// <summary>
+        /// Methods that toggles value of EnterpriseList field
+        /// </summary>
+        public void ToggleEnterpriseList()
+        {
+            enterpriseList = true;
+        }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns>string</returns>
+        public override string ToString()
+        {
+            string result = caseId + " " + name;
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that updates a Project in Db
+        /// </summary>
+        /// <param name="tempProject">Project</param>
+        /// <returns>bool</returns>
         public bool UpdateProject(Project tempProject)
         {
             bool result;
@@ -163,59 +263,6 @@ namespace JudBizz
             return result;
         }
 
-        public bool DeleteFromProject(int id)
-        {
-            bool result;
-            string strSql = CreateDeleteFromSqlQuery(id);
-            result = executor.WriteToDataBase(strSql);
-            return result;
-        }
-
-        /// <summary>
-        /// Returns main content as a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            string result = caseId + " " + name;
-            return result;
-        }
-
-        private string CreateInsertIntoSqlQuery(Project project)
-        {
-            //INSERT INTO table_name (column1, column2, column3, ...) VALUES(value1, value2, value3, ...);
-            string dataString = GetDataStringFromProject(project);
-            string result = @"INSERT INTO dbo.Projects(CaseId, Name, Builder, Status, TenderForm, EnterpriseForm, Executive, EnterpriseList, Copy) VALUES(";
-            result += dataString + @");";
-            return result;
-        }
-
-        private string CreateUpdateSqlQuery(Project project)
-        {
-            //UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
-            string result = @"UPDATE dbo.Projects SET CaseId = " + project.CaseId + ", Name = '" + project.Name + "', Builder = " + project.Builder + ", Status = " + project.Status + ", TenderForm = " + project.TenderForm + ", EnterpriseForm = " + project.EnterpriseForm + ", Executive = " + project.Executive + ", EnterpriseList = '" + project.EnterpriseList + "', Copy = '" + project.Copy + "' WHERE Id = " + project.Id + ";";
-            return result;
-        }
-
-        private string CreateDeleteFromSqlQuery(int id)
-        {
-            //DELETE FROM table_name WHERE condition;
-            string result = @"DELETE FROM dbo.Projects WHERE Id = " + id + ";";
-            return result;
-        }
-
-        private string GetDataStringFromProject(Project project)
-        {
-            string result = project.CaseId + @", '" + project.Name + @"', " + project.Builder + @", " + project.Status + @", " + project.TenderForm + @", " + project.EnterpriseForm + @", " + project.Executive + @", 'false', 'false'";
-            return result;
-        }
-
-        private string GetValueStringFromArray(string[] array)
-        {
-            string result = "";
-            result = result.Remove(result.Length - 1);
-            return result;
-        }
         #endregion
 
         #region Properties

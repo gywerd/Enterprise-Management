@@ -40,63 +40,6 @@ namespace JudGui
             GenerateComboBoxExecutiveItems();
         }
 
-        #region Methods
-        private void GenerateComboBoxCaseIdItems()
-        {
-            ComboBoxCaseId.Items.Clear();
-            foreach (IndexableProject temp in Bizz.ActiveProjects)
-            {
-                ComboBoxCaseId.Items.Add(temp);
-            }
-        }
-
-        private void GenerateComboBoxBuilderItems()
-        {
-            ComboBoxBuilder.Items.Clear();
-            foreach (Builder temp in Bizz.Builders)
-            {
-                ComboBoxBuilder.Items.Add(temp);
-            }
-        }
-
-        private void GenerateComboBoxProjectStatusItems()
-        {
-            ComboBoxProjectStatus.Items.Clear();
-            foreach (ProjectStatus temp in Bizz.ProjectStatusList)
-            {
-                ComboBoxProjectStatus.Items.Add(temp);
-            }
-        }
-
-        private void GenerateComboBoxTenderFormItems()
-        {
-            ComboBoxTenderForm.Items.Clear();
-            foreach (TenderForm temp in Bizz.TenderForms)
-            {
-                ComboBoxTenderForm.Items.Add(temp);
-            }
-        }
-
-        private void GenerateComboBoxEnterpriseFormItems()
-        {
-            ComboBoxEnterpriseForm.Items.Clear();
-            foreach (EnterpriseForm temp in Bizz.EnterpriseForms)
-            {
-                ComboBoxEnterpriseForm.Items.Add(temp);
-            }
-        }
-
-        private void GenerateComboBoxExecutiveItems()
-        {
-            ComboBoxExecutive.Items.Clear();
-            foreach (User temp in Bizz.Users)
-            {
-                ComboBoxExecutive.Items.Add(temp);
-            }
-        }
-
-        #endregion
-
         #region Buttons
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
@@ -191,6 +134,60 @@ namespace JudGui
         #endregion
 
         #region Methods
+        private void GenerateComboBoxCaseIdItems()
+        {
+            ComboBoxCaseId.Items.Clear();
+            foreach (IndexableProject temp in Bizz.ActiveProjects)
+            {
+                ComboBoxCaseId.Items.Add(temp);
+            }
+        }
+
+        private void GenerateComboBoxBuilderItems()
+        {
+            ComboBoxBuilder.Items.Clear();
+            foreach (Builder temp in Bizz.Builders)
+            {
+                ComboBoxBuilder.Items.Add(temp);
+            }
+        }
+
+        private void GenerateComboBoxProjectStatusItems()
+        {
+            ComboBoxProjectStatus.Items.Clear();
+            foreach (ProjectStatus temp in Bizz.ProjectStatusList)
+            {
+                ComboBoxProjectStatus.Items.Add(temp);
+            }
+        }
+
+        private void GenerateComboBoxTenderFormItems()
+        {
+            ComboBoxTenderForm.Items.Clear();
+            foreach (TenderForm temp in Bizz.TenderForms)
+            {
+                ComboBoxTenderForm.Items.Add(temp);
+            }
+        }
+
+        private void GenerateComboBoxEnterpriseFormItems()
+        {
+            ComboBoxEnterpriseForm.Items.Clear();
+            foreach (EnterpriseForm temp in Bizz.EnterpriseForms)
+            {
+                ComboBoxEnterpriseForm.Items.Add(temp);
+            }
+        }
+
+        private void GenerateComboBoxExecutiveItems()
+        {
+            ComboBoxExecutive.Items.Clear();
+            foreach (User temp in Bizz.Users)
+            {
+                ComboBoxExecutive.Items.Add(temp);
+            }
+        }
+
         /// <summary>
         /// Method, that reloads list of active projects
         /// </summary>

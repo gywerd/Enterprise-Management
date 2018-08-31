@@ -223,7 +223,7 @@ namespace JudDataAccess
             }
             catch(SqlException ex)
             {
-                throw ex;
+                MessageBox.Show(ex.ToString());
             }
         }
 

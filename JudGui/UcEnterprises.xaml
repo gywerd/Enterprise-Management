@@ -19,7 +19,7 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
-        <Label x:Name="LabelEnterpriseList" Content="Entreprisee" 
+        <Label x:Name="LabelEnterpriseList" Content="Entrepriser" 
                FontSize="36" FontWeight="Bold" 
                Grid.Row="0"
                Height="60" Width="250"
