@@ -49,30 +49,14 @@ namespace JudGui
             TabAdministration.IsEnabled = false;
             HelpData.IsEnabled = false;
             Information.IsEnabled = false;
-            OpenUcLogin();
             OpenUcLoginHelp();
+            OpenUcLogin();
         }
-
-        #region Methods
-        private void OpenUcLogin()
-        {
-            Bizz.UcRightActive = true;
-            UcLogin = new UcLogin(Bizz, TabOffer, TabAdministration, HelpData, Information, MenuItemChangePassWord, MenuItemLogOut, UserName, UcLeft, UcRight);
-            UcRight.Content = UcLogin;
-        }
-
-        private void OpenUcLoginHelp()
-        {
-            UcLoginHelp = new UcLoginHelp();
-            UcLeft.Content = UcLoginHelp;
-        }
-
-        #endregion
 
         #region Buttons
         private void ButtonAbout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Jorton Underentrepenør Database V. 0.2 ALPHA\n\n©2018 Jorton\n©2018 Daniel Giversen", "Om Jorton Underentrepenør Database", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Jorton Underentrepenør Database V. 0.3 ALPHA\n\n©2018 Jorton\n©2018 Daniel Giversen", "Om Jorton Underentrepenør Database", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void ButtonBicV115_Click(object sender, RoutedEventArgs e)
@@ -94,20 +78,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcBuilders = new UcBuilders(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Kommunikation'. Alt, der ikke er gemt vil blive mistet!", "Åbn Kommunikation", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Bizz.UcRightActive = false;
-                    UcLeft.Content = UcBuilders;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcBuilders = new UcBuilders(Bizz, UcRight);
+                    UcRight.Content = UcBuilders;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcBuilders = new UcBuilders(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcBuilders;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcBuilders;
             }
         }
 
@@ -115,18 +99,18 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcCommunication = new UcCommunication(Bizz, UcLeft, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Kommunikation'. Alt, der ikke er gemt vil blive mistet!", "Åbn Kommunikation", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
                     Bizz.UcRightActive = false;
+                    UcCommunication = new UcCommunication(Bizz, UcLeft, UcRight);
                     UcLeft.Content = UcCommunication;
                     UcRight.Content = new UserControl();
                 }
             }
             else
             {
-                UcCommunication = new UcCommunication(Bizz, UcLeft, UcRight);
                 Bizz.UcRightActive = false;
+                UcCommunication = new UcCommunication(Bizz, UcLeft, UcRight);
                 UcLeft.Content = UcCommunication;
                 UcRight.Content = new UserControl();
             }
@@ -136,20 +120,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcContacts = new UcContacts(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Kommunikation'. Alt, der ikke er gemt vil blive mistet!", "Åbn Kommunikation", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Bizz.UcRightActive = false;
-                    UcLeft.Content = UcContacts;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcContacts = new UcContacts(Bizz, UcRight);
+                    UcRight.Content = UcContacts;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcContacts = new UcContacts(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcContacts;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcContacts;
             }
         }
 
@@ -157,20 +141,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcCraftCategories = new UcCraftCategories(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Kommunikation'. Alt, der ikke er gemt vil blive mistet!", "Åbn Kommunikation", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Bizz.UcRightActive = false;
-                    UcLeft.Content = UcCraftCategories;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcCraftCategories = new UcCraftCategories(Bizz, UcRight);
+                    UcRight.Content = UcCraftCategories;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcCraftCategories = new UcCraftCategories(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcCraftCategories;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcCraftCategories;
             }
         }
 
@@ -178,20 +162,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcCraftGroups = new UcCraftGroups(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Kommunikation'. Alt, der ikke er gemt vil blive mistet!", "Åbn Kommunikation", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Bizz.UcRightActive = false;
-                    UcLeft.Content = UcCraftGroups;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcCraftGroups = new UcCraftGroups(Bizz, UcRight);
+                    UcRight.Content = UcCraftGroups;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcCraftGroups = new UcCraftGroups(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcCraftGroups;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcCraftGroups;
             }
         }
 
@@ -199,18 +183,18 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcEnterprises = new UcEnterprises(Bizz, UcLeft, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Entreprise'. Alt, der ikke er gemt vil blive mistet!", "Åbn Entreprise", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
                     Bizz.UcRightActive = false;
+                    UcEnterprises = new UcEnterprises(Bizz, UcLeft, UcRight);
                     UcLeft.Content = UcEnterprises;
                     UcRight.Content = new UserControl();
                 }
             }
             else
             {
-                UcEnterprises = new UcEnterprises(Bizz, UcLeft, UcRight);
                 Bizz.UcRightActive = false;
+                UcEnterprises = new UcEnterprises(Bizz, UcLeft, UcRight);
                 UcLeft.Content = UcEnterprises;
                 UcRight.Content = new UserControl();
             }
@@ -220,24 +204,24 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcEnterpriseForms = new UcEnterpriseForms(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Kommunikation'. Alt, der ikke er gemt vil blive mistet!", "Åbn Kommunikation", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Bizz.UcRightActive = false;
-                    UcLeft.Content = UcEnterpriseForms;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcEnterpriseForms = new UcEnterpriseForms(Bizz, UcRight);
+                    UcRight.Content = UcEnterpriseForms;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcEnterpriseForms = new UcEnterpriseForms(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcEnterpriseForms;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcEnterpriseForms;
             }
         }
 
-        private void ButtonEnterpriseManagerV10_Click(object sender, RoutedEventArgs e)
+        private void ButtonJortonSubEntrepeneurDatabaseV10_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Endnu ikke implementeret", "Jorton Underentrepenør Database 1.0", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -251,20 +235,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcJobDescritions = new UcJobDescritions(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Jobbeskrivelser'. Alt, der ikke er gemt vil blive mistet!", "Åbn Jobbeskrivelser", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Bizz.UcRightActive = false;
-                    UcLeft.Content = UcJobDescritions;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcJobDescritions = new UcJobDescritions(Bizz, UcRight);
+                    UcRight.Content = UcJobDescritions;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcJobDescritions = new UcJobDescritions(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcJobDescritions;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcJobDescritions;
             }
         }
 
@@ -287,18 +271,18 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcProject = new UcProject(Bizz, UcLeft, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Projekt'. Alt, der ikke er gemt vil blive mistet!", "Åbn Projekt", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    UcLeft.Content = UcProject;
                     Bizz.UcRightActive = false;
+                    UcProject = new UcProject(Bizz, UcLeft, UcRight);
+                    UcLeft.Content = UcProject;
                     UcRight.Content = new UserControl();
                 }
             }
             else
             {
-                UcProject = new UcProject(Bizz, UcLeft, UcRight);
                 Bizz.UcRightActive = false;
+                UcProject = new UcProject(Bizz, UcLeft, UcRight);
                 UcLeft.Content = UcProject;
                 UcRight.Content = new UserControl();
             }
@@ -308,19 +292,19 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcProjectStatusList = new UcProjectStatusList(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Projektstatusliste'. Alt, der ikke er gemt vil blive mistet!", "Åbn Projektstatusliste", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
+                    Bizz.UcRightActive = true;
                     UcLeft.Content = UcProjectStatusList;
-                    Bizz.UcRightActive = false;
+                    UcProjectStatusList = new UcProjectStatusList(Bizz, UcRight);
                     UcRight.Content = new UserControl();
                 }
             }
             else
             {
-                UcProjectStatusList = new UcProjectStatusList(Bizz, UcRight);
-                Bizz.UcRightActive = false;
+                Bizz.UcRightActive = true;
                 UcLeft.Content = UcProjectStatusList;
+                UcProjectStatusList = new UcProjectStatusList(Bizz, UcRight);
                 UcRight.Content = new UserControl();
             }
         }
@@ -329,20 +313,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcRegions = new UcRegions(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Regioner'. Alt, der ikke er gemt vil blive mistet!", "Åbn Regioner", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    UcLeft.Content = UcRegions;
-                    Bizz.UcRightActive = false;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcRegions = new UcRegions(Bizz, UcRight);
+                    UcRight.Content = UcRegions;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcRegions = new UcRegions(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcRegions;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcRegions;
             }
         }
 
@@ -350,20 +334,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcSubEntrepeneurList = new UcSubEntrepeneurList(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Underentrepenørlisten'. Alt, der ikke er gemt vil blive mistet!", "Åbn Underentrepenørliste", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Bizz.UcRightActive = false;
-                    UcLeft.Content = UcSubEntrepeneurList;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcSubEntrepeneurList = new UcSubEntrepeneurList(Bizz, UcRight);
+                    UcRight.Content = UcSubEntrepeneurList;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcSubEntrepeneurList = new UcSubEntrepeneurList(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcSubEntrepeneurList;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcSubEntrepeneurList;
             }
         }
 
@@ -371,18 +355,18 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcSubEntrepeneurs = new UcSubEntrepeneurs(Bizz, UcLeft, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Underentrepenør'. Alt, der ikke er gemt vil blive mistet!", "Åbn Underentrepenør", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
                     Bizz.UcRightActive = false;
+                    UcSubEntrepeneurs = new UcSubEntrepeneurs(Bizz, UcLeft, UcRight);
                     UcLeft.Content = UcSubEntrepeneurs;
                     UcRight.Content = new UserControl();
                 }
             }
             else
             {
-                UcSubEntrepeneurs = new UcSubEntrepeneurs(Bizz, UcLeft, UcRight);
                 Bizz.UcRightActive = false;
+                UcSubEntrepeneurs = new UcSubEntrepeneurs(Bizz, UcLeft, UcRight);
                 UcLeft.Content = UcSubEntrepeneurs;
                 UcRight.Content = new UserControl();
             }
@@ -392,20 +376,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcTenderForms = new UcTenderForms(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Udbudsformer'. Alt, der ikke er gemt vil blive mistet!", "Åbn Brugere", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    UcLeft.Content = UcTenderForms;
-                    Bizz.UcRightActive = false;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcTenderForms = new UcTenderForms(Bizz, UcRight);
+                    UcRight.Content = UcTenderForms;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcTenderForms = new UcTenderForms(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcTenderForms;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcTenderForms;
             }
         }
 
@@ -413,20 +397,20 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcUsers = new UcUsers(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Brugere'. Alt, der ikke er gemt vil blive mistet!", "Åbn Brugere", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    UcLeft.Content = UcUsers;
-                    Bizz.UcRightActive = false;
-                    UcRight.Content = new UserControl();
+                    Bizz.UcRightActive = true;
+                    UcLeft.Content = new UserControl();
+                    UcUsers = new UcUsers(Bizz, UcRight);
+                    UcRight.Content = UcUsers;
                 }
             }
             else
             {
+                Bizz.UcRightActive = true;
+                UcLeft.Content = new UserControl();
                 UcUsers = new UcUsers(Bizz, UcRight);
-                Bizz.UcRightActive = false;
-                UcLeft.Content = UcUsers;
-                UcRight.Content = new UserControl();
+                UcRight.Content = UcUsers;
             }
         }
 
@@ -434,19 +418,19 @@ namespace JudGui
         {
             if (Bizz.UcRightActive)
             {
-                UcZipList = new UcZipList(Bizz, UcRight);
                 if (MessageBox.Show("Vil du åbne 'Postnummerlisten'. Alt, der ikke er gemt vil blive mistet!", "Åbn Postnummerliste", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Bizz.UcRightActive = false;
+                    Bizz.UcRightActive = true;
                     UcLeft.Content = new UserControl();
+                    UcZipList = new UcZipList(Bizz, UcRight);
                     UcRight.Content = UcZipList;
                 }
             }
             else
             {
-                UcZipList = new UcZipList(Bizz, UcRight);
-                Bizz.UcRightActive = false;
+                Bizz.UcRightActive = true;
                 UcLeft.Content = new UserControl();
+                UcZipList = new UcZipList(Bizz, UcRight);
                 UcRight.Content = UcZipList;
             }
         }
@@ -474,6 +458,22 @@ namespace JudGui
         {
             MessageBox.Show("Endnu ikke implementeret", "Ændre password", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+        #endregion
+
+        #region Methods
+        private void OpenUcLogin()
+        {
+            Bizz.UcRightActive = true;
+            UcLogin = new UcLogin(Bizz, TabOffer, TabAdministration, HelpData, Information, MenuItemChangePassWord, MenuItemLogOut, UserName, UcLeft, UcRight);
+            UcRight.Content = UcLogin;
+        }
+
+        private void OpenUcLoginHelp()
+        {
+            UcLoginHelp = new UcLoginHelp();
+            UcLeft.Content = UcLoginHelp;
+        }
+
         #endregion
 
     }

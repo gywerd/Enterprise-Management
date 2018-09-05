@@ -20,7 +20,7 @@
         <Ribbon x:Name="RibbonWin"  SelectedIndex="0">
             <!-- Help Pane, located at the right-hand side -->
             <Ribbon.HelpPaneContent>
-                <RibbonSplitButton x:Name="ButtonHelpMenu"
+                <RibbonSplitButton x:Name="ButtonThreeDotsMenu"
                                    Click="ButtonAbout_Click"
                                    SmallImageSource="images/three-dots.png" >
                     <RibbonButton x:Name="ButtonHelp" 
@@ -86,11 +86,11 @@
                 <!-- News Group-->
                 <RibbonGroup x:Name="News" Header="Nyheder">
                     <RibbonSplitButton 
-                        Click="ButtonEnterpriseManagerV10_Click" 
+                        Click="ButtonJortonSubEntrepeneurDatabaseV10_Click" 
                         LargeImageSource="images/news.png" 
                         Label="Aktuelt">
-                        <RibbonButton x:Name="ButtonEnterpriseManagerV10" 
-                                      Click="ButtonEnterpriseManagerV10_Click"
+                        <RibbonButton x:Name="ButtonJortonSubEntrepeneurDatabaseV10" 
+                                      Click="ButtonJortonSubEntrepeneurDatabaseV10_Click"
                                       Label="Enterprise Manager V. 1.0" 
                                       SmallImageSource="images/news-small.png" />
                     </RibbonSplitButton>
