@@ -66,8 +66,10 @@ namespace JudGui
                 //Update list of projects
                 Bizz.Projects.Clear();
                 Bizz.Projects = Bizz.CPR.GetProjects();
-                ReloadListActiveProjects();
-                ReloadListIndexableProjects();
+                Bizz.ActiveProjects.Clear();
+                Bizz.ActiveProjects = Bizz.GetListActiveProjects();
+                Bizz.IndexableProjects.Clear();
+                Bizz.IndexableProjects = Bizz.GetListIndexableProjects();
 
                 //Close right UserControl
                 UcRight.Content = new UserControl();
@@ -185,39 +187,6 @@ namespace JudGui
             foreach (User temp in Bizz.Users)
             {
                 ComboBoxExecutive.Items.Add(temp);
-            }
-        }
-
-        /// <summary>
-        /// Method, that reloads list of active projects
-        /// </summary>
-        private void ReloadListActiveProjects()
-        {
-            Bizz.ActiveProjects.Clear();
-            int i = 0;
-            foreach (Project tempProject in Bizz.Projects)
-            {
-                if (tempProject.Status == 1)
-                {
-                    IndexableProject result = new IndexableProject(i, tempProject);
-                    Bizz.ActiveProjects.Add(result);
-                    i++;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Method, that reloads list of indexable projects
-        /// </summary>
-        private void ReloadListIndexableProjects()
-        {
-            Bizz.IndexableProjects.Clear();
-            int i = 0;
-            foreach (Project temp in Bizz.Projects)
-            {
-                IndexableProject result = new IndexableProject(i, temp);
-                Bizz.IndexableProjects.Add(result);
-                i++;
             }
         }
 

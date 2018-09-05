@@ -11,10 +11,10 @@ namespace JudBizz
     {
         #region Fields
         private int id;
-        private string legalEntity;
-        private string name;
-        private string description;
-        private int contactInfo;
+        protected string legalEntity;
+        protected string name;
+        protected string description;
+        protected int contactInfo;
 
         private static string strConnection;
         private Executor executor;
@@ -73,6 +73,19 @@ namespace JudBizz
             this.name = name;
             this.description = description;
             this.contactInfo = contactInfo;
+        }
+
+        /// <summary>
+        /// Constructor that accepts data from existing Contact
+        /// </summary>
+        /// <param name="contact">Contact</param>
+        public Contact(Contact contact)
+        {
+            this.id = contact.Id;
+            this.legalEntity = contact.LegalEntity;
+            this.name = contact.Name;
+            this.description = contact.Description;
+            this.contactInfo = contact.ContactInfo;
         }
 
         #endregion

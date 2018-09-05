@@ -62,7 +62,7 @@ namespace JudBizz
         /// <param name="address">int</param>
         /// <param name="contactInfo">int</param>
         /// <param name="craftGroup1">int</param>
-        public LegalEntity(string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int area, bool countryWide = false, bool cooperative = false, bool active=false)
+        public LegalEntity(string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int region, bool countryWide = false, bool cooperative = false, bool active=false)
         {
             this.name = name;
             this.address = address;
@@ -72,7 +72,7 @@ namespace JudBizz
             this.craftGroup2 = craftGroup2;
             this.craftGroup3 = craftGroup3;
             this.craftGroup4 = craftGroup4;
-            this.region = area;
+            this.region = region;
             this.countryWide = countryWide;
             this.cooperative = cooperative;
             this.active = active;
@@ -86,7 +86,7 @@ namespace JudBizz
         /// <param name="address">int</param>
         /// <param name="contact">int</param>
         /// <param name="craftGroup">int</param>
-        public LegalEntity(string id, string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int area, bool countryWide, bool cooperative, bool active)
+        public LegalEntity(string id, string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int region, bool countryWide, bool cooperative, bool active)
         {
             this.id = id;
             this.name = name;
@@ -97,11 +97,33 @@ namespace JudBizz
             this.craftGroup2 = craftGroup2;
             this.craftGroup3 = craftGroup3;
             this.craftGroup4 = craftGroup4;
-            this.region = area;
+            this.region = region;
             this.countryWide = countryWide;
             this.cooperative = cooperative;
             this.active = active;
         }
+
+        /// <summary>
+        /// Constructor that accepts data from existing LegalEntity
+        /// </summary>
+        /// <param name="legalEntity">LegalEntity</param>
+        public LegalEntity(LegalEntity legalEntity)
+        {
+            this.id = legalEntity.Id;
+            this.name = legalEntity.Name;
+            this.address = legalEntity.Address;
+            this.contactInfo = legalEntity.ContactInfo;
+            this.url = legalEntity.Url;
+            this.craftGroup1 = legalEntity.CraftGroup1;
+            this.craftGroup2 = legalEntity.CraftGroup2;
+            this.craftGroup3 = legalEntity.CraftGroup3;
+            this.craftGroup4 = legalEntity.CraftGroup4;
+            this.region = legalEntity.Region;
+            this.countryWide = legalEntity.CountryWide;
+            this.cooperative = legalEntity.Cooperative;
+            this.active = legalEntity.Active;
+        }
+        
         #endregion
 
         #region Methods

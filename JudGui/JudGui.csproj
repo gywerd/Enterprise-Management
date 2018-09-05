@@ -170,8 +170,8 @@
     <Compile Include="UcChangeProjectStatus.xaml.cs">
       <DependentUpon>UcChangeProjectStatus.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UcEraseProject.xaml.cs">
-      <DependentUpon>UcEraseProject.xaml</DependentUpon>
+    <Compile Include="UcDeleteProject.xaml.cs">
+      <DependentUpon>UcDeleteProject.xaml</DependentUpon>
     </Compile>
     <Compile Include="UcProjectStatusList.xaml.cs">
       <DependentUpon>UcProjectStatusList.xaml</DependentUpon>
@@ -245,6 +245,9 @@
     </None>
     <None Include="Documentation\UML-Db-C#.pdf" />
     <None Include="packages.config" />
+    <None Include="PDF_Documents\trial.pdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -349,7 +352,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UcEraseProject.xaml">
+    <Page Include="UcDeleteProject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -469,6 +472,7 @@
   <ItemGroup>
     <Resource Include="Images\ceo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

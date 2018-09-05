@@ -19,7 +19,7 @@ namespace JudGui
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class UcEraseProject : UserControl
+    public partial class UcDeleteProject : UserControl
     {
         #region Fields
         public Bizz Bizz;
@@ -27,7 +27,7 @@ namespace JudGui
 
         #endregion
 
-        public UcEraseProject(Bizz bizz, UserControl ucRight)
+        public UcDeleteProject(Bizz bizz, UserControl ucRight)
         {
             InitializeComponent();
             this.Bizz = bizz;

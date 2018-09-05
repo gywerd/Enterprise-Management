@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Jorton Underentrepenør Database" 
         Height="1080" Width="1920" 
-        MaxHeight="1080" MaxWidth="1950" 
+        MaxHeight="1080" MaxWidth="1920" 
         Background="LightGray" 
         WindowState="Maximized" 
         ResizeMode="CanMinimize" >
@@ -174,7 +174,7 @@
         <Grid HorizontalAlignment="Right" Height="910" VerticalAlignment="Top" Width="1912" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400*" />
-                <ColumnDefinition Width="1920*" />
+                <ColumnDefinition Width="1520*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="860*" />

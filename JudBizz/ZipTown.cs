@@ -44,18 +44,93 @@ namespace JudBizz
             this.town = town;
         }
 
+        /// <summary>
+        /// Constructor that accepts an existing ZipTown
+        /// </summary>
+        /// <param name="zipTown">ZipTown</param>
+        public ZipTown(ZipTown zipTown)
+        {
+            if (zipTown != null)
+            {
+                this.zip = zipTown.zip;
+                this.town = zipTown.town;
+            }
+            else
+            {
+                this.zip = "";
+                this.town = "";
+            }
+        }
+
         #endregion
 
         #region Methods
         /// <summary>
-        /// Method that return class content as string
+        /// Method, that Create a Delete From SQL-Query
         /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        /// <param name="zip">string</param>
+        /// <returns>string</returns>
+        private string CreateDeleteFromSqlQuery(string zip)
         {
-            return zip + " " + town;
+            //DELETE FROM table_name WHERE condition;
+            string result = @"DELETE FROM dbo.ZipTown WHERE Id = '" + zip + "';";
+            return result;
         }
 
+        /// <summary>
+        /// Method, that Create a Insert Into SQL-Query
+        /// </summary>
+        /// <param name="zipTown">ZipTown</param>
+        /// <returns>string</returns>
+        private string CreateInsertIntoSqlQuery(ZipTown zipTown)
+        {
+            //INSERT INTO table_name (column1, column2, column3, ...) VALUES(value1, value2, value3, ...);
+            string dataString = GetDataStringFromProject(zipTown);
+            string result = @"INSERT INTO dbo.ZipTown(Zip, Town) VALUES(";
+            result += dataString + @");";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that Create an Update SQL-Query
+        /// </summary>
+        /// <param name="zipTown">ZipTown</param>
+        /// <returns>string</returns>
+        private string CreateUpdateSqlQuery(ZipTown zipTown)
+        {
+            //UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+            string result = @"UPDATE dbo.Projects SET Town = '" + zipTown.Town + "' WHERE Zip = '" + zipTown.Zip + "';";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that deletes a Project from the Db
+        /// </summary>
+        /// <param name="zip">string</param>
+        /// <returns>bool</returns>
+        public bool DeleteFromZipTown(string zip)
+        {
+            bool result;
+            string strSql = CreateDeleteFromSqlQuery(zip);
+            result = executor.WriteToDataBase(strSql);
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that converts a project into a data string for SQL-Query
+        /// </summary>
+        /// <param name="zipTown">ZipTown</param>
+        /// <returns>string</returns>
+        private string GetDataStringFromProject(ZipTown zipTown)
+        {
+            string result = "'" + zipTown.Zip + @"', '" + zipTown.Town + "'";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that load a ZipTownList from Db
+        /// </summary>
+        /// <returns>List<ZipTown></returns>
         public List<ZipTown> GetZipTownList()
         {
             List<string> results = executor.ReadListFromDataBase("ZipTown");
@@ -68,6 +143,41 @@ namespace JudBizz
                 zips.Add(zipTown);
             }
             return zips;
+        }
+
+        /// <summary>
+        /// Method, that adds a project to Db
+        /// </summary>
+        /// <param name="zipTown">Project</param>
+        /// <returns>bool</returns>
+        public bool InsertIntoZipTown(ZipTown zipTown)
+        {
+            bool result;
+            string strSql = CreateInsertIntoSqlQuery(zipTown);
+            result = executor.WriteToDataBase(strSql);
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that converts main info to string
+        /// </summary>
+        /// <returns>string</returns>
+        public override string ToString()
+        {
+            return zip + " " + town;
+        }
+
+        /// <summary>
+        /// Method, that updates a ZipTown in Db
+        /// </summary>
+        /// <param name="zipTown">ZipTown</param>
+        /// <returns>bool</returns>
+        public bool UpdateZipTown(ZipTown zipTown)
+        {
+            bool result;
+            string strSql = CreateUpdateSqlQuery(zipTown);
+            result = executor.WriteToDataBase(strSql);
+            return result;
         }
 
         #endregion
@@ -110,6 +220,7 @@ namespace JudBizz
                 }
             }
         }
+
         #endregion
     }
 }

@@ -49,9 +49,42 @@ namespace JudGui
             }
         }
 
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            //Code that deletes a project from Db
+            bool result = Bizz.CEP.DeleteFromEnterpriseList(Bizz.tempEnterprise.Id);
+            Bizz.tempEnterprise = new Enterprise();
+
+            if (result)
+            {
+                //Show Confirmation
+                MessageBox.Show("Entrepriselisten blev slettet", "Slet Entrepriseliste", MessageBoxButton.OK, MessageBoxImage.Information);
+                //Reset Boxes
+                TextBoxName.Text = "";
+                TextBoxElaboration.Text = "";
+                TextBoxOfferList.Text = "";
+                ComboBoxCraftGroup1.SelectedIndex = -1;
+                ComboBoxCraftGroup2.SelectedIndex = -1;
+                ComboBoxCraftGroup3.SelectedIndex = -1;
+                ComboBoxCraftGroup4.SelectedIndex = -1;
+
+                //Update Enterprise List
+                Bizz.EnterpriseList.Clear();
+                Bizz.EnterpriseList = Bizz.CEP.GetEnterpriseList();
+                IndexableEnterpriseList.Clear();
+                IndexableEnterpriseList = GetIndexableEnterpriseList();
+                ListBoxEnterpriseList.ItemsSource = IndexableEnterpriseList;
+            }
+            else
+            {
+                //Show error
+                MessageBox.Show("Databasen returnerede en fejl. Entrepriselisten blev ikke slettet. Prøv igen.", "Slet Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
         private void ButtonEdit_Click(object sender, RoutedEventArgs e)
         {
-            //Code that creates a new project
+            //Code that edits a project
             bool result = Bizz.CEP.UpdateEnterpriseList(Bizz.tempEnterprise);
 
             if (result)
@@ -68,7 +101,7 @@ namespace JudGui
                 ComboBoxCraftGroup3.SelectedIndex = -1;
                 ComboBoxCraftGroup4.SelectedIndex = -1;
 
-                //Update list of projects
+                //Update Enterprise List
                 Bizz.EnterpriseList.Clear();
                 Bizz.EnterpriseList = Bizz.CEP.GetEnterpriseList();
                 IndexableEnterpriseList.Clear();
@@ -78,7 +111,7 @@ namespace JudGui
             else
             {
                 //Show error
-                MessageBox.Show("Databasen returnerede en fejl. Entrepriselisten blev ikke redigeret. Prøv igen.", "Opret Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Databasen returnerede en fejl. Entrepriselisten blev ikke redigeret. Prøv igen.", "Rediger Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

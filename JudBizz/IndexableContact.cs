@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace JudBizz
 {
-    public class IndexableProject : Project
+    public class IndexableContact : Contact
     {
         int index;
 
-        public IndexableProject(int index, Project project) : base(project)
+        public IndexableContact(int index, Contact contact) : base(contact)
         {
             this.index = index;
         }

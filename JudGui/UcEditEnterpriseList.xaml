@@ -5,125 +5,155 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JudGui"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1300">
+             d:DesignHeight="840" d:DesignWidth="1560">
     <Grid>
-        <Label x:Name="LabelEditEnterpriseList" Content="Rediger Projektliste" 
-               FontSize="30" FontWeight="Bold"
-               Height="50" Width="300"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120*" />
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="120*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="75*"/>
+            <RowDefinition Height="255*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="110*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="LabelEditEnterpriseList" Content="Rediger Entrepriseliste" 
+               FontSize="48" FontWeight="Bold"
+               Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4" 
                HorizontalAlignment="Left" 
-               Margin="100,50,0,0" 
                VerticalAlignment="Top" />
-        <Label x:Name="LabelCaseId" Content="SagsID*:" 
-               FontSize="24" 
-               Height="40" Width="100"
+        <Label x:Name="LabelCaseId" Content="Sagsnummer*:" 
+               FontSize="30" 
+               Grid.Column="6" Grid.Row="1" Grid.ColumnSpan="2" 
                HorizontalAlignment="Left" 
-               Margin="450,60,0,0" 
-               VerticalAlignment="Top" />
+               VerticalAlignment="Bottom" />
         <ComboBox x:Name="ComboBoxCaseId" 
-                  FontSize="24" 
-                  Height="40" Width="130"
+                  FontSize="30" 
+                  Grid.Column="8" Grid.Row="1" Grid.ColumnSpan="1" 
+                  Height="50" Width="135"
                   HorizontalAlignment="Left" 
-                  Margin="560,60,0,0" 
                   SelectionChanged="ComboBoxCaseId_SelectionChanged" 
-                  VerticalAlignment="Top" />
-        <ListBox x:Name="ListBoxEnterpriseList" 
-                 HorizontalAlignment="Left" 
-                 Height="175" Width="1100" 
-                 Margin="100,127,0,0"  
-                 SelectionChanged="ListBoxEnterpriseList_SelectionChanged"
-                 VerticalAlignment="Top" />
-        <Label x:Name="LabelDesignation" Content="Benævnelse*:" 
-               FontSize="24" 
-               Height="40" Width="300"
+                  VerticalAlignment="Bottom" />
+        <Label x:Name="LabelEnterpriseList" Content="Entrepriseliste:*:" 
+               FontSize="30" 
+               Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="6" 
                HorizontalAlignment="Left" 
-               Margin="100,310,0,0" 
+               VerticalAlignment="Top" />
+        <Label x:Name="LabelDesignation" Content="Benævnelse*:" 
+               FontSize="30" 
+               Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" 
+               HorizontalAlignment="Left" 
                VerticalAlignment="Top" />
         <Label x:Name="LabelElaboration" Content="Uddybning:" 
-               FontSize="24" 
-               Height="40" Width="300"
-               HorizontalAlignment="Center" 
-               Margin="0,310,0,0" 
+               FontSize="30" 
+               Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2" 
+               HorizontalAlignment="Left" 
                VerticalAlignment="Top" />
         <Label x:Name="LabelOfferList" Content="Tilbudsliste:" 
-               FontSize="24" 
-               Height="40" Width="300"
-               HorizontalAlignment="Right" 
-               Margin="0,310,100,0" 
+               FontSize="30" 
+               Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" 
+               HorizontalAlignment="Left" 
                VerticalAlignment="Top" />
-        <TextBox x:Name="TextBoxName" 
-                 FontSize="24" 
-                 Height="40" Width="300" 
+        <Label x:Name="LabelCraftgroups" Content="Faggrupper:" 
+               FontSize="30" 
+               Grid.Column="1" Grid.Row="6" Grid.ColumnSpan="2" 
+               HorizontalAlignment="Left" 
+               VerticalAlignment="Top" />
+        <ListBox x:Name="ListBoxEnterpriseList" 
+                 Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="6" 
+                 Height="245" Width="955"
                  HorizontalAlignment="Left" 
-                 Margin="100,360,0,0" 
+                 SelectionChanged="ListBoxEnterpriseList_SelectionChanged"
+                 VerticalAlignment="Top" />
+        <TextBox x:Name="TextBoxName" 
+                 FontSize="30" 
+                 Grid.Column="3" Grid.Row="3" Grid.ColumnSpan="6" 
+                 Height="50" Width="955" 
+                 HorizontalAlignment="Left" 
                  TextWrapping="Wrap" 
                  Text="" 
                  TextChanged="TextBoxName_TextChanged"
                  VerticalAlignment="Top" />
         <TextBox x:Name="TextBoxElaboration" 
-                 FontSize="24" 
-                 Height="40" Width="300"
-                 HorizontalAlignment="Center" 
-                 Margin="00,360,0,0" 
+                 FontSize="30" 
+                 Grid.Column="3" Grid.Row="4" Grid.ColumnSpan="6" 
+                 Height="50" Width="955"
+                 HorizontalAlignment="Left" 
                  TextWrapping="Wrap" 
                  Text="" 
                  TextChanged="TextBoxElaboration_TextChanged"
                  VerticalAlignment="Top"/>
         <TextBox x:Name="TextBoxOfferList" 
-                 FontSize="24" 
-                 Height="40" Width="300"
-                 HorizontalAlignment="Right" 
-                 Margin="0,360,100,0" 
+                 FontSize="30" 
+                 Grid.Column="3" Grid.Row="5" Grid.ColumnSpan="6" 
+                 Height="50" Width="955"
+                 HorizontalAlignment="Left" 
                  TextWrapping="Wrap" 
                  Text="" 
                  TextChanged="TextBoxOfferList_TextChanged"
                  VerticalAlignment="Top"/>
-        <Label x:Name="LabelCraftgroups" Content="Faggrupper:" 
-               FontSize="24" 
-               Height="40" Width="200"
-               HorizontalAlignment="Left" 
-               Margin="100,410,0,0" 
-               VerticalAlignment="Top" />
         <ComboBox x:Name="ComboBoxCraftGroup1" 
-                  FontSize="24" 
-                  Height="40" Width="200"
+                  FontSize="30" 
+                 Grid.Column="3" Grid.Row="6" Grid.ColumnSpan="3" 
+                  Height="50" Width="470"
                   HorizontalAlignment="Left" 
-                  Margin="100,460,0,0" 
                   SelectionChanged="ComboBoxCraftGroup1_SelectionChanged" 
                   VerticalAlignment="Top" />
         <ComboBox x:Name="ComboBoxCraftGroup2" 
-                  FontSize="24" 
-                  Height="40" Width="200"
-                  HorizontalAlignment="Center" 
-                  Margin="0,460,300,0" 
+                  FontSize="30" 
+                 Grid.Column="6" Grid.Row="6" Grid.ColumnSpan="3" 
+                  Height="50" Width="470"
+                  HorizontalAlignment="Right" 
                   SelectionChanged="ComboBoxCraftGroup2_SelectionChanged" 
                   VerticalAlignment="Top" />
         <ComboBox x:Name="ComboBoxCraftGroup3" 
-                  FontSize="24" 
-                  Height="40" Width="200"
-                  HorizontalAlignment="Center" 
-                  Margin="300,460,0,0" 
+                  FontSize="30" 
+                  Grid.Column="3" Grid.Row="7" Grid.ColumnSpan="3" 
+                  Height="50" Width="470"
+                  HorizontalAlignment="Left" 
                   SelectionChanged="ComboBoxCraftGroup3_SelectionChanged" 
                   VerticalAlignment="Top" />
         <ComboBox x:Name="ComboBoxCraftGroup4" 
-                  FontSize="24" 
-                  Height="40" Width="200"
+                  FontSize="30" 
+                  Grid.Column="6" Grid.Row="7" Grid.ColumnSpan="3" 
+                  Height="50" Width="470"
                   HorizontalAlignment="Right" 
-                  Margin="0,460,100,0" 
                   SelectionChanged="ComboBoxCraftGroup4_SelectionChanged" 
                   VerticalAlignment="Top" />
         <Button x:Name="ButtonClose" Content="Luk"
                 Click="ButtonClose_Click" 
                 FontSize="48" FontWeight="Bold" 
-                Height="100"  Width="325" 
-                HorizontalAlignment="Left" 
-                Margin="250,0,0,50" 
+                Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="2" 
+                Height="100"  Width="315" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Bottom" />
+        <Button x:Name="ButtonDelete" Content="Slet"
+                Click="ButtonDelete_Click" 
+                FontSize="48" FontWeight="Bold" 
+                Grid.Column="4" Grid.Row="8" Grid.ColumnSpan="2" 
+                Height="100"  Width="315" 
+                HorizontalAlignment="Center" 
                 VerticalAlignment="Bottom" />
         <Button x:Name="ButtonEdit" Content="Rediger"
                 Click="ButtonEdit_Click" 
                 FontSize="48" FontWeight="Bold" 
-                Height="100"  Width="325" 
-                HorizontalAlignment="Right" 
-                Margin="0,0,250,50" 
+                Grid.Column="7" Grid.Row="8" Grid.ColumnSpan="2" 
+                Height="100"  Width="315" 
+                HorizontalAlignment="Center" 
                 VerticalAlignment="Bottom" />
     </Grid>
 </UserControl>

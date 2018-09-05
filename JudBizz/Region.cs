@@ -77,7 +77,7 @@ namespace JudBizz
         /// Retrieves a list of regions from Db
         /// </summary>
         /// <returns></returns>
-        public List<Region> GetGeography()
+        public List<Region> GetRegions()
         {
             List<string> results = executor.ReadListFromDataBase("Regions");
             List<Region> geography = new List<Region>();

@@ -61,8 +61,10 @@ namespace JudGui
                 //Update list of projects
                 Bizz.Projects.Clear();
                 Bizz.Projects = Bizz.CPR.GetProjects();
-                ReloadListActiveProjects();
-                ReloadListIndexableProjects();
+                Bizz.ActiveProjects.Clear();
+                Bizz.ActiveProjects = Bizz.GetListActiveProjects();
+                Bizz.IndexableProjects.Clear();
+                Bizz.IndexableProjects = Bizz.GetListIndexableProjects();
 
                 //Close right UserControl
                 Bizz.UcRightActive = false;

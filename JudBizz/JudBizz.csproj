@@ -82,7 +82,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IndexableContact.cs" />
     <Compile Include="IndexableEnterprise.cs" />
+    <Compile Include="IndexableLegalEntity.cs" />
     <Compile Include="IndexableProject.cs" />
     <Compile Include="Address.cs" />
     <Compile Include="Bizz.cs" />
@@ -90,7 +92,8 @@
     <Compile Include="Category.cs" />
     <Compile Include="Enterprise.cs" />
     <Compile Include="EnterpriseForm.cs" />
-    <Compile Include="PDFCreator.cs" />
+    <Compile Include="IndexableSubEntrepeneur.cs" />
+    <Compile Include="PdfCreator.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectStatus.cs" />
     <Compile Include="Region.cs" />
@@ -115,6 +118,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="temp\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -88,6 +88,7 @@ namespace JudGui
                     Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
+            TextBoxName.Text = Bizz.tempProject.Name;
         }
 
         private void TextBoxCaseId_TextChanged(object sender, TextChangedEventArgs e)

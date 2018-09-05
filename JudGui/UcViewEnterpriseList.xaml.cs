@@ -24,6 +24,7 @@ namespace JudGui
         #region Fields
         public Bizz Bizz;
         public UserControl UcRight;
+        public List<IndexableEnterprise> IndexableEnterpriseList = new List<IndexableEnterprise>();
 
         #endregion
 
@@ -32,6 +33,71 @@ namespace JudGui
             InitializeComponent();
             this.Bizz = bizz;
             this.UcRight = ucRight;
+            GenerateComboBoxCaseIdItems();
         }
+
+        #region Buttons
+        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            //Close right UserControl
+            MessageBox.Show("Visning af Entrepriselisten lukkes.", "Luk Entrepriseliste", MessageBoxButton.OK, MessageBoxImage.Information);
+            Bizz.UcRightActive = false;
+            UcRight.Content = new UserControl();
+        }
+
+        private void ButtonGeneratePdf_Click(object sender, RoutedEventArgs e)
+        {
+            PdfCreator pdfCreator = new PdfCreator();
+            string path = pdfCreator.GenerateEnterpriseListPdf(Bizz.tempProject, IndexableEnterpriseList, Bizz.Users);
+            System.Diagnostics.Process.Start(path);
+        }
+
+        #endregion
+
+        #region Events
+        private void ComboBoxCaseId_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int selectedIndex = ComboBoxCaseId.SelectedIndex;
+            foreach (IndexableProject temp in Bizz.ActiveProjects)
+            {
+                if (temp.Index == selectedIndex)
+                {
+                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                }
+            }
+            TextBoxCaseName.Content = Bizz.tempProject.Name;
+            IndexableEnterpriseList = GetIndexableEnterpriseList();
+        }
+
+        #endregion
+
+        #region Methods
+        private void GenerateComboBoxCaseIdItems()
+        {
+            ComboBoxCaseId.Items.Clear();
+            foreach (IndexableProject temp in Bizz.ActiveProjects)
+            {
+                ComboBoxCaseId.Items.Add(temp);
+            }
+        }
+
+        private List<IndexableEnterprise> GetIndexableEnterpriseList()
+        {
+            List<IndexableEnterprise> result = new List<IndexableEnterprise>();
+            int i = 0;
+            foreach (Enterprise enterprise in Bizz.EnterpriseList)
+            {
+                if (enterprise.Project == Bizz.tempProject.Id)
+                {
+                    IndexableEnterprise temp = new IndexableEnterprise(i, enterprise);
+                    result.Add(temp);
+                }
+                i++;
+            }
+            return result;
+        }
+
+        #endregion
+
     }
 }

@@ -6,45 +6,69 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JudGui"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1300">
+             d:DesignHeight="840" d:DesignWidth="1520">
     <Grid>
-        <Label x:Name="labelIntials" Content="Initialer:" 
-               FontSize="36" 
-               Height="65" Width="250"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100*" />
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="100*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="100*"/>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="370*"/>
+            <RowDefinition Height="110*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="LabelEditCaseId" Content="Login" 
+               FontSize="60" FontWeight="Bold"
+               Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" 
                HorizontalAlignment="Left" 
-               Margin="250,200,0,0" 
                VerticalAlignment="Top" />
-        <Label x:Name="LabelPassWord" Content="Adgangskode" 
-               FontSize="36" 
-               Height="65" Width="250"
+        <Label x:Name="labelIntials" Content="Initialer:" 
+               FontSize="42" 
+               Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" 
                HorizontalAlignment="Left" 
-               Margin="250,300,0,0" 
+               VerticalAlignment="Top" />
+        <Label x:Name="LabelPassWord" Content="Adgangskode*:" 
+               FontSize="42" 
+               Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" 
+               HorizontalAlignment="Left" 
                VerticalAlignment="Top" />
         <xctk:WatermarkTextBox x:Name="TextBoxInitials" 
-                               FontSize="36" 
-                               Height="65" Width="500"
-                               HorizontalAlignment="Right" 
-                               Margin="0,200,250,0" 
+                               FontSize="42" 
+                               Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="6" 
+                               Height="70" Width="955"
+                               HorizontalAlignment="Left" 
                                TextWrapping="Wrap" 
                                Text=""
                                VerticalAlignment="Top" 
                                Watermark="nn" />
         <xctk:WatermarkPasswordBox x:Name="TextBoxPassword" 
-                                   FontSize="36" 
-                                   Height="65"  Width="500" 
-                                   HorizontalAlignment="Right" 
-                                   Margin="0,300,250,0" 
+                                   FontSize="42" 
+                                   Grid.Column="3" Grid.Row="3" Grid.ColumnSpan="6" 
+                                   Height="70" Width="955"
+                                   HorizontalAlignment="Left" 
                                    Password=""
                                    VerticalAlignment="Top" 
                                    Watermark="dinAdgang§kod3"/>
         <Button x:Name="ButtonLogin" Content="Login"
                 Click="ButtonLogin_Click" 
                 FontSize="48" FontWeight="Bold" 
-                Height="100"  Width="250" 
-                HorizontalAlignment="Right"
+                Grid.Column="7" Grid.Row="5" Grid.ColumnSpan="2" 
+                Height="100"  Width="315" 
+                HorizontalAlignment="Center"
                 IsDefault="True" 
-                Margin="0,400,250,0" 
-                VerticalAlignment="Top" />
+                VerticalAlignment="Bottom" />
 
     </Grid>
 </UserControl>

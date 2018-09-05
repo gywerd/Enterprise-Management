@@ -438,16 +438,16 @@ namespace JudGui
                 if (MessageBox.Show("Vil du åbne 'Postnummerlisten'. Alt, der ikke er gemt vil blive mistet!", "Åbn Postnummerliste", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
                     Bizz.UcRightActive = false;
-                    UcLeft.Content = UcZipList;
-                    UcRight.Content = new UserControl();
+                    UcLeft.Content = new UserControl();
+                    UcRight.Content = UcZipList;
                 }
             }
             else
             {
                 UcZipList = new UcZipList(Bizz, UcRight);
                 Bizz.UcRightActive = false;
-                UcLeft.Content = UcZipList;
-                UcRight.Content = new UserControl();
+                UcLeft.Content = new UserControl();
+                UcRight.Content = UcZipList;
             }
         }
 

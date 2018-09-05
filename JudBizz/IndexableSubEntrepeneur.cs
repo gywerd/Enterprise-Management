@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JudBizz
 {
-    public class IndexableEnterprise : Enterprise
+    public class IndexableSubEntrepeneur : SubEntrepeneur
     {
         #region Fields
         int index;
@@ -17,14 +17,16 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public IndexableEnterprise() { }
+        public IndexableSubEntrepeneur()
+        {
+        }
 
         /// <summary>
-        /// Constructor, that adds an index to an existing Enterprise
+        /// Constructor, that adds an index to an existing SubEntrepeneur
         /// </summary>
         /// <param name="index"></param>
-        /// <param name="enterprise"></param>
-        public IndexableEnterprise(int index, Enterprise enterprise) : base(enterprise)
+        /// <param name="subEntrepeneur"></param>
+        public IndexableSubEntrepeneur(int index, SubEntrepeneur subEntrepeneur) : base(subEntrepeneur)
         {
             this.index = index;
         }

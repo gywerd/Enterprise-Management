@@ -85,9 +85,65 @@ namespace JudBizz
             this.active = active;
         }
 
+        /// <summary>
+        /// Constructor for that accepts data from existing SubEntrepeneur
+        /// </summary>
+        /// <param name="subEntrepeneur">SubEntrepeneur</param>
+        public SubEntrepeneur(SubEntrepeneur subEntrepeneur)
+        {
+            this.id = subEntrepeneur.Id;
+            this.enterpriseList = subEntrepeneur.EnterpriseList;
+            this.entrepeneur = subEntrepeneur.Entrepeneur;
+            this.request = subEntrepeneur.Request;
+            this.ittLetter = subEntrepeneur.IttLetter;
+            this.offer = subEntrepeneur.Offer;
+            this.reservations = subEntrepeneur.Reservations;
+            this.uphold = subEntrepeneur.Uphold;
+            this.agreementConcluded = subEntrepeneur.AgreementConcluded;
+            this.active = subEntrepeneur.Active;
+        }
+
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Method, that creates an Delete SQL-Query
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private string CreateDeleteFromSqlQuery(int id)
+        {
+            //DELETE FROM table_name WHERE condition;
+            string result = @"DELETE FROM dbo.SubEntrepeneurs WHERE Id = " + id + @";";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that creates an Insert Into SQL-Query
+        /// </summary>
+        /// <param name="subEntrepeneur">Enterprise</param>
+        /// <returns>string</returns>
+        private string CreateInsertIntoSqlQuery(SubEntrepeneur subEntrepeneur)
+        {
+            //INSERT INTO table_name (column1, column2, column3, ...) VALUES(value1, value2, value3, ...);
+            string dataString = GetDataStringFromSubEntrepeneur(subEntrepeneur);
+            string result = @"INSERT INTO dbo.SubEntrepeneurs(EnterpriseList, Entrepeneur, Contact, Request, IttLetter, Offer, Reservations, Uphold, AgreementConcluded, Active) VALUES(";
+            result += dataString + @");";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that creates an Update SQL-Query
+        /// </summary>
+        /// <param name="subEntrepeneur">Enterprise</param>
+        /// <returns>string</returns>
+        private string CreateUpdateSqlQuery(SubEntrepeneur subEntrepeneur)
+        {
+            //UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+            string result = @"UPDATE dbo.SubEntrepeneurs SET EnterpriseList = " + subEntrepeneur.EnterpriseList.ToString() + @", Entrepeneur = '" + subEntrepeneur.Entrepeneur + @"', Contact = " + subEntrepeneur.Contact.ToString() + @", Request = " + subEntrepeneur.Request.ToString() + @", IttLetter = " + subEntrepeneur.IttLetter + @", Offer = " + subEntrepeneur.Offer.ToString() + @", Reservations = '" + subEntrepeneur.Reservations.ToString() + @"', Uphold = '" + subEntrepeneur.Uphold.ToString() + @"', AgreementConcluded = '" + subEntrepeneur.AgreementConcluded.ToString() + @"', Active = '" + subEntrepeneur.Active.ToString() + @" WHERE Id = " + subEntrepeneur.Id + @";";
+            return result;
+        }
+
         public void DeleteFromSubEntrepeneurs(int id)
         {
             bool result;
@@ -95,13 +151,68 @@ namespace JudBizz
             result = executor.WriteToDataBase(strSql);
         }
 
-        private string CreateDeleteFromSqlQuery(int id)
+        /// <summary>
+        /// Method, converts an SubEntrepeneur into a data string
+        /// </summary>
+        /// <param name="subEntrepeneur">SubEntrepeneur</param>
+        /// <returns>string</returns>
+        private string GetDataStringFromSubEntrepeneur(SubEntrepeneur subEntrepeneur)
         {
-            //DELETE FROM table_name WHERE condition;
-            string result = @"DELETE FROM dbo.SubEntrepeneurs WHERE Id = " + id + ";";
+            string result = subEntrepeneur.EnterpriseList.ToString() + @", '" + subEntrepeneur.EnterpriseList.ToString() + @"', '" + subEntrepeneur.Entrepeneur + @"', " + subEntrepeneur.Contact.ToString() + @", " + subEntrepeneur.Request.ToString() + @", " + subEntrepeneur.IttLetter.ToString() + @", " + subEntrepeneur.Offer.ToString() + @", '" + subEntrepeneur.Reservations.ToString() + @", '" + subEntrepeneur.Uphold.ToString() + @", '" + subEntrepeneur.AgreementConcluded.ToString() + @", '" + subEntrepeneur.Active.ToString() + @"'";
             return result;
         }
 
+        /// <summary>
+        /// Method, that gets entrepeneur name from id
+        /// </summary>
+        /// <returns></returns>
+        private string GetEntrepeneurName()
+        {
+            string result = "";
+            List<LegalEntity> entrepeneurs = CLE.GetLegalEntities();
+            foreach (LegalEntity entrepeneur in entrepeneurs)
+            {
+                if (entrepeneur.Id == this.entrepeneur)
+                {
+                    result = entrepeneur.Name;
+                    return result;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieves a list of subentrepeneurs from Db
+        /// </summary>
+        /// <returns></returns>
+        public List<SubEntrepeneur> GetSubEntrepeneurs()
+        {
+            List<string> results = executor.ReadListFromDataBase("SubEntrepeneurs");
+            List<SubEntrepeneur> subs = new List<SubEntrepeneur>();
+            foreach (string sub in results)
+            {
+                string[] resultArray = new string[11];
+                resultArray = sub.Split(';');
+                SubEntrepeneur sub2 = new SubEntrepeneur(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), resultArray[2], Convert.ToInt32(resultArray[3]), Convert.ToInt32(resultArray[4]), Convert.ToInt32(resultArray[5]), Convert.ToInt32(resultArray[6]), Convert.ToBoolean(resultArray[7]), Convert.ToBoolean(resultArray[8]), Convert.ToBoolean(resultArray[9]), Convert.ToBoolean(resultArray[10]));
+                subs.Add(sub2);
+            }
+            return subs;
+        }
+
+        /// <summary>
+        /// Method, that adds an Enterprise to Db
+        /// </summary>
+        /// <param name="tempEnterprise">Enterprise</param>
+        /// <returns>bool</returns>
+        public bool InsertIntoSubEntrepeneurs(SubEntrepeneur tempSubEntrepeneur)
+        {
+            bool result;
+            string strSql = CreateInsertIntoSqlQuery(tempSubEntrepeneur);
+            result = executor.WriteToDataBase(strSql);
+            return result;
+        }
+
+        /// <summary>
         /// <summary>
         /// Method that togle value of reservations
         /// </summary>
@@ -173,39 +284,15 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Retrieves a list of subentrepeneurs from Db
+        /// Method, that updates an Enterprise in Db
         /// </summary>
-        /// <returns></returns>
-        public List<SubEntrepeneur> GetSubEntrepeneurs()
+        /// <param name="tempSubEntrepeneur"></param>
+        /// <returns>bool</returns>
+        public bool UpdateEnterpriseList(SubEntrepeneur tempSubEntrepeneur)
         {
-            List<string> results = executor.ReadListFromDataBase("SubEntrepeneurs");
-            List<SubEntrepeneur> subs = new List<SubEntrepeneur>();
-            foreach (string sub in results)
-            {
-                string[] resultArray = new string[11];
-                resultArray = sub.Split(';');
-                    SubEntrepeneur sub2 = new SubEntrepeneur(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), resultArray[2], Convert.ToInt32(resultArray[3]), Convert.ToInt32(resultArray[4]), Convert.ToInt32(resultArray[5]), Convert.ToInt32(resultArray[6]), Convert.ToBoolean(resultArray[7]), Convert.ToBoolean(resultArray[8]), Convert.ToBoolean(resultArray[9]), Convert.ToBoolean(resultArray[10]));
-                    subs.Add(sub2);
-            }
-            return subs;
-        }
-
-        /// <summary>
-        /// Method, that gets entrepeneur name from id
-        /// </summary>
-        /// <returns></returns>
-        private string GetEntrepeneurName()
-        {
-            string result = "";
-            List<LegalEntity> entrepeneurs = CLE.GetLegalEntities();
-            foreach (LegalEntity entrepeneur in entrepeneurs)
-            {
-                if (entrepeneur.Id == this.entrepeneur)
-                {
-                    result = entrepeneur.Name;
-                    return result;
-                }
-            }
+            bool result;
+            string strSql = CreateUpdateSqlQuery(tempSubEntrepeneur);
+            result = executor.WriteToDataBase(strSql);
             return result;
         }
 
@@ -335,7 +422,6 @@ namespace JudBizz
         public bool AgreementConcluded { get => agreementConcluded; }
 
         public bool Active { get => active; }
-
         #endregion
     }
 }

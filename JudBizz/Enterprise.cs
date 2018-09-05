@@ -11,15 +11,15 @@ namespace JudBizz
     public class Enterprise
     {
         #region Fields
-        private int id;
-        private int project;
-        private string name;
-        private string elaboration;
-        private string offerList;
-        private int craftGroup1;
-        private int craftGroup2;
-        private int craftGroup3;
-        private int craftGroup4;
+        protected int id;
+        protected int project;
+        protected string name;
+        protected string elaboration;
+        protected string offerList;
+        protected int craftGroup1;
+        protected int craftGroup2;
+        protected int craftGroup3;
+        protected int craftGroup4;
 
         private static string strConnection;
         private Executor executor;
@@ -122,7 +122,7 @@ namespace JudBizz
         private string CreateDeleteFromSqlQuery(int enterprise)
         {
             //DELETE FROM table_name WHERE condition;
-            string result = @"DELETE FROM dbo.EnterpriseList WHERE Project = " + enterprise + ";";
+            string result = @"DELETE FROM dbo.EnterpriseList WHERE Id = " + enterprise + @";";
             return result;
         }
 
@@ -148,7 +148,7 @@ namespace JudBizz
         private string CreateUpdateSqlQuery(Enterprise enterprise)
         {
             //UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
-            string result = @"UPDATE dbo.EnterpriseList SET Project = " + enterprise.Project.ToString() + ", Name = '" + enterprise.Name + "', Elaboration = '" + enterprise.Elaboration + "', OfferList = '" + enterprise.OfferList + "', CraftGroup1 = " + enterprise.CraftGroup1.ToString() + ", CraftGroup2 = " + enterprise.CraftGroup2.ToString() + ", CraftGroup3 = " + enterprise.CraftGroup3.ToString() + ", CraftGroup4 = " + enterprise.CraftGroup4.ToString() + " WHERE Id = " + enterprise.Id + ";";
+            string result = @"UPDATE dbo.EnterpriseList SET Project = " + enterprise.Project.ToString() + @", Name = '" + enterprise.Name + @"', Elaboration = '" + enterprise.Elaboration + @"', OfferList = '" + enterprise.OfferList + @"', CraftGroup1 = " + enterprise.CraftGroup1.ToString() + @", CraftGroup2 = " + enterprise.CraftGroup2.ToString() + @", CraftGroup3 = " + enterprise.CraftGroup3.ToString() + @", CraftGroup4 = " + enterprise.CraftGroup4.ToString() + @" WHERE Id = " + enterprise.Id + @";";
             return result;
         }
 
@@ -156,17 +156,18 @@ namespace JudBizz
         /// Method, that removes an Enterprise from Db
         /// </summary>
         /// <param name="enterprise">int</param>
-        public void DeleteFromEnterpriseList(int enterprise)
+        public bool DeleteFromEnterpriseList(int enterprise)
         {
             try
             {
                 bool result = false;
                 string strSql = CreateDeleteFromSqlQuery(enterprise);
                 result = executor.WriteToDataBase(strSql);
+                return result;
             }
             catch (Exception)
             {
-                throw;
+                return false;
             }
         }
 

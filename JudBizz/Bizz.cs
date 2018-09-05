@@ -18,8 +18,10 @@ namespace JudBizz
         public User CurrentUser = new User(strConnection);
         public Address tempAddress = new Address(strConnection);
         public Enterprise tempEnterprise = new Enterprise(strConnection);
-        public ZipTown tempZipTown = new ZipTown(strConnection);
+        public LegalEntity tempLegalEntity = new LegalEntity();
         public Project tempProject = new Project(strConnection);
+        public SubEntrepeneur tempSubEntrepeneur;
+        public ZipTown tempZipTown = new ZipTown(strConnection);
         public bool UcRightActive = false;
         #endregion
 
@@ -53,7 +55,7 @@ namespace JudBizz
         public List<CraftGroup> CraftGroups = CCG.GetCraftGroups();
         public List<Enterprise> EnterpriseList = CEP.GetEnterpriseList();
         public List<EnterpriseForm> EnterpriseForms = CEF.GetEnterpriseForms();
-        public List<Region> Geography = CRG.GetGeography();
+        public List<Region> Geography = CRG.GetRegions();
         public List<IttLetter> IttLetters = CIL.GetIttLetters();
         public List<JobDescription> JobDescriptions = CJD.GetJobDescriptions();
         public List<LegalEntity> LegalEntities = CLE.GetLegalEntities();
@@ -61,6 +63,7 @@ namespace JudBizz
         public List<IndexableProject> ActiveProjects = new List<IndexableProject>();
         public List<IndexableProject> IndexableProjects = new List<IndexableProject>();
         public List<ProjectStatus> ProjectStatusList = CPS.GetProjectStatusList();
+        public List<Region> Regions = CRG.GetRegions();
         public List<Request> Requests = CRQ.GetRequests();
         public List<SubEntrepeneur> SubEntrepeneurs = CSE.GetSubEntrepeneurs();
         public List<TenderForm> TenderForms = CTF.GetTenderForms();
@@ -76,8 +79,8 @@ namespace JudBizz
         /// </summary>
         public Bizz()
         {
-            GenerateListActiveProjects();
-            GenerateListIndexableProjects();
+            ActiveProjects = GetListActiveProjects();
+            IndexableProjects = GetListIndexableProjects();
         }
 
         #endregion
@@ -113,34 +116,38 @@ namespace JudBizz
         /// <summary>
         /// Method, that generate list of active projects
         /// </summary>
-        private void GenerateListActiveProjects()
+        /// <returns>List<IndexableEnterprise></returns>
+        public List<IndexableProject> GetListActiveProjects()
         {
-            ActiveProjects.Clear();
+            List<IndexableProject> result = new List<IndexableProject>();
             int i = 0;
             foreach (Project tempProject in Projects)
             {
                 if (tempProject.Status == 1)
                 {
-                    IndexableProject result = new IndexableProject(i, tempProject);
-                    ActiveProjects.Add(result);
+                    IndexableProject temp = new IndexableProject(i, tempProject);
+                    result.Add(temp);
                     i++;
                 }
             }
+            return result;
         }
 
         /// <summary>
         /// Method, that generate list of active projects
         /// </summary>
-        private void GenerateListIndexableProjects()
+        /// <returns>List<IndexableEnterprise></returns>
+        public List<IndexableProject> GetListIndexableProjects()
         {
-            IndexableProjects.Clear();
+            List<IndexableProject> result = new List<IndexableProject>();
             int i = 0;
             foreach (Project tempProject in Projects)
             {
-                    IndexableProject result = new IndexableProject(i, tempProject);
-                    IndexableProjects.Add(result);
+                    IndexableProject temp = new IndexableProject(i, tempProject);
+                    result.Add(temp);
                     i++;
             }
+            return result;
         }
 
         #endregion

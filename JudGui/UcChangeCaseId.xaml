@@ -6,55 +6,84 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JudGui"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1300">
+             d:DesignHeight="840" d:DesignWidth="1520">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="120*" />
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="120*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50*"/>
+            <RowDefinition Height="75*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="435*"/>
+            <RowDefinition Height="110*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
         <Label x:Name="LabelEditCaseId" Content="Skift Sagsnummer" 
                FontSize="48" FontWeight="Bold"
-               Height="75" Width="800"
+               Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" 
                HorizontalAlignment="Left" 
-               Margin="250,50,0,0" 
                VerticalAlignment="Top" />
-        <Label x:Name="LabelCurrentCaseId" Content="Nuværende SagsID*:" 
+        <Label x:Name="LabelCurrentCaseId" Content="Nuv. Sagsnummer*:" 
                FontSize="30" 
-               Height="50" Width="290"
+               Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" 
                HorizontalAlignment="Left" 
-               Margin="250,125,0,0" 
                VerticalAlignment="Top" />
-        <Label x:Name="LabelNewCaseId" Content="Nyt SagsID*:" 
+        <Label x:Name="LabelNewCaseId" Content="Nyt Sagsnummer*:" 
                FontSize="30" 
-               Height="50" Width="290"
+               Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" 
                HorizontalAlignment="Left" 
-               Margin="250,185,0,0" 
                VerticalAlignment="Top" />
         <ComboBox x:Name="ComboBoxCaseId" 
                   FontSize="30" 
-                  Height="50" Width="130"
-                  HorizontalAlignment="Right" 
-                  Margin="0,125,620,0" 
-                  VerticalAlignment="Top" SelectionChanged="ComboBoxCaseId_SelectionChanged" />
+                  Grid.Column="3" Grid.Row="2" 
+                  HorizontalAlignment="Left"
+                  SelectionChanged="ComboBoxCaseId_SelectionChanged" 
+                  VerticalAlignment="Top" 
+                  Width="130"  />
         <xctk:WatermarkTextBox x:Name="TextBoxCaseId" 
                                Background="White"  
                                FontSize="30" 
-                               Height="50" Width="130"
-                               HorizontalAlignment="Right" 
-                               Margin="0,185,620,0" 
-                               TextWrapping="Wrap" 
+                               Grid.Column="3" Grid.Row="3" 
+                               HorizontalAlignment="Left" 
                                Text=""
+                               TextChanged="TextBoxCaseId_TextChanged" 
+                               TextWrapping="Wrap" 
                                Watermark="123456"
-                               VerticalAlignment="Top" TextChanged="TextBoxCaseId_TextChanged"/>
+                               VerticalAlignment="Top" 
+                               Width="130" />
+        <TextBox x:Name="TextBoxName" 
+                 FontSize="30" 
+                 Grid.Column="4" Grid.Row="2" Grid.ColumnSpan="5" 
+                 Height="50" Width="795" 
+                 HorizontalAlignment="Left" 
+                 IsEnabled="False" 
+                 Text="" 
+                 TextWrapping="Wrap" 
+                 VerticalAlignment="Top" />
         <Button x:Name="ButtonCancel" Content="Annuller"
                 Click="ButtonCancel_Click" 
-                FontSize="48" FontWeight="Bold" 
-                Height="100"  Width="325" 
-                HorizontalAlignment="Left" 
-                Margin="250,0,0,50" 
+                FontSize="48" FontWeight="Bold"
+                Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="2" 
+                Height="100"  Width="315"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Bottom" />
         <Button x:Name="ButtonEdit" Content="Gem og luk"
                 Click="ButtonEdit_Click" 
                 FontSize="48" FontWeight="Bold" 
-                Height="100"  Width="325" 
-                HorizontalAlignment="Right" 
-                Margin="0,0,250,50" 
+                Grid.Column="6" Grid.Row="5" Grid.ColumnSpan="2" 
+                Height="100"  Width="315" 
+                HorizontalAlignment="Center"
                 VerticalAlignment="Bottom" />
     </Grid>
 </UserControl>

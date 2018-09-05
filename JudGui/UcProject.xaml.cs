@@ -74,8 +74,8 @@ namespace JudGui
         private void ButtonEraseProject_Click(object sender, RoutedEventArgs e)
         {
             Bizz.UcRightActive = true;
-            UcEraseProject ucEraseProject = new UcEraseProject(Bizz, UcRight);
-            UcRight.Content = ucEraseProject;
+            UcDeleteProject ucDeleteProject = new UcDeleteProject(Bizz, UcRight);
+            UcRight.Content = ucDeleteProject;
         }
 
         #endregion

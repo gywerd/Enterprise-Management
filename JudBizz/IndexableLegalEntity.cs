@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace JudBizz
 {
-    public class IndexableProject : Project
+    public class IndexableLegalEntity : LegalEntity
     {
         int index;
 
-        public IndexableProject(int index, Project project) : base(project)
+        public IndexableLegalEntity(int index, LegalEntity legalEntity) : base(legalEntity)
         {
             this.index = index;
         }
@@ -20,6 +20,9 @@ namespace JudBizz
             return base.ToString();
         }
 
-        public int Index { get => index; }
+        public int Index
+        {
+            get => index;
+        }
     }
 }
