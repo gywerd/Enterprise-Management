@@ -26,7 +26,7 @@ namespace JudBizz
         /// </summary>
         /// <param name="index"></param>
         /// <param name="subEntrepeneur"></param>
-        public IndexableSubEntrepeneur(int index, SubEntrepeneur subEntrepeneur) : base(subEntrepeneur)
+        public IndexableSubEntrepeneur(string strCon, List<LegalEntity> entrepeneurs, int index, SubEntrepeneur subEntrepeneur) : base(strCon, entrepeneurs, subEntrepeneur)
         {
             this.index = index;
         }
@@ -40,7 +40,8 @@ namespace JudBizz
         /// <returns>string</returns>
         public override string ToString()
         {
-            return base.ToString();
+            string result = this.Name;
+            return result;
         }
 
         #endregion

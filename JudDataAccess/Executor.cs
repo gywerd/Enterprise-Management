@@ -44,9 +44,15 @@ namespace JudDataAccess
 
         public bool WriteToDataBase(string strSql)
         {
-            bool result = true;
-            FunctionExecuteNonQuery(strSql);
-            return result;
+            try
+            {
+                FunctionExecuteNonQuery(strSql);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
     }

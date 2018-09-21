@@ -11,11 +11,9 @@ namespace JudBizz
     {
         #region Fields
         private int id;
-        private bool sent;
+        private int status;
         private DateTime? sentDate;
-        private bool received;
         private DateTime? receivedDate;
-        private bool cancellation;
 
         private static string strConnection;
         private Executor executor;
@@ -28,11 +26,9 @@ namespace JudBizz
         /// </summary>
         public Request()
         {
-            this.sent = false;
+            this.status = 0;
             this.sentDate = null;
-            this.received = false;
             this.receivedDate = null;
-            this.cancellation = false;
         }
 
         /// <summary>
@@ -46,52 +42,94 @@ namespace JudBizz
         }
 
         /// <summary>
+        /// Constructor, that accepts data from existing Request
+        /// </summary>
+        /// <param name="strCon">string</param>
+        public Request(Request request)
+        {
+            this.id = request.Id;
+            this.status = request.Status;
+            this.sentDate = request.SentDate;
+            this.receivedDate = request.ReceivedDate;
+        }
+
+        /// <summary>
         /// Constructor to add request from Db
         /// </summary>
         /// <param name="id">int</param>
         /// <param name="regionName">string</param>
         /// <param name="zips">string</param>
-        public Request(int id, bool sent, bool received, bool cancellation, DateTime? sentDate = null, DateTime? receivedDate = null)
+        public Request(int id, int status, DateTime? sentDate = null, DateTime? receivedDate = null)
         {
             this.id = id;
-            this.sent = sent;
+            this.status = status;
             this.sentDate = sentDate;
-            this.received = received;
             this.receivedDate = receivedDate;
-            this.cancellation = cancellation;
         }
 
         #endregion
 
         #region Methods
         /// <summary>
-        /// Method, that toggles value of sent
+        /// Method, that create Delete SQL-query
         /// </summary>
-        public void ToggleSent()
+        /// <param name="id">int</param>
+        /// <returns>string</returns>
+        private string CreateDeleteFromSqlQuery(int id)
         {
-            if (sent)
-            {
-                sent = false;
-            }
-            else
-            {
-                sent = true;
-            }
+            //DELETE FROM table_name WHERE condition;
+            string result = @"DELETE FROM dbo.Requests WHERE Id = " + id + ";";
+            return result;
         }
 
         /// <summary>
-        /// Method, that toggles value of Active
+        /// Method, that creates sqlQuery to update status of a Request entry in Db
         /// </summary>
-        public void ToggleReceived()
+        /// <param name="status">int</param>
+        /// <param name="id">int</param>
+        /// <returns>string</returns>
+        private string CreateUpdateStatusSqlQuery(int status, int id, string date)
         {
-            if (received)
+            //UPDATE [dbo].[Requests] SET [Status] = <Status, int,>,[SentDate] = <SentDate, date,>,[ReceivedDate] = <ReceivedDate, date,> WHERE [Id] = <Id, int>
+            string query = "";
+
+            switch (status)
             {
-                received = false;
+                case 0:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 0, [SentDate] = '1899-12-31, [ReceivedDate] = '1899-12-31' WHERE [Id] = " + id.ToString();
+                    break;
+                case 1:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 1, [SentDate] = '" + date + @"', [ReceivedDate] = '1899-12-31' WHERE [Id] = " + id.ToString();
+                    break;
+                case 2:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 2, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString();
+                    break;
+                case 3:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 3, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString();
+                    break;
+                case 4:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 4, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString();
+                    break;
+                case 5:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 5, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString() + @";";
+                    break;
+                case 6:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 6, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString() + @";";
+                    break;
+                case 7:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 7, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString() + @";";
+                    break;
+                case 8:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 8, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString() + @";";
+                    break;
+                case 9:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 9, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString() + @";";
+                    break;
+                case 10:
+                    query = @"UPDATE [dbo].[Requests] SET [Status] = 10, [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString() + @";";
+                    break;
             }
-            else
-            {
-                received = true;
-            }
+            return query;
         }
 
         public void DeleteFromRequests(int id)
@@ -101,54 +139,24 @@ namespace JudBizz
             result = executor.WriteToDataBase(strSql);
         }
 
-        private string CreateDeleteFromSqlQuery(int id)
-        {
-            //DELETE FROM table_name WHERE condition;
-            string result = @"DELETE FROM dbo.Requests WHERE Id = " + id + ";";
-            return result;
-        }
-
-        /// <summary>
-        /// Method, that toggles value of Active
-        /// </summary>
-        public void ToggleCancellation()
-        {
-            if (cancellation)
-            {
-                cancellation = false;
-            }
-            else
-            {
-                cancellation = true;
-            }
-        }
-
         /// <summary>
         /// Returns main content as a string
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            if (sent.Equals(true) && received.Equals(false))
+            switch (status)
             {
-                string result = "Forespørgsel sendt: " + sentDate.Value.ToShortDateString();
-                return result;
+                case 0:
+                    return "Forespørgsel ikke sendt.";
+                case 1:
+                    return "Forespørgsel sendt: " + sentDate.Value.ToShortDateString();
+                case 2:
+                    return "Forespørgsel bekræftet: " + receivedDate.Value.ToShortDateString();
+                case 3:
+                    return "Forespørgsel annulleret: " + receivedDate.Value.ToShortDateString();
             }
-            else if (sent.Equals(true) && received.Equals(true) && cancellation.Equals(true))
-            {
-                string result = "Forespørgsel annulleret: " + receivedDate.Value.ToShortDateString();
-                return result;
-            }
-            else if (sent.Equals(true) && received.Equals(true) && cancellation.Equals(false))
-            {
-                string result = "Forespørgsel bekræftet: " + receivedDate.Value.ToShortDateString();
-                return result;
-            }
-            else
-            {
-                string result = "Forespørgsel ikke sendt.";
-                return result;
-            }
+            return "";
         }
 
         /// <summary>
@@ -163,23 +171,38 @@ namespace JudBizz
             {
                 string[] resultArray = new string[6];
                 resultArray = result.Split(';');
-                if (resultArray[2] == null && resultArray[4] == null)
+                if (resultArray[2] == null && resultArray[3] == null)
                 {
-                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToBoolean(resultArray[3]), Convert.ToBoolean(resultArray[5]));
+                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]));
                     requests.Add(request);
                 }
-                else if (resultArray[2] != null)
+                else if (resultArray[2] != null && resultArray[3] == null)
                 {
-                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToBoolean(resultArray[3]), Convert.ToBoolean(resultArray[5]), Convert.ToDateTime(resultArray[2]));
+                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), Convert.ToDateTime(resultArray[2]));
                     requests.Add(request);
                 }
                 else
                 {
-                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToBoolean(resultArray[3]), Convert.ToBoolean(resultArray[5]), Convert.ToDateTime(resultArray[2]), Convert.ToDateTime(resultArray[4]));
+                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), Convert.ToDateTime(resultArray[2]), Convert.ToDateTime(resultArray[3]));
                     requests.Add(request);
                 }
             }
             return requests;
+        }
+
+        /// <summary>
+        /// Method, that updates a status of a Request entry in Db
+        /// </summary>
+        /// <param name="status">int</param>
+        /// <param name="id">int</param>
+        /// <param name="date">string</param>
+        /// <returns>bool</returns>
+        public bool UpdateRequestStatus(int status, int id, string date)
+        {
+            bool result;
+            string strSql = CreateUpdateStatusSqlQuery(status, id, date);
+            result = executor.WriteToDataBase(strSql);
+            return result;
         }
 
         #endregion
@@ -187,16 +210,16 @@ namespace JudBizz
         #region Properties
         public int Id { get => id; }
 
-        public bool Sent
+        public int Status
         {
-            get => sent;
+            get => status;
             set
             {
                 try
                 {
-                    if (value.Equals(true) || value.Equals(false))
+                    if (value >= 0)
                     {
-                        sent = value;
+                        status = value;
                     }
                 }
                 catch (Exception ex)
@@ -218,28 +241,9 @@ namespace JudBizz
                         sentDate = value;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
-                }
-            }
-        }
-
-        public bool Received
-        {
-            get => received;
-            set
-            {
-                try
-                {
-                    if (value.Equals(true) || value.Equals(false))
-                    {
-                        received = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
+                    receivedDate = null;
                 }
             }
         }
@@ -256,28 +260,9 @@ namespace JudBizz
                         receivedDate = value;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
-                }
-            }
-        }
-
-        public bool Cancellation
-        {
-            get => cancellation;
-            set
-            {
-                try
-                {
-                    if (value.Equals(true) || value.Equals(false))
-                    {
-                        cancellation = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
+                    receivedDate = null;
                 }
             }
         }

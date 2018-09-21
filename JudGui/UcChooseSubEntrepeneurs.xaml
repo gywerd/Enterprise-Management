@@ -30,7 +30,7 @@
             <RowDefinition Height="110*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <Label x:Name="LabelEditEnterpriseList" Content="Vælg Underentrepenører" 
+        <Label x:Name="LabelChooseSubEntrepeneurs" Content="Vælg Underentrepenører" 
                FontSize="48" FontWeight="Bold"
                Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4" 
                HorizontalAlignment="Left" 

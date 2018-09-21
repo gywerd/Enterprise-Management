@@ -17,9 +17,13 @@ namespace JudBizz
         public static string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=JortonSubEnt;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public User CurrentUser = new User(strConnection);
         public Address tempAddress = new Address(strConnection);
+        public Contact tempContact = new Contact(strConnection);
         public Enterprise tempEnterprise = new Enterprise(strConnection);
+        public IttLetter tempIttLetter = new IttLetter(strConnection);
         public LegalEntity tempLegalEntity = new LegalEntity();
+        public Offer tempOffer = new Offer(strConnection);
         public Project tempProject = new Project(strConnection);
+        public Request tempRequest = new Request(strConnection);
         public SubEntrepeneur tempSubEntrepeneur;
         public ZipTown tempZipTown = new ZipTown(strConnection);
         public bool UcRightActive = false;
@@ -41,7 +45,8 @@ namespace JudBizz
         public static ProjectStatus CPS = new ProjectStatus(strConnection);
         public static Region CRG = new Region(strConnection);
         public static Request CRQ = new Request(strConnection);
-        public static SubEntrepeneur CSE = new SubEntrepeneur(strConnection);
+        public static RequestStatus CRS = new RequestStatus(strConnection);
+        public static SubEntrepeneur CSE;
         public static TenderForm CTF = new TenderForm(strConnection);
         public static User CUS = new User(strConnection);
         public static ZipTown CZT = new ZipTown(strConnection);
@@ -59,13 +64,15 @@ namespace JudBizz
         public List<IttLetter> IttLetters = CIL.GetIttLetters();
         public List<JobDescription> JobDescriptions = CJD.GetJobDescriptions();
         public List<LegalEntity> LegalEntities = CLE.GetLegalEntities();
+        public List<Offer> Offers = COF.GetOffers();
         public List<Project> Projects = CPR.GetProjects();
         public List<IndexableProject> ActiveProjects = new List<IndexableProject>();
         public List<IndexableProject> IndexableProjects = new List<IndexableProject>();
         public List<ProjectStatus> ProjectStatusList = CPS.GetProjectStatusList();
         public List<Region> Regions = CRG.GetRegions();
         public List<Request> Requests = CRQ.GetRequests();
-        public List<SubEntrepeneur> SubEntrepeneurs = CSE.GetSubEntrepeneurs();
+        public List<RequestStatus> RequestStatusList = CRS.GetRequestStatusList();
+        public List<SubEntrepeneur> SubEntrepeneurs;
         public List<TenderForm> TenderForms = CTF.GetTenderForms();
         public List<User> Users = CUS.GetUsers();
         public List<ZipTown> ZipCodeList = CZT.GetZipTownList();
@@ -79,6 +86,8 @@ namespace JudBizz
         /// </summary>
         public Bizz()
         {
+            CSE = new SubEntrepeneur(strConnection, LegalEntities);
+            SubEntrepeneurs = CSE.GetSubEntrepeneurs();
             ActiveProjects = GetListActiveProjects();
             IndexableProjects = GetListIndexableProjects();
         }

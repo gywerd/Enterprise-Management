@@ -21,11 +21,12 @@ namespace JudBizz
         private bool uphold;
         private bool agreementConcluded;
         private bool active;
+        private string name;
 
         private static string strConnection;
         private Executor executor;
 
-        public static LegalEntity CLE = new LegalEntity(strConnection);
+        public List<LegalEntity> Entrepeneurs;
 
         #endregion
 
@@ -51,10 +52,23 @@ namespace JudBizz
         /// Empty constructor, that activates Db-connection
         /// </summary>
         /// <param name="strCon">string</param>
-        public SubEntrepeneur(string strCon)
+        public SubEntrepeneur(string strCon, List<LegalEntity> entrepeneurs)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
+            this.Entrepeneurs = entrepeneurs;
+
+            this.enterpriseList = 0;
+            this.entrepeneur = "";
+            this.contact = 0;
+            this.request = 0;
+            this.ittLetter = 0;
+            this.offer = 0;
+            this.reservations = false;
+            this.uphold = false;
+            this.agreementConcluded = false;
+            this.active = false;
+            this.name = GetEntrepeneurName(entrepeneur);
         }
 
         /// <summary>
@@ -71,11 +85,16 @@ namespace JudBizz
         /// <param name="uphold">bool</param>
         /// <param name="agreementConcluded">bool</param>
         /// <param name="active">bool</param>
-        public SubEntrepeneur(int id, int enterpriseList, string entrepeneur, int contact, int request, int ittLetter, int offer, bool reservations, bool uphold, bool agreementConcluded, bool active)
+        public SubEntrepeneur(string strCon, List<LegalEntity> entrepeneurs, int id, int enterpriseList, string entrepeneur, int contact, int request, int ittLetter, int offer, bool reservations, bool uphold, bool agreementConcluded, bool active)
         {
+            strConnection = strCon;
+            executor = new Executor(strConnection);
+            this.Entrepeneurs = entrepeneurs;
+
             this.id = id;
             this.enterpriseList = enterpriseList;
             this.entrepeneur = entrepeneur;
+            this.contact = contact;
             this.request = request;
             this.ittLetter = ittLetter;
             this.offer = offer;
@@ -83,15 +102,21 @@ namespace JudBizz
             this.uphold = uphold;
             this.agreementConcluded = agreementConcluded;
             this.active = active;
+            this.name = GetEntrepeneurName(entrepeneur);
         }
 
         /// <summary>
         /// Constructor for that accepts data from existing SubEntrepeneur
         /// </summary>
         /// <param name="subEntrepeneur">SubEntrepeneur</param>
-        public SubEntrepeneur(SubEntrepeneur subEntrepeneur)
+        public SubEntrepeneur(string strCon, List<LegalEntity> entrepeneurs, SubEntrepeneur subEntrepeneur)
         {
+            strConnection = strCon;
+            executor = new Executor(strConnection);
+            this.Entrepeneurs = entrepeneurs;
+
             this.id = subEntrepeneur.Id;
+            this.contact = subEntrepeneur.Contact;
             this.enterpriseList = subEntrepeneur.EnterpriseList;
             this.entrepeneur = subEntrepeneur.Entrepeneur;
             this.request = subEntrepeneur.Request;
@@ -101,6 +126,7 @@ namespace JudBizz
             this.uphold = subEntrepeneur.Uphold;
             this.agreementConcluded = subEntrepeneur.AgreementConcluded;
             this.active = subEntrepeneur.Active;
+            this.name = GetEntrepeneurName(entrepeneur);
         }
 
         #endregion
@@ -140,10 +166,14 @@ namespace JudBizz
         private string CreateUpdateSqlQuery(SubEntrepeneur subEntrepeneur)
         {
             //UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
-            string result = @"UPDATE dbo.SubEntrepeneurs SET EnterpriseList = " + subEntrepeneur.EnterpriseList.ToString() + @", Entrepeneur = '" + subEntrepeneur.Entrepeneur + @"', Contact = " + subEntrepeneur.Contact.ToString() + @", Request = " + subEntrepeneur.Request.ToString() + @", IttLetter = " + subEntrepeneur.IttLetter + @", Offer = " + subEntrepeneur.Offer.ToString() + @", Reservations = '" + subEntrepeneur.Reservations.ToString() + @"', Uphold = '" + subEntrepeneur.Uphold.ToString() + @"', AgreementConcluded = '" + subEntrepeneur.AgreementConcluded.ToString() + @"', Active = '" + subEntrepeneur.Active.ToString() + @" WHERE Id = " + subEntrepeneur.Id + @";";
+            string result = @"UPDATE dbo.SubEntrepeneurs SET EnterpriseList = " + subEntrepeneur.EnterpriseList.ToString() + @", Entrepeneur = '" + subEntrepeneur.Entrepeneur + @"', Contact = " + subEntrepeneur.Contact.ToString() + @", Request = " + subEntrepeneur.Request.ToString() + @", IttLetter = " + subEntrepeneur.IttLetter + @", Offer = " + subEntrepeneur.Offer.ToString() + @", Reservations = '" + subEntrepeneur.Reservations.ToString() + @"', Uphold = '" + subEntrepeneur.Uphold.ToString() + @"', AgreementConcluded = '" + subEntrepeneur.AgreementConcluded.ToString() + @"', Active = '" + subEntrepeneur.Active.ToString() + @"' WHERE Id = " + subEntrepeneur.Id + @";";
             return result;
         }
 
+        /// <summary>
+        /// Method, that deletes a row from Db
+        /// </summary>
+        /// <param name="id"></param>
         public void DeleteFromSubEntrepeneurs(int id)
         {
             bool result;
@@ -166,16 +196,14 @@ namespace JudBizz
         /// Method, that gets entrepeneur name from id
         /// </summary>
         /// <returns></returns>
-        private string GetEntrepeneurName()
+        private string GetEntrepeneurName(string id)
         {
             string result = "";
-            List<LegalEntity> entrepeneurs = CLE.GetLegalEntities();
-            foreach (LegalEntity entrepeneur in entrepeneurs)
+            foreach (LegalEntity entrepeneur in Entrepeneurs)
             {
-                if (entrepeneur.Id == this.entrepeneur)
+                if (entrepeneur.Id == id)
                 {
                     result = entrepeneur.Name;
-                    return result;
                 }
             }
             return result;
@@ -193,7 +221,7 @@ namespace JudBizz
             {
                 string[] resultArray = new string[11];
                 resultArray = sub.Split(';');
-                SubEntrepeneur sub2 = new SubEntrepeneur(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), resultArray[2], Convert.ToInt32(resultArray[3]), Convert.ToInt32(resultArray[4]), Convert.ToInt32(resultArray[5]), Convert.ToInt32(resultArray[6]), Convert.ToBoolean(resultArray[7]), Convert.ToBoolean(resultArray[8]), Convert.ToBoolean(resultArray[9]), Convert.ToBoolean(resultArray[10]));
+                SubEntrepeneur sub2 = new SubEntrepeneur(strConnection, Entrepeneurs, Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), resultArray[2], Convert.ToInt32(resultArray[3]), Convert.ToInt32(resultArray[4]), Convert.ToInt32(resultArray[5]), Convert.ToInt32(resultArray[6]), Convert.ToBoolean(resultArray[7]), Convert.ToBoolean(resultArray[8]), Convert.ToBoolean(resultArray[9]), Convert.ToBoolean(resultArray[10]));
                 subs.Add(sub2);
             }
             return subs;
@@ -210,6 +238,36 @@ namespace JudBizz
             string strSql = CreateInsertIntoSqlQuery(tempSubEntrepeneur);
             result = executor.WriteToDataBase(strSql);
             return result;
+        }
+
+        /// <summary>
+        /// Method, that toggles value of active
+        /// </summary>
+        public void ToggleActive()
+        {
+            if (active)
+            {
+                active = false;
+            }
+            else
+            {
+                active = true;
+            }
+        }
+
+        /// <summary>
+        /// Method, that toggles value of agreementConcluded
+        /// </summary>
+        public void ToggleAgreementConcluded()
+        {
+            if (agreementConcluded)
+            {
+                agreementConcluded = false;
+            }
+            else
+            {
+                agreementConcluded = true;
+            }
         }
 
         /// <summary>
@@ -244,51 +302,21 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Method, that toggles value of agreementConcluded
-        /// </summary>
-        public void ToggleAgreementConcluded()
-        {
-            if (agreementConcluded)
-            {
-                agreementConcluded = false;
-            }
-            else
-            {
-                agreementConcluded = true;
-            }
-        }
-
-        /// <summary>
-        /// Method, that toggles value of active
-        /// </summary>
-        public void ToggleActive()
-        {
-            if (active)
-            {
-                active = false;
-            }
-            else
-            {
-                active = true;
-            }
-        }
-
-        /// <summary>
         /// Returns main content as a string
         /// </summary>
-        /// <returns></returns>
+        /// <returns>string</returns>
         public override string ToString()
         {
-                string result = GetEntrepeneurName();
-                return result;
+            string result = name;
+            return result;
         }
 
         /// <summary>
-        /// Method, that updates an Enterprise in Db
+        /// Method, that updates an Subenterprises in Db
         /// </summary>
         /// <param name="tempSubEntrepeneur"></param>
         /// <returns>bool</returns>
-        public bool UpdateEnterpriseList(SubEntrepeneur tempSubEntrepeneur)
+        public bool UpdateSubEntrepeneurs(SubEntrepeneur tempSubEntrepeneur)
         {
             bool result;
             string strSql = CreateUpdateSqlQuery(tempSubEntrepeneur);
@@ -422,6 +450,25 @@ namespace JudBizz
         public bool AgreementConcluded { get => agreementConcluded; }
 
         public bool Active { get => active; }
+
+        public string Name
+        {
+            get => name;
+            set
+            {
+                try
+                {
+                    if (value != null)
+                    {
+                        name = value;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
         #endregion
     }
 }

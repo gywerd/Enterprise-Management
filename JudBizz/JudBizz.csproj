@@ -93,12 +93,14 @@
     <Compile Include="Category.cs" />
     <Compile Include="Enterprise.cs" />
     <Compile Include="EnterpriseForm.cs" />
+    <Compile Include="IndexableRequest.cs" />
     <Compile Include="IndexableSubEntrepeneur.cs" />
     <Compile Include="PdfCreator.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectStatus.cs" />
     <Compile Include="Region.cs" />
     <Compile Include="Request.cs" />
+    <Compile Include="RequestStatus.cs" />
     <Compile Include="SubEntrepeneur.cs" />
     <Compile Include="TenderForm.cs" />
     <Compile Include="User.cs" />

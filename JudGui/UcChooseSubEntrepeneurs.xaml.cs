@@ -127,7 +127,7 @@ namespace JudGui
                 if (temp.Index == selectedIndex)
                 {
                     Bizz.tempLegalEntity = temp;
-                    Bizz.tempSubEntrepeneur = new SubEntrepeneur();
+                    Bizz.tempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
                     Bizz.tempSubEntrepeneur.EnterpriseList = Bizz.tempEnterprise.Id;
                     Bizz.tempSubEntrepeneur.Entrepeneur = temp.Id;
                     if (!Bizz.tempSubEntrepeneur.Active)
@@ -203,6 +203,13 @@ namespace JudGui
             foreach (IndexableLegalEntity entity in tempResult)
             {
                 if (entity.Region == ComboBoxArea.SelectedIndex)
+                {
+                    result.Add(entity);
+                }
+            }
+            foreach (IndexableLegalEntity entity in tempResult)
+            {
+                if (entity.Region != ComboBoxArea.SelectedIndex && entity.CountryWide.Equals(true))
                 {
                     result.Add(entity);
                 }

@@ -54,7 +54,6 @@ namespace JudGui
 
         private void ButtonEdit_Click(object sender, RoutedEventArgs e)
         {
-            //To create:
             // Code that save changes to the project
             bool result = Bizz.CPR.UpdateProject(Bizz.tempProject);
 

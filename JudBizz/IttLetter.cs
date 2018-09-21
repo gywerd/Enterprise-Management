@@ -10,7 +10,7 @@ namespace JudBizz
     public class IttLetter
     {
         #region Fields
-        private int ittLetterId;
+        private int id;
         private bool sent;
         private DateTime? sentDate;
 
@@ -53,29 +53,70 @@ namespace JudBizz
         /// <param name="sentDate"></param>
         public IttLetter(int id, bool sent, DateTime? sentDate)
         {
-            this.ittLetterId = id;
+            this.id = id;
             this.sent = sent;
             this.sentDate = sentDate;
         }
+
+        /// <summary>
+        /// Constructor for adding ITT letter from Db
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sent"></param>
+        /// <param name="sentDate"></param>
+        public IttLetter(IttLetter ittLetter)
+        {
+            this.id = ittLetter.Id;
+            this.sent = ittLetter.Sent;
+            this.sentDate = ittLetter.SentDate;
+        }
+        
         #endregion
 
         #region Methods
         /// <summary>
-        /// Returns main content as a string
+        /// Method, that creates sqlQuery to delete a Request entry in Db
         /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        /// <param name="sent">int</param>
+        /// <param name="id">int</param>
+        /// <returns>string</returns>
+        private string CreateDeleteFromSqlQuery(int id)
         {
+            //DELETE FROM table_name WHERE condition;
+            string result = @"DELETE FROM dbo.IttLetters WHERE Id = " + id + ";";
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that creates sqlQuery to update status of a Request entry in Db
+        /// </summary>
+        /// <param name="sent">int</param>
+        /// <param name="id">int</param>
+        /// <returns>string</returns>
+        private string CreateUpdateIttLetterSentSqlQuery(bool sent, int id, string date)
+        {
+            //UPDATE [dbo].[IttLetters] SET [Status] = <Status, int,>,[SentDate] = <ReceivedDate, date,> WHERE [Id] = <Id, int>;
+            string query = "";
             if (sent)
             {
-                string result = "Tilbudsbrev sendt: " + sentDate.Value.ToShortDateString();
-                return result;
+                query = @"UPDATE [dbo].[IttLetters] SET [Sent] = 'true', [SentDate] = '" + date + @"' WHERE [Id] = " + id.ToString();
             }
             else
             {
-                string result = "Tilbudsbrev ikke sendt";
-                return result;
+                query = @"UPDATE [dbo].[IttLetters] SET [Sent] = 'false', [SentDate] = '1899-12-31' WHERE [Id] = " + id.ToString();
             }
+            return query;
+        }
+
+        /// <summary>
+        /// Method, that deletes a Request from Db
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteFromIttLetters(int id)
+        {
+            bool result;
+            string strSql = CreateDeleteFromSqlQuery(id);
+            result = executor.WriteToDataBase(strSql);
         }
 
         /// <summary>
@@ -104,26 +145,60 @@ namespace JudBizz
             return ittLetters;
         }
 
-        public void DeleteFromIttLetters(int id)
+        /// <summary>
+        /// Methods that toggles value of Sent field
+        /// </summary>
+        public void ToggleSent()
         {
-            bool result;
-            string strSql = CreateDeleteFromSqlQuery(id);
-            result = executor.WriteToDataBase(strSql);
+            if (sent)
+            {
+                sent = false;
+            }
+            else
+            {
+                sent = true;
+            }
         }
 
-        private string CreateDeleteFromSqlQuery(int id)
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
         {
-            //DELETE FROM table_name WHERE condition;
-            string result = @"DELETE FROM dbo.IttLetters WHERE Id = " + id + ";";
+            if (sent)
+            {
+                string result = "Tilbudsbrev sendt: " + sentDate.Value.ToShortDateString();
+                return result;
+            }
+            else
+            {
+                string result = "Tilbudsbrev ikke sendt";
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Method, that updates sent status for an IttLetter in Db
+        /// </summary>
+        /// <param name="sent">bool</param>
+        /// <param name="id">int</param>
+        /// <returns>bool</returns>
+        public bool UpdateIttLetterSent(int id, bool sent, string date)
+        {
+            bool result;
+            string strSql = CreateUpdateIttLetterSentSqlQuery(sent, id, date);
+            result = executor.WriteToDataBase(strSql);
             return result;
         }
 
         #endregion
 
         #region Properties
-        public int IttLetterId { get => ittLetterId; }
+        public int Id { get => id; }
         public bool Sent { get => sent; }
         public DateTime? SentDate { get => sentDate; set => sentDate = value; }
+
         #endregion
     }
 }

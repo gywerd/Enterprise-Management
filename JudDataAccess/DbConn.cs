@@ -224,6 +224,7 @@ namespace JudDataAccess
             catch(SqlException ex)
             {
                 MessageBox.Show(ex.ToString());
+                throw ex;
             }
         }
 

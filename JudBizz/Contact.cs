@@ -81,26 +81,27 @@ namespace JudBizz
         /// <param name="contact">Contact</param>
         public Contact(Contact contact)
         {
-            this.id = contact.Id;
-            this.legalEntity = contact.LegalEntity;
-            this.name = contact.Name;
-            this.description = contact.Description;
-            this.contactInfo = contact.ContactInfo;
+            if (contact != null)
+            {
+                this.id = contact.Id;
+                this.legalEntity = contact.LegalEntity;
+                this.name = contact.Name;
+                this.description = contact.Description;
+                this.contactInfo = contact.ContactInfo;
+            }
+            else
+            {
+                id = 0;
+                legalEntity = "";
+                name = "";
+                description = "";
+                contactInfo = 0;
+            }
         }
 
         #endregion
 
         #region Methods
-        public override string ToString()
-        {
-            string tempName = name;
-            if (description != "")
-            {
-                tempName += " (" + description + ")";
-            }
-            return tempName;
-        }
-
         public List<Contact> GetContacts()
         {
             List<string> results = executor.ReadListFromDataBase("Contacts");
@@ -113,6 +114,20 @@ namespace JudBizz
                 contacts.Add(contact);
             }
             return contacts;
+        }
+
+        /// <summary>
+        /// Method, that returns main info as string
+        /// </summary>
+        /// <returns>string</returns>
+        public override string ToString()
+        {
+            string tempName = name;
+            if (description != "")
+            {
+                tempName += " (" + description + ")";
+            }
+            return tempName;
         }
 
         #endregion
