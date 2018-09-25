@@ -82,6 +82,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContactInfo.cs" />
     <Compile Include="DocCreator.cs" />
     <Compile Include="IndexableContact.cs" />
     <Compile Include="IndexableEnterprise.cs" />

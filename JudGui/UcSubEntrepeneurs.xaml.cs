@@ -61,27 +61,6 @@ namespace JudGui
             UcRight.Content = ucViewSubEntrepeneurs;
         }
 
-        private void ButtonViewAll_Click(object sender, RoutedEventArgs e)
-        {
-            Bizz.UcRightActive = true;
-            UcViewAllEnterpriseList ucViewAllEnterpriseList = new UcViewAllEnterpriseList(Bizz, UcRight);
-            UcRight.Content = ucViewAllEnterpriseList;
-        }
-
-        private void ButtonViewOpen_Click(object sender, RoutedEventArgs e)
-        {
-            Bizz.UcRightActive = true;
-            UcViewOpenEnterpriseList ucViewOpenEnterpriseList = new UcViewOpenEnterpriseList(Bizz, UcRight);
-            UcRight.Content = ucViewOpenEnterpriseList;
-        }
-
-        private void ButtonViewFinal_Click(object sender, RoutedEventArgs e)
-        {
-            Bizz.UcRightActive = true;
-            UcViewFinalEnterpriseList ucViewFinalEnterpriseList = new UcViewFinalEnterpriseList(Bizz, UcRight);
-            UcRight.Content = ucViewFinalEnterpriseList;
-        }
-
         #endregion
     }
 }

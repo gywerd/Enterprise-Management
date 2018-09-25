@@ -33,7 +33,7 @@ namespace JudGui
             InitializeComponent();
             this.Bizz = bizz;
             this.UcRight = ucRight;
-            GenerateComboBoxCaseIdItems();
+            ComboBoxCaseId.ItemsSource = Bizz.ActiveProjects;
         }
 
         #region Buttons
@@ -65,21 +65,21 @@ namespace JudGui
                     Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
-            TextBoxCaseName.Content = Bizz.tempProject.Name;
+            TextBoxCaseName.Text = Bizz.tempProject.Name;
             IndexableEnterpriseList = GetIndexableEnterpriseList();
         }
 
         #endregion
 
         #region Methods
-        private void GenerateComboBoxCaseIdItems()
-        {
-            ComboBoxCaseId.Items.Clear();
-            foreach (IndexableProject temp in Bizz.ActiveProjects)
-            {
-                ComboBoxCaseId.Items.Add(temp);
-            }
-        }
+        //private void GenerateComboBoxCaseIdItems()
+        //{
+        //    ComboBoxCaseId.Items.Clear();
+        //    foreach (IndexableProject temp in Bizz.ActiveProjects)
+        //    {
+        //        ComboBoxCaseId.Items.Add(temp);
+        //    }
+        //}
 
         private List<IndexableEnterprise> GetIndexableEnterpriseList()
         {

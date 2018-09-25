@@ -18,6 +18,7 @@ namespace JudBizz
         public User CurrentUser = new User(strConnection);
         public Address tempAddress = new Address(strConnection);
         public Contact tempContact = new Contact(strConnection);
+        public ContactInfo tempContactInfo = new ContactInfo(strConnection);
         public Enterprise tempEnterprise = new Enterprise(strConnection);
         public IttLetter tempIttLetter = new IttLetter(strConnection);
         public LegalEntity tempLegalEntity = new LegalEntity();
@@ -33,6 +34,7 @@ namespace JudBizz
         public static Address CAD = new Address(strConnection);
         public static Builder CBU = new Builder(strConnection);
         public static Category CCT = new Category(strConnection);
+        public static ContactInfo CCI = new ContactInfo(strConnection);
         public static Contact CCP = new Contact(strConnection);
         public static CraftGroup CCG = new CraftGroup(strConnection);
         public static Enterprise CEP = new Enterprise(strConnection);
@@ -57,6 +59,7 @@ namespace JudBizz
         public List<Builder> Builders = CBU.GetBuilders();
         public List<Category> Categories = CCT.GetCategories();
         public List<Contact> Contacts = CCP.GetContacts();
+        public List<ContactInfo> ContactInfoList = CCI.GetContactInfoList(strConnection);
         public List<CraftGroup> CraftGroups = CCG.GetCraftGroups();
         public List<Enterprise> EnterpriseList = CEP.GetEnterpriseList();
         public List<EnterpriseForm> EnterpriseForms = CEF.GetEnterpriseForms();

@@ -134,6 +134,7 @@ namespace JudBizz
 
         #region Properties
         public int Id { get => id; }
+
         public string LegalEntity
         {
             get => legalEntity;

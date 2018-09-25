@@ -194,17 +194,8 @@
     <Compile Include="UcUsers.xaml.cs">
       <DependentUpon>UcUsers.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UcViewAllEnterpriseList.xaml.cs">
-      <DependentUpon>UcViewAllEnterpriseList.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UcViewEnterpriseList.xaml.cs">
       <DependentUpon>UcViewEnterpriseList.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UcViewFinalEnterpriseList.xaml.cs">
-      <DependentUpon>UcViewFinalEnterpriseList.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UcViewOpenEnterpriseList.xaml.cs">
-      <DependentUpon>UcViewOpenEnterpriseList.xaml</DependentUpon>
     </Compile>
     <Compile Include="UcViewSubEntrepeneurs.xaml.cs">
       <DependentUpon>UcViewSubEntrepeneurs.xaml</DependentUpon>
@@ -234,6 +225,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="Documentation\BIC Nyheder version 1.1.5.pdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -325,8 +317,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UcEnterprises.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UcIttLetters.xaml">
       <SubType>Designer</SubType>
@@ -384,19 +376,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UcViewAllEnterpriseList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UcViewEnterpriseList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UcViewFinalEnterpriseList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UcViewOpenEnterpriseList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
