@@ -48,7 +48,7 @@ namespace JudGui
         private void ButtonGeneratePdf_Click(object sender, RoutedEventArgs e)
         {
             PdfCreator pdfCreator = new PdfCreator();
-            string path = pdfCreator.GenerateEnterpriseListPdf(Bizz.tempProject, IndexableEnterpriseList, Bizz.Users);
+            string path = pdfCreator.GenerateEnterpriseListPdf(Bizz.TempProject, IndexableEnterpriseList, Bizz.Users);
             System.Diagnostics.Process.Start(path);
         }
 
@@ -62,10 +62,10 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
-            TextBoxCaseName.Text = Bizz.tempProject.Name;
+            TextBoxCaseName.Text = Bizz.TempProject.Name;
             IndexableEnterpriseList = GetIndexableEnterpriseList();
         }
 
@@ -87,7 +87,7 @@ namespace JudGui
             int i = 0;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.tempProject.Id)
+                if (enterprise.Project == Bizz.TempProject.Id)
                 {
                     IndexableEnterprise temp = new IndexableEnterprise(i, enterprise);
                     result.Add(temp);

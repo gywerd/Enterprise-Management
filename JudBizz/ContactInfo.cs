@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JudBizz
 {
@@ -121,6 +122,34 @@ namespace JudBizz
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Method, that creates a new Contact in Db
+        /// </summary>
+        /// <param name="tempContactInfo">ContactInfo</param>
+        /// <returns>int</returns>
+        public int CreateContactInfoInDb(ContactInfo tempContactInfo, string strCon)
+        {
+            int result = 0;
+            int count = 0;
+            bool dbAnswer = false;
+            List<ContactInfo> tempContactInfoList = new List<ContactInfo>();
+            //INSERT INTO [dbo].[ContactInfoList]([Phone], [Fax], [Mobile], [Email]) VALUES(<Phone, nvarchar(10),>, <Fax, nvarchar(10),>, <Mobile, nvarchar(10),>, <Email, nvarchar(10),>)
+            string strSql = "INSERT INTO[dbo].[Contacts]([Phone], [Fax], [Mobile], [Email]) VALUES(" + tempContactInfo.Phone + ", '" + tempContactInfo.Fax + "', '" + tempContactInfo.Mobile + "', '" + tempContactInfo.Email + "')";
+            dbAnswer = executor.WriteToDataBase(strSql);
+            if (!dbAnswer)
+            {
+                MessageBox.Show("Databasen returnerede en fejl ved forsøg på at oprette ny kontaktinfo.", "Databasefejl", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            tempContactInfoList = GetContactInfoList(strCon);
+            count = tempContactInfoList.Count;
+            result = tempContactInfoList[count - 1].Id;
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that fetches a ContactInfo list
+        /// </summary>
+        /// <returns></returns>
         public List<ContactInfo> GetContactInfoList(string strCon)
         {
             List<string> results = executor.ReadListFromDataBase("ContactInfoList");
@@ -133,6 +162,24 @@ namespace JudBizz
                 contacts.Add(contactInfo);
             }
             return contacts;
+        }
+
+        /// <summary>
+        /// Method, that sets id, if id == 0
+        /// </summary>
+        public void SetId(int id)
+        {
+            try
+            {
+                if (this.id == 0 && id >= 1)
+                {
+                    this.id = id;
+                }
+            }
+            catch (Exception)
+            {
+                this.id = 0;
+            }
         }
 
         /// <summary>
@@ -160,11 +207,11 @@ namespace JudBizz
             {
                 tempName += "Fax:" + fax + "\n";
             }
-            if (fax != null && fax != "")
+            if (mobile != null && mobile != "")
             {
                 tempName += "Mobil:" + mobile + "\n";
             }
-            if (fax != null && fax != "")
+            if (email != null && email != "")
             {
                 tempName += "Email:" + email;
             }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JudBizz
 {
@@ -12,7 +13,7 @@ namespace JudBizz
         #region Fields
         private int id;
         private bool received;
-        private DateTime? receivedDate;
+        private DateTime receivedDate;
         private double price;
         private bool chosen;
 
@@ -28,7 +29,7 @@ namespace JudBizz
         public Offer()
         {
             this.received = false;
-            this.receivedDate = null;
+            this.receivedDate = Convert.ToDateTime("1932-03-17");
             this.price = 0;
             this.chosen = false;
         }
@@ -41,6 +42,11 @@ namespace JudBizz
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
+
+            this.received = false;
+            this.receivedDate = Convert.ToDateTime("1932-03-17");
+            this.price = 0;
+            this.chosen = false;
         }
 
         /// <summary>
@@ -50,10 +56,21 @@ namespace JudBizz
         /// <param name="receivedDate">DateTime?</param>
         /// <param name="price">double</param>
         /// <param name="chosen">bool</param>
-        public Offer(bool received, DateTime? receivedDate, double price, bool chosen)
+        public Offer(bool received, double price, bool chosen, DateTime? receivedDate = null)
         {
             this.received = received;
-            this.receivedDate = receivedDate;
+            if (receivedDate == null)
+            {
+                if (received)
+                {
+                    receivedDate = DateTime.Now;
+                }
+                else
+                {
+                    receivedDate = Convert.ToDateTime("1932-03-17");
+                }
+            }
+            this.receivedDate = Convert.ToDateTime(receivedDate);
             this.price = price;
             this.chosen = chosen;
         }
@@ -66,11 +83,22 @@ namespace JudBizz
         /// <param name="receivedDate">DateTime?</param>
         /// <param name="price">double</param>
         /// <param name="chosen">bool</param>
-        public Offer(int id, bool received, double price, bool chosen, DateTime? receivedDate = null)
+        public Offer(int id, bool received, double price, bool chosen, DateTime? receivedDate)
         {
             this.id = id;
             this.received = received;
-            this.receivedDate = receivedDate;
+            if (receivedDate == null)
+            {
+                if (received)
+                {
+                    receivedDate = DateTime.Now;
+                }
+                else
+                {
+                    receivedDate = Convert.ToDateTime("1932-03-17");
+                }
+            }
+            this.receivedDate = Convert.ToDateTime(receivedDate);
             this.price = price;
             this.chosen = chosen;
         }
@@ -80,7 +108,7 @@ namespace JudBizz
         /// </summary>
         /// <param name="id">int</param>
         /// <param name="received">bool</param>
-        /// <param name="receivedDate">DateTime?</param>
+        /// <param name="receivedDate">DateTime</param>
         /// <param name="price">double</param>
         /// <param name="chosen">bool</param>
         public Offer(Offer offer)
@@ -104,8 +132,18 @@ namespace JudBizz
             {
                 receivedDate = DateTime.Now;
             }
-            this.received = true;
-            this.receivedDate = receivedDate;
+            if (receivedDate.Value.ToShortDateString().Substring(0, 10) != "17-03-1932")
+            {
+                this.received = true;
+            }
+            else
+            {
+                this.received = false;
+            }
+            if (this.receivedDate.ToShortDateString().Substring(0, 10) != receivedDate.Value.ToShortDateString().Substring(0, 10))
+            {
+                this.receivedDate = Convert.ToDateTime(receivedDate);
+            }
         }
 
         /// <summary>
@@ -121,23 +159,48 @@ namespace JudBizz
         }
 
         /// <summary>
+        /// Method, that creates a new Offer in Db
+        /// </summary>
+        /// <param name="tempOffer">Offer</param>
+        /// <returns>int</returns>
+        public int CreateOfferInDb(Offer tempOffer)
+        {
+            int result = 0;
+            int count = 0;
+            bool dbAnswer = false;
+            List<Offer> tempOffers = new List<Offer>();
+            //INSERT INTO [dbo].[Offers]([Received], [ReceivedDate], [Price], [Chosen]) VALUES(<Received, bit,>, <ReceivedDate, date,>, <Price, money,>, <Chosen, bit,>)
+            string tempReceivedDate = tempOffer.ReceivedDate.Year + "-" + tempOffer.ReceivedDate.Month + "-" + tempOffer.ReceivedDate.Day;
+            string strSql = "INSERT INTO[dbo].[Offers]([Received], [ReceivedDate], [Price], [Chosen]) VALUES('" + tempOffer.Received + "', '" + tempReceivedDate + "', " + tempOffer.Price + ", '" + tempOffer.Chosen + "')";
+            dbAnswer = executor.WriteToDataBase(strSql);
+            if (!dbAnswer)
+            {
+                MessageBox.Show("Databasen returnerede en fejl ved forsøg på at oprette et nyt tilbud.", "Databasefejl", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            tempOffers = GetOffers();
+            count = tempOffers.Count;
+            result = tempOffers[count - 1].Id;
+            return result;
+        }
+
+        /// <summary>
         /// Method, that creste a Update Offer ReceivedSQL-query
         /// </summary>
         /// <param name="sent"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        private string CreateUpdateOfferReceivedSqlQuery(bool sent, int id, string date)
+        private string CreateUpdateOfferReceivedSqlQuery(bool sent, int id, string date, double price, bool chosen)
         {
             string query = "";
 
-            //UPDATE [dbo].[Offers] SET [Status] = <Status, int,>,[ReceivedDate] = <ReceivedDate, date,> WHERE [Id] = <Id, int>;
+            //UPDATE [dbo].[Offers] SET [Status] = <Status, int,>,[ReceivedDate] = <ReceivedDate, date,>, [Price] = <Price, money,>, [Chosen] = <Chosen, bit,> WHERE [Id] = <Id, int>;
             if (sent)
             {
-                query = @"UPDATE [dbo].[Offers] SET [Received] = 'true', [ReceivedDate] = '" + date + @"' WHERE [Id] = " + id.ToString();
+                query = @"UPDATE [dbo].[Offers] SET [Received] = 'true', [ReceivedDate] = '" + date + @"', [Price] = " + price.ToString() + ", [Chosen] = '" + chosen + "' WHERE [Id] = " + id.ToString();
             }
             else
             {
-                query = @"UPDATE [dbo].[Offers] SET [Received] = 'false', [ReceivedDate] = '1899-12-31' WHERE [Id] = " + id.ToString();
+                query = @"UPDATE [dbo].[Offers] SET [Received] = 'false', [ReceivedDate] = '1932-03-17', [Price] = 0, [Chosen] = 'false' WHERE [Id] = " + id.ToString();
             }
             return query;
         }
@@ -154,7 +217,7 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Retrieves a list of regions from Db
+        /// Method, that fetches a list of Offers from Db
         /// </summary>
         /// <returns></returns>
         public List<Offer> GetOffers()
@@ -172,7 +235,7 @@ namespace JudBizz
                 }
                 else
                 {
-                    Offer offer = new Offer(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToInt32(resultArray[3]), Convert.ToBoolean(resultArray[4]));
+                    Offer offer = new Offer(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToInt32(resultArray[3]), Convert.ToBoolean(resultArray[4]), Convert.ToDateTime("1932-03-17"));
                     offers.Add(offer);
                 }
             }
@@ -186,7 +249,25 @@ namespace JudBizz
         public void ResetReceived()
         {
             this.received = false;
-            this.receivedDate = Convert.ToDateTime("1899-12-31");
+            this.receivedDate = Convert.ToDateTime("1932-03-17");
+        }
+
+        /// <summary>
+        /// Method, that sets id, if id == 0
+        /// </summary>
+        public void SetId(int id)
+        {
+            try
+            {
+                if (this.id == 0 && id >= 1)
+                {
+                    this.id = id;
+                }
+            }
+            catch (Exception)
+            {
+                this.id = 0;
+            }
         }
 
         /// <summary>
@@ -236,7 +317,7 @@ namespace JudBizz
         {
             if (received)
             {
-                string result = "Offer received: " + receivedDate.Value.ToShortDateString();
+                string result = "Offer received: " + receivedDate.ToShortDateString();
                 return result;
             }
             else
@@ -252,10 +333,10 @@ namespace JudBizz
         /// <param name="sent">bool</param>
         /// <param name="id">int</param>
         /// <returns>bool</returns>
-        public bool UpdateOfferReceived(int id, bool sent, string date)
+        public bool UpdateOfferReceived(int id, bool sent, string date, double price, bool chosen)
         {
             bool result;
-            string strSql = CreateUpdateOfferReceivedSqlQuery(sent, id, date);
+            string strSql = CreateUpdateOfferReceivedSqlQuery(sent, id, date, price, chosen);
             result = executor.WriteToDataBase(strSql);
             return result;
         }
@@ -265,7 +346,7 @@ namespace JudBizz
         #region Properties
         public int Id { get => id; }
         public bool Received { get => received; }
-        public DateTime? ReceivedDate { get => receivedDate; }
+        public DateTime ReceivedDate { get => receivedDate; }
         public double Price
         {
             get => price;

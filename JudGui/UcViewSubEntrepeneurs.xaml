@@ -131,6 +131,23 @@
                 </TransformGroup>
             </RadioButton.RenderTransform>
         </RadioButton>
+        <RadioButton x:Name="RadioButtonShowAgreement" 
+                     Checked="RadioButtonShowAgreement_Checked" 
+                     Content="Oversigt for kontraktudfærdigelse" 
+                     FontSize="14" 
+                     Grid.Column="1" Grid.Row="8" Grid.ColumnSpan="3" 
+                     HorizontalAlignment="Left" 
+                     RenderTransformOrigin="1,1"
+                     VerticalAlignment="Top" >
+            <RadioButton.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform CenterX="-230" CenterY="-30" ScaleX="2" ScaleY="2"  />
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </RadioButton.RenderTransform>
+        </RadioButton>
         <Button x:Name="ButtonCancel" Content="Annuller"
                 Click="ButtonCancel_Click" 
                 FontSize="48" FontWeight="Bold" 

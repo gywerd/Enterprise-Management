@@ -24,6 +24,11 @@ namespace JudGui
     public partial class UcEditSubEntrepeneurs : UserControl
     {
         #region Fields
+        public DateTime Date = new DateTime();
+        public bool Changed = false;
+        public bool ChangeSentDate;
+        public bool DbStatus = false;
+        public bool OverrideControl = false;
         public Bizz Bizz;
         public UserControl UcRight;
         public List<IndexableContact> IndexableContacts = new List<IndexableContact>();
@@ -33,6 +38,7 @@ namespace JudGui
 
         #endregion
 
+        #region Constructors
         public UcEditSubEntrepeneurs(Bizz bizz, UserControl ucRight)
         {
             InitializeComponent();
@@ -41,6 +47,8 @@ namespace JudGui
             ComboBoxCaseId.ItemsSource = Bizz.ActiveProjects;
             ComboBoxRequest.ItemsSource = Bizz.RequestStatusList;
         }
+
+        #endregion
 
         #region Buttons
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
@@ -64,17 +72,23 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    break;
                 }
             }
-            TextBoxName.Text = Bizz.tempProject.Name;
+            OverrideControl = true;
+            TextBoxName.Text = Bizz.TempProject.Name;
             IndexableEnterpriseList = GetIndexableEnterpriseList();
             ComboBoxEnterprise.ItemsSource = IndexableEnterpriseList;
             ComboBoxEnterprise.SelectedIndex = 0;
+            ListBoxSubEntrepeneurs.ItemsSource = "";
+            ListBoxSubEntrepeneurs.SelectedIndex = -1;
             ClearTempEntities();
             TextBoxEntrepeneur.Text = "";
+            TextBoxOfferPrice.Text = "";
             ResetComboBoxes();
             ResetRadioButtons();
+            OverrideControl = false;
         }
 
         private void ComboBoxContact_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -82,109 +96,307 @@ namespace JudGui
             int selectedIndex = ComboBoxContact.SelectedIndex;
             if (selectedIndex >= 0)
             {
-                bool changed = false;
+                Changed = false;
                 IndexableContact contact = IndexableContacts[selectedIndex];
-                if (Bizz.tempSubEntrepeneur.Contact != contact.Id)
+                if (Bizz.TempSubEntrepeneur.Contact != contact.Id)
                 {
-                    Bizz.tempSubEntrepeneur.Contact = contact.Id;
-                    changed = true;
+                    Bizz.TempSubEntrepeneur.Contact = contact.Id;
+                    Changed = true;
                 }
-                if (changed)
+                if (Changed)
                 {
-                    Bizz.CSE.UpdateSubEntrepeneurs(Bizz.tempSubEntrepeneur);
+                    DbStatus = Bizz.CSE.UpdateSubEntrepeneurs(Bizz.TempSubEntrepeneur);
+                    if (DbStatus)
+                    {
+                        MessageBox.Show("Kontaktpersonen blev opdateret", "Opdater kontakt", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Bizz.SubEntrepeneurs.Clear();
+                        Bizz.SubEntrepeneurs = Bizz.CSE.GetSubEntrepeneurs();
+                    }
                 }
-                Bizz.SubEntrepeneurs.Clear();
-                Bizz.SubEntrepeneurs = Bizz.CSE.GetSubEntrepeneurs();
+                if (Changed && !DbStatus)
+                {
+                    MessageBox.Show("Databasen meldte en fejl. Kontaktpersonen blev ikke opdateret", "Opdater kontakt", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Bizz.TempSubEntrepeneur.Contact = 0;
+                    ComboBoxContact.SelectedIndex = 0;
+                }
+                DbStatus = false;
+                Changed = false;
             }
             else
             {
-                Bizz.tempContact = new Contact(Bizz.strConnection);
-                DateTime date = DateTime.Now;
-                DateRequest.DisplayDate = date;
-                DateRequest.Text = "";
+                Bizz.TempContact = new Contact(Bizz.strConnection);
             }
         }
 
         private void ComboBoxEnterprise_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ClearTempEntities();
-            TextBoxEntrepeneur.Text = "";
-            TextBoxOfferPrice.Text = "";
-            ResetComboBoxes();
-            ResetRadioButtons();
-            int selectedIndex = ComboBoxEnterprise.SelectedIndex;
-            foreach (IndexableEnterprise temp in IndexableEnterpriseList)
+            if (!OverrideControl)
             {
-                if (temp.Index == selectedIndex)
+                OverrideControl = true;
+                ClearTempEntities();
+                TextBoxEntrepeneur.Text = "";
+                TextBoxOfferPrice.Text = "";
+                ResetComboBoxes();
+                ResetRadioButtons();
+                OverrideControl = false;
+                int selectedIndex = ComboBoxEnterprise.SelectedIndex;
+                foreach (IndexableEnterprise temp in IndexableEnterpriseList)
                 {
-                    Bizz.tempEnterprise = new Enterprise(temp.Id, temp.Project, temp.Name, temp.Elaboration, temp.OfferList, temp.CraftGroup1, temp.CraftGroup2, temp.CraftGroup3, temp.CraftGroup4);
+                    if (temp.Index == selectedIndex)
+                    {
+                        Bizz.TempEnterprise = new Enterprise(temp.Id, temp.Project, temp.Name, temp.Elaboration, temp.OfferList, temp.CraftGroup1, temp.CraftGroup2, temp.CraftGroup3, temp.CraftGroup4);
+                        break;
+                    }
                 }
-            }
-            IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
-            ListBoxSubEntrepeneurs.UnselectAll();
-            ListBoxSubEntrepeneurs.ItemsSource = null;
-            if (IndexableSubEntrepeneurs.Count != 0)
-            {
-                ListBoxSubEntrepeneurs.ItemsSource = IndexableSubEntrepeneurs;
+                IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
+                OverrideControl = true;
+                ListBoxSubEntrepeneurs.UnselectAll();
+                ListBoxSubEntrepeneurs.ItemsSource = null;
+                OverrideControl = false;
+                if (IndexableSubEntrepeneurs.Count != 0)
+                {
+                    ListBoxSubEntrepeneurs.ItemsSource = IndexableSubEntrepeneurs;
+                }
             }
         }
 
         private void ComboBoxRequest_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int selectedIndex = ComboBoxRequest.SelectedIndex;
-            if (selectedIndex >= 0)
+            if (!OverrideControl)
             {
-                bool changed = CheckRequest(selectedIndex);
-                if (changed)
+                int selectedIndex = ComboBoxRequest.SelectedIndex;
+                if (selectedIndex > 0)
                 {
-                    UpdateRequestStatusInDb(selectedIndex, Bizz.tempSubEntrepeneur.Request);
+                    CheckRequest(selectedIndex);
+                    if (Changed)
+                    {
+                        UpdateRequestStatusInDb(selectedIndex, Bizz.TempSubEntrepeneur.Request);
+                    }
+                    Bizz.SubEntrepeneurs.Clear();
+                    Bizz.SubEntrepeneurs = Bizz.CSE.GetSubEntrepeneurs();
+                    Changed = false;
+                    Date = new DateTime();
                 }
-                Bizz.SubEntrepeneurs.Clear();
-                Bizz.SubEntrepeneurs = Bizz.CSE.GetSubEntrepeneurs();
+                else if (selectedIndex == 0)
+                {
+                    Changed = false;
+                    Date = new DateTime();
+                }
+                else
+                {
+                    ComboBoxRequest.SelectedIndex = -1;
+                    Bizz.TempRequest = new Request(Bizz.strConnection);
+                    DateTime date = DateTime.Now;
+                    DateRequest.DisplayDate = date;
+                    DateRequest.Text = "";
+                }
             }
-            else
+        }
+
+        private void DateIttLetter_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!OverrideControl)
             {
-                ComboBoxRequest.SelectedIndex = -1;
-                Bizz.tempRequest = new Request(Bizz.strConnection);
-                DateTime date = DateTime.Now;
-                DateRequest.DisplayDate = date;
-                DateRequest.Text = "";
+                if (Bizz != null)
+                {
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
+                    {
+                        if (Bizz.TempSubEntrepeneur.IttLetter != Bizz.TempIttLetter.Id)
+                        {
+                            Bizz.TempIttLetter = GetBizzTempIttLetter();
+                        }
+                        if (DateIttLetter.Text != "")
+                        {
+                            if (DateIttLetter.Text.Substring(0, 10) != Bizz.TempIttLetter.SentDate.ToShortDateString().Substring(0, 10))
+                            {
+                                Bizz.TempIttLetter.SentDate = Convert.ToDateTime(DateIttLetter.Text);
+                                Changed = true;
+                            }
+                            if (DateIttLetter.DisplayDate.ToShortDateString().Substring(0, 10) != DateIttLetter.Text.Substring(0, 10))
+                            {
+                                OverrideControl = true;
+                                DateIttLetter.DisplayDate = Bizz.TempIttLetter.SentDate;
+                                OverrideControl = false;
+                            }
+                        }
+                        else
+                        {
+                            DateIttLetter.DisplayDate = DateTime.Now;
+                        }
+                        if (Changed)
+                        {
+                            ResetIttLetters();
+                            Changed = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DateOffer_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!OverrideControl)
+            {
+                if (Bizz != null)
+                {
+                    if (Bizz.TempSubEntrepeneur.Offer != Bizz.TempOffer.Id)
+                    {
+                        Bizz.TempOffer = GetBizzTempOffer();
+                    }
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
+                    {
+                        if (DateOffer.Text != "")
+                        {
+                            Date = Bizz.TempOffer.ReceivedDate;
+                            if (DateOffer.Text.Substring(0, 10) != Date.ToShortDateString().Substring(0, 10))
+                            {
+                                Bizz.TempOffer.SetReceivedDate(Convert.ToDateTime(DateOffer.Text));
+                                Changed = true;
+                            }
+                            if (DateOffer.DisplayDate.ToShortDateString().Substring(0, 10) != Date.ToShortDateString().Substring(0, 10))
+                            {
+                                DateOffer.DisplayDate = Bizz.TempOffer.ReceivedDate;
+                            }
+                        }
+                        else
+                        {
+                            DateOffer.DisplayDate = DateTime.Now;
+                        }
+                        if (Changed)
+                        {
+                            ResetOffers();
+                            Changed = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DateRequest_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!OverrideControl)
+            {
+                if (Bizz != null)
+                {
+                    Changed = false;
+                    if (Bizz.TempSubEntrepeneur.Request != Bizz.TempRequest.Id)
+                    {
+                        Bizz.TempRequest = GetBizzTempRequest();
+                    }
+                    int index = Bizz.TempRequest.Status;
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
+                    {
+                        int selectedIndex = ComboBoxRequest.SelectedIndex;
+                        ChangeSentDate = false;
+                        if (DateRequest.Text != "" && selectedIndex > 0)
+                        {
+                            if (DateRequest.Text.Substring(0, 10) != Bizz.TempRequest.SentDate.ToShortDateString().Substring(0, 10) && Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10) != "17-13-1932")
+                            {
+                                if (Bizz.TempRequest.Status == 1)
+                                {
+                                    if (MessageBox.Show("Vi du ændre afsendelsesesdatoen til " + DateRequest.Text + "?", "Forespørgeselsdato", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                                    {
+                                        Bizz.TempRequest.SentDate = Convert.ToDateTime(DateRequest.Text);
+                                        ChangeSentDate = true;
+                                        Changed = true;
+                                        index = 1;
+                                    }
+                                }
+                            }
+                        }
+                        if (!ChangeSentDate && selectedIndex > 0)
+                        {
+                            if (DateRequest.Text.Substring(0, 10) != Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10) && Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10) != "17-13-1932")
+                            {
+                                if (Bizz.TempRequest.Status == 2)
+                                {
+                                    if (MessageBox.Show("Vi du ændre modtagelsesdatoen til " + DateRequest.Text + "?", "Forespørgeselsdato", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                                    {
+                                        Bizz.TempRequest.ReceivedDate = Convert.ToDateTime(DateRequest.Text);
+                                        Changed = true;
+                                        index = 2;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (Changed || ChangeSentDate)
+                    {
+                        UpdateRequestStatusInDb(index, Bizz.TempSubEntrepeneur.Request);
+                        Changed = false;
+                        ChangeSentDate = false;
+                        GetRequestDate(Bizz.TempRequest);
+                        OverrideControl = true;
+                        DateRequest.Text = Date.ToShortDateString().Substring(0, 10);
+                        DateRequest.DisplayDate = Convert.ToDateTime(DateRequest.Text);
+                        OverrideControl = false;
+                    }
+                    else
+                    {
+                        if (DateRequest.Text != "")
+                        {
+                            if (DateRequest.DisplayDate.ToShortDateString().Substring(0, 10) != DateRequest.Text.Substring(0, 10))
+                            {
+                                OverrideControl = true;
+                                DateRequest.DisplayDate = Convert.ToDateTime(DateRequest.Text);
+                                OverrideControl = false;
+                            }
+                        }
+                        else
+                        {
+                            OverrideControl = true;
+                            DateRequest.DisplayDate = DateTime.Now;
+                            OverrideControl = false;
+                        }
+                    }
+                }
             }
         }
 
         private void ListBoxSubEntrepeneurs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int selectedIndex = ListBoxSubEntrepeneurs.SelectedIndex;
-            if (selectedIndex == -1)
+            if (!OverrideControl)
             {
-                Bizz.tempSubEntrepeneur = new SubEntrepeneur();
-                TextBoxEntrepeneur.Text = "";
-                TextBoxOfferPrice.Text = "";
-                ResetComboBoxes();
-                ResetRadioButtons();
-            }
-            else if (selectedIndex < IndexableSubEntrepeneurs.Count && selectedIndex >= 0)
-            {
-                //TextBoxEntrepeneur.Text = "";
-                //TextBoxOfferPrice.Text = "";
-                //ResetComboBoxes();
-                //ResetRadioButtons();
-                Bizz.tempSubEntrepeneur = new SubEntrepeneur();
-                IndexableSubEntrepeneurs.Clear();
-                IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
-                //ListBoxSubEntrepeneurs.ItemsSource = null;
-                //ListBoxSubEntrepeneurs.ItemsSource = IndexableSubEntrepeneurs;
-                SetBizzTempSubEntrepeneur(selectedIndex);
-                TextBoxEntrepeneur.Text = Bizz.tempSubEntrepeneur.Name;
-                SetComboBoxes();
-                SetRadioButtons();
-                TextBoxOfferPrice.Text = Bizz.tempOffer.Price.ToString();
+                int selectedIndex = ListBoxSubEntrepeneurs.SelectedIndex;
+                if (selectedIndex == -1)
+                {
+                    Bizz.TempSubEntrepeneur = new SubEntrepeneur();
+                    TextBoxEntrepeneur.Text = "";
+                    TextBoxOfferPrice.Text = "";
+                    ResetComboBoxes();
+                    ResetRadioButtons();
+                }
+                else if (selectedIndex < IndexableSubEntrepeneurs.Count && selectedIndex >= 0)
+                {
+                    OverrideControl = true;
+                    TextBoxEntrepeneur.Text = "";
+                    TextBoxOfferPrice.Text = "";
+                    ResetComboBoxes();
+                    ResetRadioButtons();
+                    OverrideControl = false;
+                    Bizz.TempSubEntrepeneur = new SubEntrepeneur();
+                    IndexableSubEntrepeneurs.Clear();
+                    IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
+                    //ListBoxSubEntrepeneurs.ItemsSource = null;
+                    //ListBoxSubEntrepeneurs.ItemsSource = IndexableSubEntrepeneurs;
+                    SetBizzTempSubEntrepeneur(selectedIndex);
+                    TextBoxEntrepeneur.Text = Bizz.TempSubEntrepeneur.Name;
+                    Bizz.TempIttLetter = GetBizzTempIttLetter();
+                    Bizz.TempOffer = GetBizzTempOffer();
+                    Bizz.TempRequest = GetBizzTempRequest();
+                    SetComboBoxes();
+                    SetRadioButtons();
+                    TextBoxOfferPrice.Text = Bizz.TempOffer.Price.ToString();
+                }
             }
         }
 
         private void RadioButtonAgreementConcludedYes_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (Bizz != null && !OverrideControl)
             {
                 bool status = CheckTempSubEntrepeneur();
                 if (status)
@@ -192,14 +404,14 @@ namespace JudGui
                     RadioButtonAgreementConcludedYes.IsChecked = true;
                     RadioButtonAgreementConcludedNo.IsChecked = false;
                     bool changed = false;
-                    if (Bizz.tempSubEntrepeneur.AgreementConcluded == false)
+                    if (Bizz.TempSubEntrepeneur.AgreementConcluded == false)
                     {
-                        Bizz.tempSubEntrepeneur.ToggleAgreementConcluded();
+                        Bizz.TempSubEntrepeneur.ToggleAgreementConcluded();
                         changed = true;
                     }
                     if (changed)
                     {
-                        ResetSubEntrepeneurs();
+                        ResetSubEntrepeneursRadioButtons("Aftalen");
                     }
                 }
                 else
@@ -212,7 +424,7 @@ namespace JudGui
 
         private void RadioButtonAgreementConcludedNo_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (Bizz != null && !OverrideControl)
             {
                 bool status = CheckTempSubEntrepeneur();
                 if (status)
@@ -220,14 +432,14 @@ namespace JudGui
                     RadioButtonAgreementConcludedYes.IsChecked = false;
                     RadioButtonAgreementConcludedNo.IsChecked = true;
                     bool changed = false;
-                    if (Bizz.tempSubEntrepeneur.AgreementConcluded == true)
+                    if (Bizz.TempSubEntrepeneur.AgreementConcluded == true)
                     {
-                        Bizz.tempSubEntrepeneur.ToggleAgreementConcluded();
+                        Bizz.TempSubEntrepeneur.ToggleAgreementConcluded();
                         changed = true;
                     }
                     if (changed)
                     {
-                        ResetSubEntrepeneurs();
+                        ResetSubEntrepeneursRadioButtons("Aftalen");
                     }
                 }
                 else
@@ -240,279 +452,392 @@ namespace JudGui
 
         private void RadioButtonIttLetterSentYes_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonIttLetterSentYes.IsChecked = true;
-                    RadioButtonIttLetterSentNo.IsChecked = false;
-                    bool changed = CheckIttLetterSentYes();
-                    if (changed)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        ResetIttLetters();
+                        if (Bizz.TempSubEntrepeneur.IttLetter != Bizz.TempIttLetter.Id)
+                        {
+                            Bizz.TempIttLetter = GetBizzTempIttLetter();
+                        }
+                        RadioButtonIttLetterSentYes.IsChecked = true;
+                        RadioButtonIttLetterSentNo.IsChecked = false;
+                        bool tempChanged = CheckIttLetterSentYes();
+                        if (!Changed)
+                        {
+                            Changed = tempChanged;
+                        }
+                        if (Changed)
+                        {
+                            ResetIttLetters();
+                            Changed = false;
+                        }
                     }
-                }
-                else
-                {
-                    RadioButtonIttLetterSentYes.IsChecked = false;
-                    RadioButtonIttLetterSentNo.IsChecked = false;
+                    else
+                    {
+                        RadioButtonIttLetterSentYes.IsChecked = false;
+                        RadioButtonIttLetterSentNo.IsChecked = false;
+                    }
                 }
             }
         }
 
         private void RadioButtonIttLetterSentNo_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonIttLetterSentYes.IsChecked = false;
-                    RadioButtonIttLetterSentNo.IsChecked = true;
-                    bool changed = CheckIttLetterSentNo();
-                    if (changed)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        ResetIttLetters();
+                        if (Bizz.TempSubEntrepeneur.IttLetter != Bizz.TempIttLetter.Id)
+                        {
+                            Bizz.TempIttLetter = GetBizzTempIttLetter();
+                        }
+                        RadioButtonIttLetterSentYes.IsChecked = false;
+                        RadioButtonIttLetterSentNo.IsChecked = true;
+                        bool tempChanged = CheckIttLetterSentNo();
+                        if (!Changed)
+                        {
+                            Changed = tempChanged;
+                        }
+                        if (Changed)
+                        {
+                            ResetIttLetters();
+                        }
                     }
-                }
-                else
-                {
-                    RadioButtonIttLetterSentYes.IsChecked = false;
-                    RadioButtonIttLetterSentNo.IsChecked = false;
-                    DateIttLetter.DisplayDate = DateTime.Now;
-                    DateIttLetter.Text = "";
-                    TextBoxOfferPrice.Text = "";
+                    else
+                    {
+                        RadioButtonIttLetterSentYes.IsChecked = false;
+                        RadioButtonIttLetterSentNo.IsChecked = false;
+                        DateIttLetter.DisplayDate = DateTime.Now;
+                        DateIttLetter.Text = "";
+                        TextBoxOfferPrice.Text = "";
+                    }
                 }
             }
         }
 
         private void RadioButtonOfferChosenYes_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonOfferChosenYes.IsChecked = true;
-                    RadioButtonOfferChosenNo.IsChecked = false;
-                    bool changed = CheckOfferChosenYes();
-                    if (changed)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        ResetOffers();
+                        if (Bizz.TempSubEntrepeneur.Offer != Bizz.TempOffer.Id)
+                        {
+                            Bizz.TempOffer = GetBizzTempOffer();
+                        }
+                        RadioButtonOfferChosenYes.IsChecked = true;
+                        RadioButtonOfferChosenNo.IsChecked = false;
+                        bool tempChanged = CheckOfferChosenYes();
+                        if (!Changed)
+                        {
+                            Changed = tempChanged;
+                        }
+                        if (Changed)
+                        {
+                            ResetOffers();
+                        }
                     }
-                }
-                else
-                {
-                    RadioButtonOfferChosenYes.IsChecked = false;
-                    RadioButtonOfferChosenNo.IsChecked = false;
+                    else
+                    {
+                        RadioButtonOfferChosenYes.IsChecked = false;
+                        RadioButtonOfferChosenNo.IsChecked = false;
+                    }
                 }
             }
         }
 
         private void RadioButtonOfferChosenNo_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonOfferChosenYes.IsChecked = false;
-                    RadioButtonOfferChosenNo.IsChecked = true;
-                    bool changed = CheckOfferChosenNo();
-                    if (changed)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        ResetOffers();
+                        if (Bizz.TempSubEntrepeneur.Offer != Bizz.TempOffer.Id)
+                        {
+                            Bizz.TempOffer = GetBizzTempOffer();
+                        }
+                        RadioButtonOfferChosenYes.IsChecked = false;
+                        RadioButtonOfferChosenNo.IsChecked = true;
+                        bool tempChanged = CheckOfferChosenNo();
+                        if (!Changed)
+                        {
+                            Changed = tempChanged;
+                        }
+                        if (Changed)
+                        {
+                            ResetOffers();
+                        }
                     }
-                }
-                else
-                {
-                    RadioButtonOfferChosenYes.IsChecked = false;
-                    RadioButtonOfferChosenNo.IsChecked = false;
+                    else
+                    {
+                        RadioButtonOfferChosenYes.IsChecked = false;
+                        RadioButtonOfferChosenNo.IsChecked = false;
+                    }
                 }
             }
         }
 
         private void RadioButtonOfferReceivedYes_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonOfferReceivedYes.IsChecked = true;
-                    RadioButtonOfferReceivedNo.IsChecked = false;
-                    bool changed = CheckOfferReceivedYes();
-                    if (changed)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        ResetOffers();
+                        if (Bizz.TempSubEntrepeneur.Offer != Bizz.TempOffer.Id)
+                        {
+                            Bizz.TempOffer = GetBizzTempOffer();
+                        }
+                        RadioButtonOfferReceivedYes.IsChecked = true;
+                        RadioButtonOfferReceivedNo.IsChecked = false;
+                        bool tempChanged = CheckOfferReceivedYes();
+                        if (!Changed)
+                        {
+                            Changed = tempChanged;
+                        }
+                        if (Changed)
+                        {
+                            ResetOffers();
+                        }
                     }
-                }
-                else
-                {
-                    RadioButtonOfferReceivedYes.IsChecked = false;
-                    RadioButtonOfferReceivedYes.IsChecked = false;
-                    DateTime date = DateTime.Now;
-                    DateOffer.DisplayDate = date;
-                    DateOffer.Text = "";
-                    TextBoxOfferPrice.Text = "";
+                    else
+                    {
+                        RadioButtonOfferReceivedYes.IsChecked = false;
+                        RadioButtonOfferReceivedYes.IsChecked = false;
+                        DateTime date = DateTime.Now;
+                        DateOffer.DisplayDate = date;
+                        DateOffer.Text = "";
+                        TextBoxOfferPrice.Text = "";
+                    }
                 }
             }
         }
 
         private void RadioButtonOfferReceivedNo_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonOfferReceivedYes.IsChecked = false;
-                    RadioButtonOfferReceivedNo.IsChecked = true;
-                    bool changed = CheckOfferReceivedNo();
-                    if (changed)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        ResetOffers();
+                        if (Bizz.TempSubEntrepeneur.Offer != Bizz.TempOffer.Id)
+                        {
+                            Bizz.TempOffer = GetBizzTempOffer();
+                        }
+                        bool tempChanged = CheckOfferReceivedNo();
+                        if (!Changed)
+                        {
+                            Changed = tempChanged;
+                        }
+                        RadioButtonOfferReceivedYes.IsChecked = false;
+                        RadioButtonOfferReceivedNo.IsChecked = true;
+                        if (Changed)
+                        {
+                            ResetOffers();
+                        }
                     }
-                }
-                else
-                {
-                    RadioButtonOfferReceivedYes.IsChecked = false;
-                    RadioButtonOfferReceivedNo.IsChecked = false;
-                    DateTime date = DateTime.Now;
-                    DateOffer.DisplayDate = date;
-                    DateOffer.Text = "";
-                    TextBoxOfferPrice.Text = "0,00" ;
+                    else
+                    {
+                        RadioButtonOfferReceivedYes.IsChecked = false;
+                        RadioButtonOfferReceivedNo.IsChecked = false;
+                        DateTime date = DateTime.Now;
+                        DateOffer.DisplayDate = date;
+                        DateOffer.Text = "";
+                        TextBoxOfferPrice.Text = "0,00";
+                    }
                 }
             }
         }
 
         private void RadioButtonReservationsYes_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonReservationsYes.IsChecked = true;
-                    RadioButtonReservationsNo.IsChecked = false;
-                    bool changed = false;
-                    if (Bizz.tempSubEntrepeneur.Reservations == false)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        Bizz.tempSubEntrepeneur.ToggleReservations();
-                        changed = true;
+                        RadioButtonReservationsYes.IsChecked = true;
+                        RadioButtonReservationsNo.IsChecked = false;
+                        Changed = false;
+                        if (Bizz.TempSubEntrepeneur.Reservations == false)
+                        {
+                            Bizz.TempSubEntrepeneur.ToggleReservations();
+                            Changed = true;
+                        }
+                        if (Changed)
+                        {
+                            ResetSubEntrepeneursRadioButtons("Forbeholdet");
+                        }
+                        if (Changed && !DbStatus)
+                        {
+                            if (Bizz.TempSubEntrepeneur.Reservations == true)
+                            {
+                                Bizz.TempSubEntrepeneur.ToggleReservations();
+                            }
+                            RadioButtonReservationsYes.IsChecked = false;
+                            RadioButtonReservationsNo.IsChecked = true;
+                        }
+                        Changed = false;
+                        DbStatus = false;
                     }
-                    if (changed)
+                    else
                     {
-                        ResetSubEntrepeneurs();
+                        RadioButtonReservationsYes.IsChecked = false;
+                        RadioButtonReservationsNo.IsChecked = false;
                     }
-                }
-                else
-                {
-                    RadioButtonReservationsYes.IsChecked = false;
-                    RadioButtonReservationsNo.IsChecked = false;
                 }
             }
         }
 
         private void RadioButtonReservationsNo_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonReservationsYes.IsChecked = false;
-                    RadioButtonReservationsNo.IsChecked = true;
-                    bool changed = false;
-                    if (Bizz.tempSubEntrepeneur.Reservations == true)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        Bizz.tempSubEntrepeneur.ToggleReservations();
-                        changed = true;
+                        RadioButtonReservationsYes.IsChecked = false;
+                        RadioButtonReservationsNo.IsChecked = true;
+                        Changed = false;
+                        if (Bizz.TempSubEntrepeneur.Reservations == true)
+                        {
+                            Bizz.TempSubEntrepeneur.ToggleReservations();
+                            Changed = true;
+                        }
+                        if (Changed)
+                        {
+                            ResetSubEntrepeneursRadioButtons("Forbeholdet");
+                        }
+                        if (Changed && !DbStatus)
+                        {
+                            if (Bizz.TempSubEntrepeneur.Reservations == true)
+                            {
+                                Bizz.TempSubEntrepeneur.ToggleReservations();
+                            }
+                            RadioButtonReservationsYes.IsChecked = false;
+                            RadioButtonReservationsNo.IsChecked = true;
+                        }
+                        Changed = false;
+                        DbStatus = false;
                     }
-                    if (changed)
+                    else
                     {
-                        ResetSubEntrepeneurs();
+                        RadioButtonReservationsYes.IsChecked = false;
+                        RadioButtonReservationsNo.IsChecked = false;
                     }
-                }
-                else
-                {
-                    RadioButtonReservationsYes.IsChecked = false;
-                    RadioButtonReservationsNo.IsChecked = false;
                 }
             }
         }
 
         private void RadioButtonUpholdYes_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonUpholdYes.IsChecked = true;
-                    RadioButtonUpholdNo.IsChecked = false;
-                    bool changed = false;
-                    if (Bizz.tempSubEntrepeneur.Uphold == false)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        Bizz.tempSubEntrepeneur.ToggleUphold();
-                        changed = true;
+                        RadioButtonUpholdYes.IsChecked = true;
+                        RadioButtonUpholdNo.IsChecked = false;
+                        bool changed = false;
+                        if (Bizz.TempSubEntrepeneur.Uphold == false)
+                        {
+                            Bizz.TempSubEntrepeneur.ToggleUphold();
+                            changed = true;
+                        }
+                        if (changed)
+                        {
+                            ResetSubEntrepeneursRadioButtons("Vedståelsen");
+                        }
                     }
-                    if (changed)
+                    else
                     {
-                        ResetSubEntrepeneurs();
+                        RadioButtonUpholdYes.IsChecked = false;
+                        RadioButtonUpholdNo.IsChecked = false;
                     }
-                }
-                else
-                {
-                    RadioButtonUpholdYes.IsChecked = false;
-                    RadioButtonUpholdNo.IsChecked = false;
                 }
             }
         }
 
         private void RadioButtonUpholdNo_Checked(object sender, RoutedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    RadioButtonUpholdYes.IsChecked = false;
-                    RadioButtonUpholdNo.IsChecked = true;
-                    bool changed = false;
-                    if (Bizz.tempSubEntrepeneur.Uphold == true)
+                    bool status = CheckTempSubEntrepeneur();
+                    if (status)
                     {
-                        Bizz.tempSubEntrepeneur.ToggleUphold();
-                        changed = true;
+                        RadioButtonUpholdYes.IsChecked = false;
+                        RadioButtonUpholdNo.IsChecked = true;
+                        bool changed = false;
+                        if (Bizz.TempSubEntrepeneur.Uphold == true)
+                        {
+                            Bizz.TempSubEntrepeneur.ToggleUphold();
+                            changed = true;
+                        }
+                        if (changed)
+                        {
+                            ResetSubEntrepeneursRadioButtons("Vedståelsen");
+                        }
                     }
-                    if (changed)
+                    else
                     {
-                        ResetSubEntrepeneurs();
+                        RadioButtonUpholdYes.IsChecked = false;
+                        RadioButtonUpholdNo.IsChecked = false;
                     }
-                }
-                else
-                {
-                    RadioButtonUpholdYes.IsChecked = false;
-                    RadioButtonUpholdNo.IsChecked = false;
                 }
             }
         }
 
         private void TextBoxOfferPrice_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Bizz != null)
+            if (!OverrideControl)
             {
-                bool status = CheckTempSubEntrepeneur();
-                if (status)
+                if (Bizz != null)
                 {
-                    string temp = TextBoxOfferPrice.Text;
-                    temp = ParseOfferPrice(temp);
-                    TextBoxOfferPrice.Text = temp;
-                    bool changed = CheckOfferPriceForChanges(temp);
-                    if (changed)
+                    if (CheckTempSubEntrepeneur())
                     {
-                        ResetOffers();
+                        if (Bizz.TempSubEntrepeneur.Offer != Bizz.TempOffer.Id)
+                        {
+                            Bizz.TempOffer = GetBizzTempOffer();
+                        }
+                        string temp = TextBoxOfferPrice.Text;
+                        temp = ParseOfferPrice(temp);
+                        temp = ParseOfferPriceComma(temp);
+                        TextBoxOfferPrice.Text = temp;
+                        bool tempChanged = CheckOfferPriceForChanges(temp);
+                        if (!Changed)
+                        {
+                            Changed = tempChanged;
+                        }
+                        if (Changed)
+                        {
+                            ResetOffers();
+                            Changed = false;
+                        }
                     }
                 }
             }
@@ -530,28 +855,28 @@ namespace JudGui
         {
             if (entity.CraftGroup4 != 0)
             {
-                if (entity.CraftGroup4 == Bizz.tempEnterprise.CraftGroup1 || entity.CraftGroup4 == Bizz.tempEnterprise.CraftGroup2 || entity.CraftGroup4 == Bizz.tempEnterprise.CraftGroup3 || entity.CraftGroup4 == Bizz.tempEnterprise.CraftGroup4)
+                if (entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup4)
                 {
                     return true;
                 }
             }
             else if (entity.CraftGroup3 != 0)
             {
-                if (entity.CraftGroup3 == Bizz.tempEnterprise.CraftGroup1 || entity.CraftGroup3 == Bizz.tempEnterprise.CraftGroup2 || entity.CraftGroup3 == Bizz.tempEnterprise.CraftGroup3 || entity.CraftGroup3 == Bizz.tempEnterprise.CraftGroup4)
+                if (entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup4)
                 {
                     return true;
                 }
             }
             else if (entity.CraftGroup2 != 0)
             {
-                if (entity.CraftGroup2 == Bizz.tempEnterprise.CraftGroup1 || entity.CraftGroup2 == Bizz.tempEnterprise.CraftGroup2 || entity.CraftGroup2 == Bizz.tempEnterprise.CraftGroup3 || entity.CraftGroup2 == Bizz.tempEnterprise.CraftGroup4)
+                if (entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup4)
                 {
                     return true;
                 }
             }
             else if (entity.CraftGroup1 != 0)
             {
-                if (entity.CraftGroup1 == Bizz.tempEnterprise.CraftGroup1 || entity.CraftGroup1 == Bizz.tempEnterprise.CraftGroup2 || entity.CraftGroup1 == Bizz.tempEnterprise.CraftGroup3 || entity.CraftGroup1 == Bizz.tempEnterprise.CraftGroup4)
+                if (entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup4)
                 {
                     return true;
                 }
@@ -560,7 +885,7 @@ namespace JudGui
         }
 
         /// <summary>
-        /// Method, that checks content wether Bizz.tempIttLetter.SentDate has been changed
+        /// Method, that checks content wether Bizz.TempIttLetter.SentDate has been changed
         /// </summary>
         /// <returns>bool</returns>
         private bool CheckBizzTempDate(DateTime date, object temp)
@@ -575,11 +900,11 @@ namespace JudGui
             string type = temp.GetType().ToString();
             switch (type)
             {
-                case "IttLetter":
+                case "JudBizz.IttLetter":
                     IttLetter tempIttLetter = new IttLetter((IttLetter)temp);
                     tempDate = Convert.ToDateTime(tempIttLetter.SentDate);
                     break;
-                case "Offer":
+                case "JudBizz.Offer":
                     Offer tempOffer = new Offer((Offer)temp);
                     tempDate = Convert.ToDateTime(tempOffer.ReceivedDate);
                     break;
@@ -589,12 +914,12 @@ namespace JudGui
             {
                 switch (type)
                 {
-                    case "IttLetter":
-                        Bizz.tempIttLetter.SentDate = date;
+                    case "JudBizz.IttLetter":
+                        Bizz.TempIttLetter.SentDate = date;
                         result = true;
                         break;
-                    case "Offer":
-                        Bizz.tempOffer.SetReceivedDate(date);
+                    case "JudBizz.Offer":
+                        Bizz.TempOffer.SetReceivedDate(date);
                         result = true;
                         break;
                 }
@@ -609,15 +934,21 @@ namespace JudGui
         private bool CheckIttLetterSentNo()
         {
             bool result = false;
-            if (Bizz.tempIttLetter.Sent == true)
+            if (Bizz.TempIttLetter.Sent == true)
             {
-                Bizz.tempIttLetter.ToggleSent();
+                Bizz.TempIttLetter.ToggleSent();
                 result = true;
             }
-            DateTime date = Convert.ToDateTime("1899-12-31");
-            DateIttLetter.DisplayDate = date;
-            DateIttLetter.Text = date.ToShortDateString();
-            bool tempChanged = CheckBizzTempDate(date, Bizz.tempIttLetter);
+            Date = Convert.ToDateTime("1932-03-17");
+            if (DateIttLetter.DisplayDate.ToShortDateString().Substring(0, 10) != Date.ToShortDateString().Substring(0, 10))
+            {
+                DateIttLetter.DisplayDate = Date;
+            }
+            if (DateIttLetter.Text.Substring(0, 10) != Date.ToShortDateString().Substring(0, 10))
+            {
+                DateIttLetter.Text = Date.ToShortDateString();
+            }
+            bool tempChanged = CheckBizzTempDate(Date, Bizz.TempIttLetter);
             if (!result)
             {
                 result = tempChanged;
@@ -632,18 +963,18 @@ namespace JudGui
         private bool CheckIttLetterSentYes()
         {
             bool result = false;
-            if (Bizz.tempIttLetter.Sent == false)
+            if (Bizz.TempIttLetter.Sent == false)
             {
-                Bizz.tempIttLetter.ToggleSent();
+                Bizz.TempIttLetter.ToggleSent();
                 result = true;
             }
-            DateTime date = Convert.ToDateTime(Bizz.tempIttLetter.SentDate);
-            if (DateIttLetter.Text != "" && DateIttLetter.Text != "1899-12-31")
+            DateTime date = Convert.ToDateTime(Bizz.TempIttLetter.SentDate);
+            if (DateIttLetter.Text != "" && DateIttLetter.Text != "1932-03-17")
             {
-                if (DateIttLetter.Text == DateOffer.DisplayDate.ToShortTimeString().Substring(0, 10))
+                if (DateIttLetter.Text == DateOffer.DisplayDate.ToShortDateString().Substring(0, 10))
                 {
                     date = DateIttLetter.DisplayDate;
-                    bool tempChanged = CheckBizzTempDate(date, Bizz.tempOffer);
+                    bool tempChanged = CheckBizzTempDate(date, Bizz.TempOffer);
                     if (!result)
                     {
                         result = tempChanged;
@@ -651,9 +982,9 @@ namespace JudGui
                 }
                 else
                 {
-                    date = Convert.ToDateTime(DateOffer.Text);
+                    date = Convert.ToDateTime(DateIttLetter.Text);
                     DateIttLetter.DisplayDate = date;
-                    bool tempChanged = CheckBizzTempDate(date, Bizz.tempOffer);
+                    bool tempChanged = CheckBizzTempDate(date, Bizz.TempIttLetter);
                     if (!result)
                     {
                         result = tempChanged;
@@ -665,7 +996,7 @@ namespace JudGui
                 date = DateTime.Now;
                 DateIttLetter.DisplayDate = date;
                 DateIttLetter.Text = date.ToShortDateString();
-                bool tempChanged = CheckBizzTempDate(date, Bizz.tempOffer);
+                bool tempChanged = CheckBizzTempDate(date, Bizz.TempOffer);
                 if (!result)
                 {
                     result = tempChanged;
@@ -682,25 +1013,25 @@ namespace JudGui
         private bool CheckOfferPriceForChanges(string temp)
         {
             bool result = false;
-            if (ParseOfferPrice(Bizz.tempOffer.Price.ToString()) != TextBoxOfferPrice.Text)
+            if (ParseOfferPrice(Bizz.TempOffer.Price.ToString()) != TextBoxOfferPrice.Text)
             {
                 temp = Regex.Replace(temp, "[,]", ".");
                 if (temp == "")
                 {
                     TextBoxOfferPrice.Text = "0";
                 }
-                if (Bizz.tempOffer.Price != Convert.ToDouble(TextBoxOfferPrice.Text))
+                if (Bizz.TempOffer.Price != Convert.ToDouble(TextBoxOfferPrice.Text))
                 {
-                    Bizz.tempOffer.Price = Convert.ToDouble(TextBoxOfferPrice.Text);
+                    Bizz.TempOffer.Price = Convert.ToDouble(TextBoxOfferPrice.Text);
                     result = true;
                 }
             }
-            if (Bizz.tempOffer.Received && DateOffer.Text.Substring(0, 10) == "31-12-2018")
+            if (Bizz.TempOffer.Received && DateOffer.Text.Substring(0, 10) == "31-12-2018")
             {
                 DateTime tempDate = DateTime.Now;
                 DateOffer.Text = tempDate.ToShortDateString();
                 DateOffer.DisplayDate = tempDate;
-                Bizz.tempOffer.SetReceivedDate(tempDate);
+                Bizz.TempOffer.SetReceivedDate(tempDate);
                 result = true;
             }
             return result;
@@ -713,9 +1044,9 @@ namespace JudGui
         private bool CheckOfferChosenNo()
         {
             bool result = false;
-            if (Bizz.tempOffer.Chosen == true)
+            if (Bizz.TempOffer.Chosen == true)
             {
-                Bizz.tempOffer.ToggleChosen();
+                Bizz.TempOffer.ToggleChosen();
                 result = true;
             }
             return result;
@@ -728,9 +1059,9 @@ namespace JudGui
         private bool CheckOfferChosenYes()
         {
             bool result = false;
-            if (Bizz.tempOffer.Chosen == false)
+            if (Bizz.TempOffer.Chosen == false)
             {
-                Bizz.tempOffer.ToggleChosen();
+                Bizz.TempOffer.ToggleChosen();
                 result = true;
             }
             return result;
@@ -743,25 +1074,31 @@ namespace JudGui
         private bool CheckOfferReceivedNo()
         {
             bool result = false;
-            if (Bizz.tempOffer.Received == true)
+            if (Bizz.TempOffer.Received)
             {
-                Bizz.tempOffer.ToggleReceived();
+                Bizz.TempOffer.ToggleReceived();
                 result = true;
             }
-            DateTime date = Convert.ToDateTime("1899-12-31");
-            if (Bizz.tempOffer.ReceivedDate != date)
+            DateTime date = Convert.ToDateTime("1932-03-17");
+            if (Bizz.TempOffer.ReceivedDate != date)
             {
-                Bizz.tempOffer.ResetReceived();
+                Bizz.TempOffer.ResetReceived();
                 result = true;
             }
-            DateOffer.DisplayDate = date;
-            DateOffer.Text = date.ToShortDateString();
-            TextBoxOfferPrice.Text = "";
-            if (Bizz.tempOffer.Price == Convert.ToDouble(0))
+            if (DateOffer.DisplayDate.ToShortDateString().Substring(0, 10) != date.ToShortDateString().Substring(0, 10))
             {
-                Bizz.tempOffer.Price = Convert.ToDouble(0);
+                DateOffer.DisplayDate = date;
+            }
+            if (DateOffer.Text.Substring(0, 10) != date.ToShortDateString().Substring(0, 10))
+            {
+                DateOffer.Text = date.ToShortDateString();
+            }
+            if (Bizz.TempOffer.Price != Convert.ToDouble(0))
+            {
+                Bizz.TempOffer.Price = Convert.ToDouble(0);
                 result = true;
             }
+            TextBoxOfferPrice.Text = Bizz.TempOffer.Price.ToString();
             return result;
         }
 
@@ -772,23 +1109,23 @@ namespace JudGui
         private bool CheckOfferReceivedYes()
         {
             bool result = false;
-            if (Bizz.tempOffer.Received == false)
+            if (Bizz.TempOffer.Received == false)
             {
-                Bizz.tempOffer.ToggleReceived();
+                Bizz.TempOffer.ToggleReceived();
                 result = true;
             }
-            if (Bizz.tempOffer.ReceivedDate.Value.ToShortDateString().Substring(0, 10) == "31-12-1899")
+            if (Bizz.TempOffer.ReceivedDate.ToShortDateString().Substring(0, 10) == "1932-03-17")
             {
-                Bizz.tempOffer.SetReceivedDate(DateTime.Now);
+                Bizz.TempOffer.SetReceivedDate(DateTime.Now);
                 result = true;
             }
-            if (DateOffer.Text == "" || DateOffer.Text.Substring(0, 10) == "31-12-1899")
+            if (DateOffer.Text == "" || DateOffer.Text.Substring(0, 10) == "1932-03-17")
             {
                 DateOffer.Text = DateTime.Now.ToShortDateString();
             }
-            if (DateOffer.Text.Substring(0, 10) != Bizz.tempOffer.ReceivedDate.Value.ToShortDateString().Substring(0, 10))
+            if (DateOffer.Text.Substring(0, 10) != Bizz.TempOffer.ReceivedDate.ToShortDateString().Substring(0, 10))
             {
-                Bizz.tempOffer.SetReceivedDate(DateOffer.DisplayDate);
+                Bizz.TempOffer.SetReceivedDate(DateOffer.DisplayDate);
                 result = true;
             }
             if (DateOffer.Text != DateOffer.DisplayDate.ToShortDateString().Substring(0, 10))
@@ -798,7 +1135,7 @@ namespace JudGui
             if (TextBoxOfferPrice.Text == "")
             {
                 TextBoxOfferPrice.Text = "0";
-                Bizz.tempOffer.Price = Convert.ToDouble(TextBoxOfferPrice.Text);
+                Bizz.TempOffer.Price = Convert.ToDouble(TextBoxOfferPrice.Text);
                 result = true;
             }
             return result;
@@ -808,29 +1145,83 @@ namespace JudGui
         /// Method, that checks the wether changed ComboBoxRequest selection results in changes, that needs to be written to Db
         /// </summary>
         /// <returns>bool</returns>
-        private bool CheckRequest(int index)
+        private void CheckRequest(int index)
         {
-            bool result = false;
             ComboBoxRequest.SelectedIndex = index;
-            if (Bizz.tempRequest.Status != index)
+            if (Bizz.TempRequest.Status != index)
             {
-                Bizz.tempRequest.Status = index;
-                result = true;
-            }
-            DateTime date = GetRequestDate(Bizz.tempRequest);
-            if (index == 0)
-            {
-                if (Bizz.tempRequest.SentDate.Value.ToShortDateString().Substring(0, 10) != "31-12-1899" || Bizz.tempRequest.ReceivedDate.Value.ToShortDateString().Substring(0, 10) != "31-12-1899")
+                Bizz.TempRequest.Status = index;
+                if (!Changed)
                 {
-                    date = Convert.ToDateTime("31-12-1899");
-                    Bizz.tempRequest.ReceivedDate = date;
-                    Bizz.tempRequest.SentDate = date;
-                    result = true;
+                    Changed = true;
                 }
             }
-            DateRequest.DisplayDate = date;
-            DateRequest.Text = date.ToShortDateString();
-            return result;
+            if (DateRequest.Text == "" || DateRequest.Text.Substring(0, 10) == "17-03-1932")
+            {
+                DateRequest.Text = DateTime.Now.ToShortDateString().Substring(0, 10);
+            }
+            if (index == 0 || index == 1)
+            {
+                if (Bizz.TempRequest.SentDate.ToShortDateString().Substring(0, 10) != DateRequest.Text.Substring(0, 10))
+                {
+                    Bizz.TempRequest.SentDate = Convert.ToDateTime(DateRequest.Text);
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+            }
+            if (index >= 2)
+            {
+                if (Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10) != DateRequest.Text.Substring(0, 10))
+                {
+                    Bizz.TempRequest.ReceivedDate = Convert.ToDateTime(DateRequest.Text);
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+            }
+            GetRequestDate(Bizz.TempRequest);
+            switch (index)
+            {
+                case 0:
+                    if (Date.ToShortDateString().Substring(0, 10) != Bizz.TempRequest.SentDate.ToShortDateString().Substring(0, 10))
+                    {
+                        SetRequestDateNotSent();
+                        Date = Bizz.TempRequest.SentDate;
+                    }
+                    break;
+                case 1:
+                    if (Date.ToShortDateString().Substring(0, 10) != Bizz.TempRequest.SentDate.ToShortDateString().Substring(0, 10))
+                    {
+                        SetRequestSentDate();
+                        Date = Bizz.TempRequest.SentDate;
+                    }
+                    break;
+                case 2:
+                    if (Date.ToShortDateString().Substring(0, 10) != Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10))
+                    {
+                        SetRequestReceivedDate();
+                        Date = Bizz.TempRequest.ReceivedDate;
+                    }
+                    break;
+                case 3:
+                    if (Date.ToShortDateString().Substring(0, 10) != Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10))
+                    {
+                        SetRequestDateCancelled();
+                        Date = Bizz.TempRequest.ReceivedDate;
+                    }
+                    break;
+            }
+            if (DateRequest.DisplayDate.ToShortDateString().Substring(0,10) != Date.ToShortDateString().Substring(0, 10))
+            {
+                DateRequest.DisplayDate = Date;
+            }
+            if (DateRequest.Text.Substring(0, 10) != Date.ToShortDateString().Substring(0, 10))
+            {
+                DateRequest.Text = Date.ToShortDateString();
+            }
         }
 
         /// <summary>
@@ -841,7 +1232,7 @@ namespace JudGui
         {
             bool result = false;
             SubEntrepeneur temp = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
-            if (Bizz.tempSubEntrepeneur != temp)
+            if (Bizz.TempSubEntrepeneur != temp)
             {
                 result = true;
             }
@@ -853,11 +1244,11 @@ namespace JudGui
         /// </summary>
         private void ClearTempEntities()
         {
-            Bizz.tempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection,Bizz.LegalEntities);
-            Bizz.tempContact = new Contact(Bizz.strConnection);
-            Bizz.tempRequest = new Request(Bizz.strConnection);
-            Bizz.tempIttLetter = new IttLetter(Bizz.strConnection);
-            Bizz.tempOffer = new Offer(Bizz.strConnection);
+            Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection,Bizz.LegalEntities);
+            Bizz.TempContact = new Contact(Bizz.strConnection);
+            Bizz.TempRequest = new Request(Bizz.strConnection);
+            Bizz.TempIttLetter = new IttLetter(Bizz.strConnection);
+            Bizz.TempOffer = new Offer(Bizz.strConnection);
         }
 
         /// <summary>
@@ -880,7 +1271,7 @@ namespace JudGui
             }
             foreach (IndexableLegalEntity temp in tempList)
             {
-                if (!IdExistsInSubEntrepeneurs(Bizz.tempEnterprise.Id, temp.Id))
+                if (!IdExistsInSubEntrepeneurs(Bizz.TempEnterprise.Id, temp.Id))
                 {
                     LegalEntity legalEntity = new LegalEntity(temp.Id, temp.Name, temp.Address, temp.ContactInfo, temp.Url, temp.CraftGroup1, temp.CraftGroup2, temp.CraftGroup3, temp.CraftGroup4, temp.Region, temp.CountryWide, temp.Cooperative, temp.Active);
                     IndexableLegalEntity entity = new IndexableLegalEntity(i, legalEntity);
@@ -905,16 +1296,67 @@ namespace JudGui
             return result;
         }
 
+        private IttLetter GetBizzTempIttLetter()
+        {
+            IttLetter result = new IttLetter();
+            Bizz.IttLetters.Clear();
+            Bizz.IttLetters = Bizz.CIL.GetIttLetters();
+            foreach (IttLetter tempIttLetter in Bizz.IttLetters)
+            {
+                if (tempIttLetter.Id == Bizz.TempSubEntrepeneur.IttLetter)
+                {
+                    result = tempIttLetter;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        private Offer GetBizzTempOffer()
+        {
+            Offer result = new Offer();
+            Bizz.Offers.Clear();
+            Bizz.Offers = Bizz.COF.GetOffers();
+            foreach (Offer tempOffer in Bizz.Offers)
+            {
+                if (tempOffer.Id == Bizz.TempSubEntrepeneur.Offer)
+                {
+                    result = tempOffer;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        private Request GetBizzTempRequest()
+        {
+            Request result = new Request();
+            Bizz.Requests.Clear();
+            Bizz.Requests = Bizz.CRQ.GetRequests();
+            foreach (Request tempRequest in Bizz.Requests)
+            {
+                if (tempRequest.Id == Bizz.TempSubEntrepeneur.Request)
+                {
+                    result = tempRequest;
+                    break;
+                }
+            }
+            return result;
+        }
+
         /// Methods, creates a list of indexable Contacts
         /// </summary>
         /// <returns>List<IndexableContact></returns>
         private List<IndexableContact> GetIndexableContacts()
         {
             List<IndexableContact> result = new List<IndexableContact>();
-            string id = Bizz.tempSubEntrepeneur.Entrepeneur;
+            string id = Bizz.TempSubEntrepeneur.Entrepeneur;
             IndexableContact notSpecified = new IndexableContact(0, Bizz.Contacts[0]);
             result.Add(notSpecified);
             int i = 1;
+            Bizz.Contacts.Clear();
+            Bizz.Contacts = Bizz.CCP.GetContacts();
+            IndexableContacts.Clear();
             foreach (Contact contact in Bizz.Contacts)
             {
                 if (contact.LegalEntity == id)
@@ -939,7 +1381,7 @@ namespace JudGui
             int i = 1;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.tempProject.Id)
+                if (enterprise.Project == Bizz.TempProject.Id)
                 {
                     IndexableEnterprise temp = new IndexableEnterprise(i, enterprise);
                     result.Add(temp);
@@ -980,7 +1422,7 @@ namespace JudGui
         {
             List<IndexableSubEntrepeneur> result = new List<IndexableSubEntrepeneur>();
             int i = 0;
-            int id = Bizz.tempEnterprise.Id;
+            int id = Bizz.TempEnterprise.Id;
             foreach (SubEntrepeneur subEntrepeneur in Bizz.SubEntrepeneurs)
             {
                 if (subEntrepeneur.EnterpriseList == id)
@@ -998,36 +1440,45 @@ namespace JudGui
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        private DateTime GetRequestDate(Request request)
+        private void GetRequestDate(Request request)
         {
-            DateTime date = Convert.ToDateTime("1899-12-31");
+            Date = Convert.ToDateTime("1932-03-17");
 
             switch (request.Status)
             {
                 case 0:
-                    return Convert.ToDateTime("1899-12-31");
+                    break;
                 case 1:
-                    return request.SentDate.Value;
+                    Date = request.SentDate;
+                    break;
                 case 2:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
                 case 3:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
                 case 4:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
                 case 5:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
                 case 6:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
                 case 7:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
                 case 8:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
                 case 9:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
                 case 10:
-                    return request.ReceivedDate.Value;
+                    Date = request.ReceivedDate;
+                    break;
             }
-            return date;
         }
 
         /// <summary>
@@ -1045,6 +1496,7 @@ namespace JudGui
                     if (temp.Id == id)
                     {
                         result = temp.Index;
+                        break;
                     }
                 }
                 catch (Exception)
@@ -1108,7 +1560,18 @@ namespace JudGui
         {
             string result = Regex.Replace(price, "[A-Za-z ]", "");
             result = Regex.Replace(result, "[.]", ",");
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that checks comma from string and adds to digit if necessary
+        /// </summary>
+        /// <param name="result">string</param>
+        /// <returns>string</returns>
+        private string ParseOfferPriceComma(string price)
+        {
             bool comma = false;
+            string result = price;
             int i = 0;
             int j = 0;
             foreach (char c in result)
@@ -1122,6 +1585,7 @@ namespace JudGui
                 if (j > 1)
                 {
                     result = result.Substring(0, i);
+                    result += "00";
                     break;
                 }
                 i++;
@@ -1144,12 +1608,12 @@ namespace JudGui
         {
             ComboBoxContact.SelectedIndex = -1;
             ComboBoxContact.ItemsSource = null;
-            Bizz.tempContact = new Contact(Bizz.strConnection);
+            Bizz.TempContact = new Contact(Bizz.strConnection);
             ComboBoxRequest.SelectedIndex = -1;
             ComboBoxRequest.ItemsSource = Bizz.RequestStatusList;
             DateRequest.DisplayDate = DateTime.Now;
             DateRequest.Text = "";
-            Bizz.tempRequest = new Request(Bizz.strConnection);
+            Bizz.TempRequest = new Request(Bizz.strConnection);
         }
 
         /// <summary>
@@ -1157,8 +1621,8 @@ namespace JudGui
         /// </summary>
         private void ResetIttLetters()
         {
-            SubEntrepeneur temp = Bizz.tempSubEntrepeneur;
-            UpdateIttLetterSentInDb(Bizz.tempIttLetter.Id, true);
+            //SubEntrepeneur temp = Bizz.TempSubEntrepeneur;
+            UpdateIttLetterSentInDb(Bizz.TempIttLetter.Id, true);
             Bizz.IttLetters.Clear();
             Bizz.IttLetters = Bizz.CIL.GetIttLetters();
         }
@@ -1168,8 +1632,8 @@ namespace JudGui
         /// </summary>
         private void ResetOffers()
         {
-            SubEntrepeneur temp = Bizz.tempSubEntrepeneur;
-            UpdateOfferReceivedInDb(temp.Offer, true);
+            Offer temp = Bizz.TempOffer;
+            UpdateOfferReceivedInDb(temp);
             Bizz.Offers.Clear();
             Bizz.Offers = Bizz.COF.GetOffers();
         }
@@ -1183,6 +1647,7 @@ namespace JudGui
             ResetRadioButtonsOfferReceived();
             ResetRadioButtonsReservations();
             ResetRadioButtonsUphold();
+            ResetRadioButtonsOfferChosen();
             ResetRadioButtonsAgreementConcluded();
         }
 
@@ -1200,7 +1665,7 @@ namespace JudGui
         /// </summary>
         private void ResetRadioButtonsIttLetterSent()
         {
-            Bizz.tempIttLetter = new IttLetter(Bizz.strConnection);
+            Bizz.TempIttLetter = new IttLetter(Bizz.strConnection);
             DateIttLetter.DisplayDate = DateTime.Now;
             DateIttLetter.Text = "";
             RadioButtonIttLetterSentYes.IsChecked = false;
@@ -1208,11 +1673,20 @@ namespace JudGui
         }
 
         /// <summary>
+        /// Method, that resets RadioButtonOfferChosenYes and RadioButtonOfferChosenNo
+        /// </summary>
+        private void ResetRadioButtonsOfferChosen()
+        {
+            RadioButtonOfferChosenYes.IsChecked = false;
+            RadioButtonOfferChosenNo.IsChecked = false;
+        }
+
+        /// <summary>
         /// Method, that resets RadioButtonOfferReceivedYes and RadioButtonOfferReceivedNo
         /// </summary>
         private void ResetRadioButtonsOfferReceived()
         {
-            Bizz.tempOffer = new Offer(Bizz.strConnection);
+            Bizz.TempOffer = new Offer(Bizz.strConnection);
             DateOffer.DisplayDate = DateTime.Now;
             DateOffer.Text = "";
             RadioButtonOfferReceivedYes.IsChecked = false;
@@ -1242,7 +1716,7 @@ namespace JudGui
         /// </summary>
         private void ResetSubEntrepeneurs()
         {
-            Bizz.CSE.UpdateSubEntrepeneurs(Bizz.tempSubEntrepeneur);
+            Bizz.CSE.UpdateSubEntrepeneurs(Bizz.TempSubEntrepeneur);
             Bizz.SubEntrepeneurs.Clear();
             Bizz.SubEntrepeneurs = Bizz.CSE.GetSubEntrepeneurs();
             IndexableSubEntrepeneurs.Clear();
@@ -1252,59 +1726,92 @@ namespace JudGui
         }
 
         /// <summary>
-        /// Method, that sets content of Bizz.tempIttLetter
+        /// Method, that clears and update SubEntrepeneurs
+        /// </summary>
+        private void ResetSubEntrepeneursRadioButtons(string sender)
+        {
+            DbStatus = Bizz.CSE.UpdateSubEntrepeneurs(Bizz.TempSubEntrepeneur);
+            Bizz.SubEntrepeneurs.Clear();
+            Bizz.SubEntrepeneurs = Bizz.CSE.GetSubEntrepeneurs();
+            IndexableSubEntrepeneurs.Clear();
+            IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
+            if (!DbStatus)
+            {
+                //Show error
+                MessageBox.Show("Databasen returnerede en fejl. " + sender + " blev ikke rettet. Prøv igen.", "Ret Underentrepenør", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                //Show confirmation
+                MessageBox.Show(sender + " blev rettet.", "Ret Underentrepenør", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+
+        }
+
+        /// <summary>
+        /// Method, that sets content of Bizz.TempIttLetter
         /// </summary>
         /// <param name="id">int</param>
         private void SetBizzTempIttLetter(int id)
         {
             try
             {
-                foreach (IttLetter temp in Bizz.IttLetters)
+                IttLetter tempIttLetter = new IttLetter(Bizz.strConnection);
+                if (Bizz.TempIttLetter == tempIttLetter && Bizz.TempSubEntrepeneur.IttLetter != 0)
                 {
-                    if (temp.Id == id)
+                    foreach (IttLetter temp in Bizz.IttLetters)
                     {
-                        Bizz.tempIttLetter = temp;
+                        if (temp.Id == id)
+                        {
+                            Bizz.TempIttLetter = temp;
+                            break;
+                        }
                     }
                 }
             }
             catch (Exception)
             {
-                Bizz.tempIttLetter = new IttLetter(Bizz.strConnection);
+                Bizz.TempIttLetter = new IttLetter(Bizz.strConnection);
             }
         }
 
         /// <summary>
-        /// Method, that sets content of Bizz.tempIttLetter
+        /// Method, that sets content of Bizz.TempIttLetter
         /// </summary>
         /// <param name="id">int</param>
         private void SetBizzTempOffer(int id)
         {
             try
             {
-                foreach (Offer temp in Bizz.Offers)
+                Offer tempOffer = new Offer(Bizz.strConnection);
+                if (Bizz.TempOffer == tempOffer && Bizz.TempSubEntrepeneur.IttLetter != 0)
                 {
-                    if (temp.Id == id)
+                    foreach (Offer temp in Bizz.Offers)
                     {
-                        Bizz.tempOffer = temp;
+                        if (temp.Id == id)
+                        {
+                            Bizz.TempOffer = temp;
+                        }
                     }
                 }
             }
             catch (Exception)
             {
-                Bizz.tempOffer = new Offer(Bizz.strConnection);
+                Bizz.TempOffer = new Offer(Bizz.strConnection);
             }
         }
 
         /// <summary>
-        /// Method, that sets content of Bizz.tempSubEntrepeneur
+        /// Method, that sets content of Bizz.TempSubEntrepeneur
         /// </summary>
         private void SetBizzTempSubEntrepeneur(int index)
         {
             IndexableSubEntrepeneur temp = IndexableSubEntrepeneurs[index];
-            Bizz.tempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities, temp.Id, temp.EnterpriseList, temp.Entrepeneur, temp.Contact, temp.Request, temp.IttLetter, temp.Offer, temp.Reservations, temp.Uphold, temp.AgreementConcluded, temp.Active);
-            if (!Bizz.tempSubEntrepeneur.Active)
+            Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities, temp.Id, temp.EnterpriseList, temp.Entrepeneur, temp.Contact, temp.Request, temp.IttLetter, temp.Offer, temp.Reservations, temp.Uphold, temp.AgreementConcluded, temp.Active);
+            if (!Bizz.TempSubEntrepeneur.Active)
             {
-                Bizz.tempSubEntrepeneur.ToggleActive();
+                Bizz.TempSubEntrepeneur.ToggleActive();
             }
         }
 
@@ -1314,15 +1821,15 @@ namespace JudGui
         private void SetComboBoxes()
         {
             IndexableContacts = GetIndexableContacts();
-            int contactIndex = GetSelectedContact(Bizz.tempSubEntrepeneur.Contact);
+            int contactIndex = GetSelectedContact(Bizz.TempSubEntrepeneur.Contact);
             ComboBoxContact.ItemsSource = IndexableContacts;
             ComboBoxContact.SelectedIndex = contactIndex;
-            Bizz.tempRequest = GetSelectedRequest(Bizz.tempSubEntrepeneur.Request);
-            DateTime date = GetRequestDate(Bizz.tempRequest);
-            DateRequest.DisplayDate = date;
-            DateRequest.Text = date.ToShortDateString();
+            Bizz.TempRequest = GetSelectedRequest(Bizz.TempSubEntrepeneur.Request);
+            GetRequestDate(Bizz.TempRequest);
+            DateRequest.DisplayDate = Date;
+            DateRequest.Text = Date.ToShortDateString();
             ComboBoxRequest.ItemsSource = Bizz.RequestStatusList;
-            ComboBoxRequest.SelectedIndex = Bizz.tempRequest.Status;
+            ComboBoxRequest.SelectedIndex = Bizz.TempRequest.Status;
         }
 
         /// <summary>
@@ -1330,11 +1837,12 @@ namespace JudGui
         /// </summary>
         private void SetRadioButtons()
         {
-            SetRadioButtonsIttLetterSent(Bizz.tempSubEntrepeneur.IttLetter);
-            SetRadioButtonsOfferReceived(Bizz.tempSubEntrepeneur.Offer);
-            SetRadioButtonsReservations(Bizz.tempSubEntrepeneur.Reservations);
-            SetRadioButtonsUphold(Bizz.tempSubEntrepeneur.Uphold);
-            SetRadioButtonsAgreementConcluded(Bizz.tempSubEntrepeneur.AgreementConcluded);
+            SetRadioButtonsIttLetterSent(Bizz.TempSubEntrepeneur.IttLetter);
+            SetRadioButtonsOfferReceived(Bizz.TempSubEntrepeneur.Offer);
+            SetRadioButtonsReservations(Bizz.TempSubEntrepeneur.Reservations);
+            SetRadioButtonsUphold(Bizz.TempSubEntrepeneur.Uphold);
+            SetRadioButtonsOfferChosen(Bizz.TempSubEntrepeneur.Offer);
+            SetRadioButtonsAgreementConcluded(Bizz.TempSubEntrepeneur.AgreementConcluded);
         }
 
         /// <summary>
@@ -1360,27 +1868,61 @@ namespace JudGui
         /// </summary>
         /// <param name="ittLetter">int</param>
         private void SetRadioButtonsIttLetterSent(int ittLetter)
-
         {
             SetBizzTempIttLetter(ittLetter);
-            if (Bizz.tempIttLetter.Sent)
+            if (Bizz.TempIttLetter.Sent)
             {
-                if (Bizz.tempIttLetter.SentDate.Value.ToShortDateString() == "")
+                if (Bizz.TempIttLetter.SentDate.ToShortDateString() == "")
                 {
-                    Bizz.tempIttLetter.SentDate = DateTime.Now;
+                    Bizz.TempIttLetter.SentDate = DateTime.Now;
                 }
-                DateIttLetter.DisplayDate = Bizz.tempIttLetter.SentDate.Value;
-                DateIttLetter.Text = Bizz.tempIttLetter.SentDate.Value.ToShortDateString();
+                if (DateIttLetter.DisplayDate.ToShortDateString().Substring(0, 10) != Bizz.TempIttLetter.SentDate.ToShortDateString().Substring(0, 10))
+                {
+                    DateIttLetter.DisplayDate = Bizz.TempIttLetter.SentDate;
+                }
+                if (DateIttLetter.Text == "" || DateIttLetter.Text.Substring(0, 10) != Bizz.TempIttLetter.SentDate.ToShortDateString().Substring(0, 10))
+                {
+                    DateIttLetter.Text = Bizz.TempIttLetter.SentDate.ToShortDateString();
+                }
                 RadioButtonIttLetterSentYes.IsChecked = true;
                 RadioButtonIttLetterSentNo.IsChecked = false;
             }
             else
             {
-                Bizz.tempIttLetter.SentDate = Convert.ToDateTime("1899-12-31");
-                DateIttLetter.DisplayDate = Bizz.tempIttLetter.SentDate.Value;
-                DateIttLetter.Text = Bizz.tempIttLetter.SentDate.Value.ToShortDateString();
+                Date = Convert.ToDateTime("1932-03-17");
+                if (Bizz.TempIttLetter.SentDate.ToShortDateString().Substring(0, 10) != Date.ToShortDateString().Substring(0, 10))
+                {
+                    Bizz.TempIttLetter.SentDate = Date;
+                }
+                if (DateIttLetter.DisplayDate.ToShortDateString().Substring(0, 10) != Date.ToShortDateString().Substring(0, 10))
+                {
+                    DateIttLetter.DisplayDate = Bizz.TempIttLetter.SentDate;
+                }
+                if (DateIttLetter.Text == "" || DateIttLetter.Text.Substring(0, 10) != Date.ToShortDateString().Substring(0, 10))
+                {
+                    DateIttLetter.Text = Bizz.TempIttLetter.SentDate.ToShortDateString();
+                }
                 RadioButtonIttLetterSentYes.IsChecked = false;
                 RadioButtonIttLetterSentNo.IsChecked = true;
+            }
+        }
+
+        /// <summary>
+        /// Method, that sets RadioButtonOfferChosenYes and RadioButtonOfferChosenNo
+        /// </summary>
+        /// <param name="offer">int</param>
+        private void SetRadioButtonsOfferChosen(int offer)
+        {
+            SetBizzTempOffer(offer);
+            if (Bizz.TempOffer.Chosen)
+            {
+                RadioButtonOfferChosenYes.IsChecked = true;
+                RadioButtonOfferChosenNo.IsChecked = false;
+            }
+            else
+            {
+                RadioButtonOfferChosenYes.IsChecked = false;
+                RadioButtonOfferChosenNo.IsChecked = true;
             }
         }
 
@@ -1391,22 +1933,34 @@ namespace JudGui
         private void SetRadioButtonsOfferReceived(int offer)
         {
             SetBizzTempOffer(offer);
-            if (Bizz.tempOffer.Received)
+            if (Bizz.TempOffer.Received)
             {
-                if (Bizz.tempOffer.ReceivedDate.Value.ToShortDateString() == "" || Bizz.tempOffer.ReceivedDate.Value.ToShortDateString().Substring(0, 10) == "1899-12-31")
+                if (Bizz.TempOffer.ReceivedDate.ToShortDateString() == "" || Bizz.TempOffer.ReceivedDate.ToShortDateString().Substring(0, 10) == "1932-03-17")
                 {
-                    Bizz.tempOffer.AddReceived(DateTime.Now);
+                    Bizz.TempOffer.AddReceived(DateTime.Now);
                 }
-                DateOffer.DisplayDate = Bizz.tempOffer.ReceivedDate.Value;
-                DateOffer.Text = Bizz.tempOffer.ReceivedDate.Value.ToShortDateString();
+                if (DateOffer.DisplayDate.ToShortDateString().Substring(0, 10) != Bizz.TempOffer.ReceivedDate.ToShortDateString().Substring(0, 10))
+                {
+                    DateOffer.DisplayDate = Bizz.TempOffer.ReceivedDate;
+                }
+                if (DateOffer.Text.Substring(0, 10) != Bizz.TempOffer.ReceivedDate.ToShortDateString().Substring(0, 10))
+                {
+                    DateOffer.Text = Bizz.TempOffer.ReceivedDate.ToShortDateString();
+                }
                 RadioButtonOfferReceivedYes.IsChecked = true;
                 RadioButtonOfferReceivedNo.IsChecked = false;
             }
             else
             {
-                Bizz.tempOffer.AddReceived(Convert.ToDateTime("1899-12-31"));
-                DateOffer.DisplayDate = Bizz.tempOffer.ReceivedDate.Value;
-                DateOffer.Text = Bizz.tempOffer.ReceivedDate.Value.ToShortDateString();
+                Bizz.TempOffer.AddReceived(Convert.ToDateTime("1932-03-17"));
+                if (DateOffer.DisplayDate.ToShortDateString().Substring(0, 10) != Bizz.TempOffer.ReceivedDate.ToShortDateString().Substring(0, 10))
+                {
+                    DateOffer.DisplayDate = Bizz.TempOffer.ReceivedDate;
+                }
+                if (DateOffer.Text == "" || DateOffer.Text.Substring(0, 10) != Bizz.TempOffer.ReceivedDate.ToShortDateString().Substring(0, 10))
+                {
+                    DateOffer.Text = Bizz.TempOffer.ReceivedDate.ToShortDateString();
+                }
                 RadioButtonOfferReceivedYes.IsChecked = false;
                 RadioButtonOfferReceivedNo.IsChecked = true;
             }
@@ -1450,6 +2004,168 @@ namespace JudGui
 
 
         /// <summary>
+        /// Method, that coordinates Bizz.tempRequest.RecievedDate and DateRequest.Text when cancelled
+        /// </summary>
+        private void SetRequestDateCancelled()
+        {
+            if (Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10) != "1932-03-17")
+            {
+                if (DateRequest.Text.Substring(0, 10) != "1932-03-17")
+                {
+                    if (Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10) != DateRequest.Text.Substring(0, 10))
+                    {
+                        Bizz.TempRequest.ReceivedDate = Convert.ToDateTime(DateRequest.Text);
+                        Date = Bizz.TempRequest.ReceivedDate;
+                        if (!Changed)
+                        {
+                            Changed = true;
+                        }
+                        Bizz.TempRequest.ReceivedDate = Convert.ToDateTime(DateRequest.Text);
+                        Date = Bizz.TempRequest.ReceivedDate;
+                        if (!Changed)
+                        {
+                            Changed = true;
+                        }
+                    }
+                }
+                else
+                {
+                    DateRequest.Text = Date.ToShortDateString().Substring(0, 10);
+                }
+            }
+            else
+            {
+                if (DateRequest.Text.Substring(0, 10) != "1932-03-17")
+                {
+                    Bizz.TempRequest.ReceivedDate = Convert.ToDateTime(DateRequest.Text);
+                    Date = Bizz.TempRequest.ReceivedDate;
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+                else
+                {
+                    Date = DateTime.Now;
+                    Bizz.TempRequest.ReceivedDate = Date;
+                    DateRequest.Text = Date.ToShortDateString().Substring(0, 10);
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method, that sets Bizz.tempRequest.SentDate and DateRequest.Text to 1932-03-17
+        /// </summary>
+        private void SetRequestDateNotSent()
+        {
+            if (Bizz.TempRequest.SentDate.ToShortDateString().Substring(0, 10) != "1932-03-17" || Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10) != "1932-03-17")
+            {
+                Date = Convert.ToDateTime("1932-03-17");
+                Bizz.TempRequest.ReceivedDate = Date;
+                Bizz.TempRequest.SentDate = Date;
+                Changed = true;
+            }
+        }
+
+        /// <summary>
+        /// Method, that coordinates Bizz.tempRequest.RecievedDate and DateRequest.Text
+        /// </summary>
+        private void SetRequestReceivedDate()
+        {
+            if (Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10) != "1932-03-17")
+            {
+                if (DateRequest.Text.Substring(0, 10) != "1932-03-17")
+                {
+                    if (DateRequest.Text.Substring(0, 10) != Bizz.TempRequest.ReceivedDate.ToShortDateString().Substring(0, 10))
+                    {
+                        Bizz.TempRequest.ReceivedDate = Convert.ToDateTime(DateRequest.Text);
+                        Date = Bizz.TempRequest.ReceivedDate;
+                        if (!Changed)
+                        {
+                            Changed = true;
+                        }
+                    }
+                }
+                else
+                {
+                    DateRequest.Text = Date.ToShortDateString().Substring(0, 10);
+                }
+            }
+            else
+            {
+                if (DateRequest.Text.Substring(0, 10) != "1932-03-17")
+                {
+                    Bizz.TempRequest.ReceivedDate = Convert.ToDateTime(DateRequest.Text);
+                    Date = Bizz.TempRequest.ReceivedDate;
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+                else
+                {
+                    Date = DateTime.Now;
+                    Bizz.TempRequest.ReceivedDate = Date;
+                    DateRequest.Text = Date.ToShortDateString().Substring(0, 10);
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Method, that coordinates Bizz.tempRequest.SentDate and DateRequest.Text
+        /// </summary>
+        private void SetRequestSentDate()
+        {
+            if (Bizz.TempRequest.SentDate.ToShortDateString().Substring(0, 10) != "1932-03-17")
+            {
+                Date = Bizz.TempRequest.SentDate;
+                if (DateRequest.Text.Substring(0, 10) != "1932-03-17")
+                {
+                    Bizz.TempRequest.SentDate = Convert.ToDateTime(DateRequest.Text);
+                    Date = Bizz.TempRequest.SentDate;
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+                else
+                {
+                    DateRequest.Text = Date.ToShortDateString().Substring(0, 10);
+                }
+            }
+            else
+            {
+                if (DateRequest.Text.Substring(0, 10) != "1932-03-17")
+                {
+                    Bizz.TempRequest.SentDate = Convert.ToDateTime(DateRequest.Text);
+                    Date = Bizz.TempRequest.SentDate;
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+                else
+                {
+                    Date = DateTime.Now;
+                    Bizz.TempRequest.SentDate = Date;
+                    DateRequest.Text = Date.ToShortDateString().Substring(0, 10);
+                    if (!Changed)
+                    {
+                        Changed = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Method, that update sent status on an IttLetter in Db
         /// </summary>
         /// <param name="id">int</param>
@@ -1475,13 +2191,14 @@ namespace JudGui
         /// <summary>
         /// Method, that update received status on an Offer in Db
         /// </summary>
-        /// <param name="id">int</param>
+        /// <param name="offer">int</param>
         /// <param name="received">bool</param>
-        private void UpdateOfferReceivedInDb(int id, bool received)
+        private void UpdateOfferReceivedInDb(Offer offer)
         {
-            string date = DateOffer.DisplayDate.Year + "-" + DateOffer.DisplayDate.Month + "-" + DateOffer.DisplayDate.Day;
+            //string strDate = DateOffer.DisplayDate.Year + "-" + DateOffer.DisplayDate.Month + "-" + DateOffer.DisplayDate.Day;
+            string strDate = offer.ReceivedDate.Year + "-" + offer.ReceivedDate.Month + "-" + offer.ReceivedDate.Day;
             // Code that save changes to the project
-            bool result = Bizz.COF.UpdateOfferReceived(id, received, date);
+            bool result = Bizz.COF.UpdateOfferReceived(offer.Id, offer.Received, strDate, offer.Price, offer.Chosen);
 
             if (result)
             {
@@ -1503,7 +2220,7 @@ namespace JudGui
         private void UpdateRequestStatusInDb(int status, int id)
         {
             // Code that save changes to the project
-            bool result = Bizz.CRQ.UpdateRequestStatus(status, id, DateRequest.Text);
+            bool result = Bizz.CRQ.UpdateRequestStatus(status, id, Convert.ToDateTime(DateRequest.Text));
 
             if (!result)
             {

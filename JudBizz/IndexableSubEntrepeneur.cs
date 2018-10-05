@@ -40,8 +40,7 @@ namespace JudBizz
         /// <returns>string</returns>
         public override string ToString()
         {
-            string result = this.Name;
-            return result;
+            return this.Name;
         }
 
         #endregion

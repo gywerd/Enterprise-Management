@@ -15,13 +15,14 @@ namespace JudDataAccess
 
         #endregion
 
-        /// <summary>
-        /// Initiate class
-        /// </summary>
+        #region Constructors
         public DbConn()
         {
         }
 
+        #endregion
+
+        #region Methods
         protected void OpenDB()
         {
             try
@@ -259,6 +260,8 @@ namespace JudDataAccess
             return bolRes;
         }
 
+        #endregion
+
         #region Properties
         protected string StrConnectionString
         {
@@ -275,6 +278,7 @@ namespace JudDataAccess
                 }
             }
         }
+
         #endregion
 
     }

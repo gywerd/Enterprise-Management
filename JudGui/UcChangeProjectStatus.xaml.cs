@@ -51,7 +51,7 @@ namespace JudGui
         private void ButtonExecute_Click(object sender, RoutedEventArgs e)
         {
             // Code that changes project status
-            bool result = Bizz.CPR.UpdateProject(Bizz.tempProject);
+            bool result = Bizz.CPR.UpdateProject(Bizz.TempProject);
 
             if (result)
             {
@@ -87,16 +87,16 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
-            ComboBoxProjectStatus.SelectedIndex = Bizz.tempProject.Status;
-            TextBoxCaseName.Content = Bizz.tempProject.Name;
+            ComboBoxProjectStatus.SelectedIndex = Bizz.TempProject.Status;
+            TextBoxCaseName.Content = Bizz.TempProject.Name;
         }
 
         private void ComboBoxProjectStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempProject.Status = ComboBoxProjectStatus.SelectedIndex;
+            Bizz.TempProject.Status = ComboBoxProjectStatus.SelectedIndex;
         }
 
         #endregion

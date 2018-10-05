@@ -49,8 +49,8 @@ namespace JudGui
         private void ButtonCopy_Click(object sender, RoutedEventArgs e)
         {
             // Code that copies the current project into a new project
-            Project project = new Project(Bizz.tempProject.CaseId, Bizz.tempProject.Name, Bizz.tempProject.Builder, 1, Bizz.tempProject.TenderForm, Bizz.tempProject.EnterpriseForm, Bizz.tempProject.Executive);
-            bool result = Bizz.CPR.InsertIntoProject(Bizz.tempProject);
+            Project project = new Project(Bizz.TempProject.CaseId, Bizz.TempProject.Name, Bizz.TempProject.Builder, 1, Bizz.TempProject.TenderForm, Bizz.TempProject.EnterpriseForm, Bizz.TempProject.Executive);
+            bool result = Bizz.CPR.InsertIntoProject(Bizz.TempProject);
 
             if (result)
             {
@@ -83,10 +83,10 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
-            TextBoxCaseName.Text = Bizz.tempProject.Name;
+            TextBoxCaseName.Text = Bizz.TempProject.Name;
         }
 
         private void TextBoxCaseId_TextChanged(object sender, TextChangedEventArgs e)
@@ -98,7 +98,7 @@ namespace JudGui
                 TextBoxCaseId.Text = id;
                 TextBoxCaseId.Select(TextBoxCaseId.Text.Length, 0);
             }
-            Bizz.tempProject.CaseId = Convert.ToInt32(TextBoxCaseId.Text);
+            Bizz.TempProject.CaseId = Convert.ToInt32(TextBoxCaseId.Text);
         }
 
         private void TextBoxCaseName_TextChanged(object sender, TextChangedEventArgs e)
@@ -110,7 +110,7 @@ namespace JudGui
                 TextBoxCaseName.Text = id;
                 TextBoxCaseName.Select(TextBoxCaseName.Text.Length, 0);
             }
-            Bizz.tempProject.Name = TextBoxCaseName.Text;
+            Bizz.TempProject.Name = TextBoxCaseName.Text;
         }
 
         #endregion

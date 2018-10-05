@@ -40,6 +40,7 @@ namespace JudGui
             InitializeComponent();
             this.Bizz = bizz;
             this.UcRight = ucRight;
+            ComboBoxCaseId.ItemsSource = Bizz.ActiveProjects;
         }
 
         #endregion
@@ -64,19 +65,23 @@ namespace JudGui
             PdfCreator pdfCreator = new PdfCreator();
             if (RadioButtonShowAll.IsChecked.Value)
             {
-                path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz.tempProject, IndexableEnterpriseList, IndexableSubEntrepeneurs, Bizz.Users);
+                path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz, Bizz.TempProject, IndexableEnterpriseList, IndexableSubEntrepeneurs, Bizz.Users);
             }
             if (RadioButtonShowOpen.IsChecked.Value)
             {
-                path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz.tempProject, IndexableEnterpriseList, OpenIndexableSubEntrepeneurs, Bizz.Users);
+                path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz, Bizz.TempProject, IndexableEnterpriseList, OpenIndexableSubEntrepeneurs, Bizz.Users);
             }
             if (RadioButtonShowChosen.IsChecked.Value)
             {
-                path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz.tempProject, IndexableEnterpriseList, ChosenIndexableSubEntrepeneurs, Bizz.Users);
+                path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz, Bizz.TempProject, IndexableEnterpriseList, ChosenIndexableSubEntrepeneurs, Bizz.Users);
             }
             if (RadioButtonShowYesReceivedChosen.IsChecked.Value)
             {
-                path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz.tempProject, IndexableEnterpriseList, YesReceivedChosenIndexableSubEntrepeneurs, Bizz.Users);
+                path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz, Bizz.TempProject, IndexableEnterpriseList, YesReceivedChosenIndexableSubEntrepeneurs, Bizz.Users);
+            }
+            if (RadioButtonShowAgreement.IsChecked.Value)
+            {
+                path = pdfCreator.GenerateSubEntrepeneursPdfForAgreement(Bizz, Bizz.TempProject, IndexableEnterpriseList, ChosenIndexableSubEntrepeneurs, Bizz.Users);
             }
             Process.Start(path);
         }
@@ -91,10 +96,10 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
-            TextBoxCaseName.Text = Bizz.tempProject.Name;
+            TextBoxCaseName.Text = Bizz.TempProject.Name;
             IndexableEnterpriseList = GetIndexableEnterpriseList();
             IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
             RadioButtonShowAll.IsChecked = true;
@@ -106,10 +111,8 @@ namespace JudGui
             RadioButtonShowOpen.IsChecked = false;
             RadioButtonShowChosen.IsChecked = false;
             RadioButtonShowYesReceivedChosen.IsChecked = false;
-            IndexableEnterpriseList.Clear();
-            IndexableEnterpriseList = GetIndexableEnterpriseList();
-            IndexableSubEntrepeneurs.Clear();
-            IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
+            RadioButtonShowAgreement.IsChecked = false;
+            UpdateIndexableLists();
         }
 
         private void RadioButtonShowOpen_Checked(object sender, RoutedEventArgs e)
@@ -118,10 +121,8 @@ namespace JudGui
             RadioButtonShowOpen.IsChecked = true;
             RadioButtonShowChosen.IsChecked = false;
             RadioButtonShowYesReceivedChosen.IsChecked = false;
-            IndexableEnterpriseList.Clear();
-            IndexableEnterpriseList = GetIndexableEnterpriseList();
-            IndexableSubEntrepeneurs.Clear();
-            IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
+            RadioButtonShowAgreement.IsChecked = false;
+            UpdateIndexableLists();
             OpenIndexableSubEntrepeneurs.Clear();
             OpenIndexableSubEntrepeneurs = FilterOpen();
         }
@@ -132,10 +133,8 @@ namespace JudGui
             RadioButtonShowOpen.IsChecked = false;
             RadioButtonShowChosen.IsChecked = true;
             RadioButtonShowYesReceivedChosen.IsChecked = false;
-            IndexableEnterpriseList.Clear();
-            IndexableEnterpriseList = GetIndexableEnterpriseList();
-            IndexableSubEntrepeneurs.Clear();
-            IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
+            RadioButtonShowAgreement.IsChecked = false;
+            UpdateIndexableLists();
             ChosenIndexableSubEntrepeneurs.Clear();
             ChosenIndexableSubEntrepeneurs = FilterChosen();
         }
@@ -146,14 +145,23 @@ namespace JudGui
             RadioButtonShowOpen.IsChecked = false;
             RadioButtonShowChosen.IsChecked = false;
             RadioButtonShowYesReceivedChosen.IsChecked = true;
-            IndexableEnterpriseList.Clear();
-            IndexableEnterpriseList = GetIndexableEnterpriseList();
-            IndexableSubEntrepeneurs.Clear();
-            IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
+            RadioButtonShowAgreement.IsChecked = false;
+            UpdateIndexableLists();
             YesReceivedChosenIndexableSubEntrepeneurs.Clear();
             YesReceivedChosenIndexableSubEntrepeneurs = FilterYesReceivedChosen();
         }
 
+        private void RadioButtonShowAgreement_Checked(object sender, RoutedEventArgs e)
+        {
+            RadioButtonShowAll.IsChecked = false;
+            RadioButtonShowOpen.IsChecked = false;
+            RadioButtonShowChosen.IsChecked = false;
+            RadioButtonShowYesReceivedChosen.IsChecked = false;
+            RadioButtonShowAgreement.IsChecked = true;
+            UpdateIndexableLists();
+            ChosenIndexableSubEntrepeneurs.Clear();
+            ChosenIndexableSubEntrepeneurs = FilterChosen();
+        }
         #endregion
 
         #region Methods
@@ -235,7 +243,7 @@ namespace JudGui
             int i = 0;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.tempProject.Id)
+                if (enterprise.Project == Bizz.TempProject.Id)
                 {
                     IndexableEnterprise temp = new IndexableEnterprise(i, enterprise);
                     result.Add(temp);
@@ -269,6 +277,18 @@ namespace JudGui
             return result;
         }
 
+        /// <summary>
+        /// Method, that reloads IndexableEnterpriseList & IndexableSubEntrepeneurs
+        /// </summary>
+        private void UpdateIndexableLists()
+        {
+            IndexableEnterpriseList.Clear();
+            IndexableEnterpriseList = GetIndexableEnterpriseList();
+            IndexableSubEntrepeneurs.Clear();
+            IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
+        }
+
         #endregion
+
     }
 }

@@ -54,16 +54,16 @@ namespace JudGui
         private void ButtonCreateClose_Click(object sender, RoutedEventArgs e)
         {
             //Code that creates a new project
-            if (Bizz.tempProject.EnterpriseList == false)
+            if (Bizz.TempProject.EnterpriseList == false)
             {
-                Bizz.tempProject.ToggleEnterpriseList();
-                Bizz.CPR.UpdateProject(Bizz.tempProject);
+                Bizz.TempProject.ToggleEnterpriseList();
+                Bizz.CPR.UpdateProject(Bizz.TempProject);
                 Bizz.Projects.Clear();
                 Bizz.Projects = Bizz.CPR.GetProjects();
                 ReloadListActiveProjects();
                 ReloadListIndexableProjects();
             }
-            bool result = Bizz.CEP.InsertIntoEnterpriseList(Bizz.tempEnterprise);
+            bool result = Bizz.CEP.InsertIntoEnterpriseList(Bizz.TempEnterprise);
 
             if (result)
             {
@@ -73,7 +73,7 @@ namespace JudGui
                 //Update EnterpriseList
                 Bizz.EnterpriseList.Clear();
                 Bizz.EnterpriseList = Bizz.CEP.GetEnterpriseList();
-                Bizz.tempEnterprise = new Enterprise(Bizz.strConnection);
+                Bizz.TempEnterprise = new Enterprise(Bizz.strConnection);
 
                 //Close right UserControl
                 Bizz.UcRightActive = false;
@@ -89,16 +89,16 @@ namespace JudGui
         private void ButtonCreateNew_Click(object sender, RoutedEventArgs e)
         {
             //Code that creates a new project
-            if (Bizz.tempProject.EnterpriseList == false)
+            if (Bizz.TempProject.EnterpriseList == false)
             {
-                Bizz.tempProject.ToggleEnterpriseList();
-                Bizz.CPR.UpdateProject(Bizz.tempProject);
+                Bizz.TempProject.ToggleEnterpriseList();
+                Bizz.CPR.UpdateProject(Bizz.TempProject);
                 Bizz.Projects.Clear();
                 Bizz.Projects = Bizz.CPR.GetProjects();
                 ReloadListActiveProjects();
                 ReloadListIndexableProjects();
             }
-            bool result = Bizz.CEP.InsertIntoEnterpriseList(Bizz.tempEnterprise);
+            bool result = Bizz.CEP.InsertIntoEnterpriseList(Bizz.TempEnterprise);
 
             if (result)
             {
@@ -118,13 +118,13 @@ namespace JudGui
                 //Update Enterprise list
                 Bizz.EnterpriseList.Clear();
                 Bizz.EnterpriseList = Bizz.CEP.GetEnterpriseList();
-                Bizz.tempEnterprise.Name = "";
-                Bizz.tempEnterprise.Elaboration = "";
-                Bizz.tempEnterprise.OfferList = "";
-                Bizz.tempEnterprise.CraftGroup1 = 0;
-                Bizz.tempEnterprise.CraftGroup2 = 0;
-                Bizz.tempEnterprise.CraftGroup3 = 0;
-                Bizz.tempEnterprise.CraftGroup4 = 0;
+                Bizz.TempEnterprise.Name = "";
+                Bizz.TempEnterprise.Elaboration = "";
+                Bizz.TempEnterprise.OfferList = "";
+                Bizz.TempEnterprise.CraftGroup1 = 0;
+                Bizz.TempEnterprise.CraftGroup2 = 0;
+                Bizz.TempEnterprise.CraftGroup3 = 0;
+                Bizz.TempEnterprise.CraftGroup4 = 0;
             }
             else
             {
@@ -143,39 +143,39 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
-            TextBoxCaseName.Content = Bizz.tempProject.Name;
-            Bizz.tempEnterprise.Project = Bizz.tempProject.Id;
+            TextBoxCaseName.Content = Bizz.TempProject.Name;
+            Bizz.TempEnterprise.Project = Bizz.TempProject.Id;
             ComboBoxCraftGroup1.SelectedIndex = 0;
             ComboBoxCraftGroup2.SelectedIndex = 0;
             ComboBoxCraftGroup3.SelectedIndex = 0;
             ComboBoxCraftGroup4.SelectedIndex = 0;
-            Bizz.tempEnterprise.CraftGroup1 = 0;
-            Bizz.tempEnterprise.CraftGroup2 = 0;
-            Bizz.tempEnterprise.CraftGroup3 = 0;
-            Bizz.tempEnterprise.CraftGroup4 = 0;
+            Bizz.TempEnterprise.CraftGroup1 = 0;
+            Bizz.TempEnterprise.CraftGroup2 = 0;
+            Bizz.TempEnterprise.CraftGroup3 = 0;
+            Bizz.TempEnterprise.CraftGroup4 = 0;
         }
 
         private void ComboBoxCraftGroup1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempEnterprise.CraftGroup1 = ComboBoxCraftGroup1.SelectedIndex;
+            Bizz.TempEnterprise.CraftGroup1 = ComboBoxCraftGroup1.SelectedIndex;
         }
 
         private void ComboBoxCraftGroup2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempEnterprise.CraftGroup2 = ComboBoxCraftGroup2.SelectedIndex;
+            Bizz.TempEnterprise.CraftGroup2 = ComboBoxCraftGroup2.SelectedIndex;
         }
 
         private void ComboBoxCraftGroup3_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempEnterprise.CraftGroup3 = ComboBoxCraftGroup3.SelectedIndex;
+            Bizz.TempEnterprise.CraftGroup3 = ComboBoxCraftGroup3.SelectedIndex;
         }
 
         private void ComboBoxCraftGroup4_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempEnterprise.CraftGroup4 = ComboBoxCraftGroup4.SelectedIndex;
+            Bizz.TempEnterprise.CraftGroup4 = ComboBoxCraftGroup4.SelectedIndex;
         }
 
         private void TextBoxName_TextChanged(object sender, TextChangedEventArgs e)
@@ -187,7 +187,7 @@ namespace JudGui
                 TextBoxName.Text = textBlock;
                 TextBoxName.Select(TextBoxName.Text.Length, 0);
             }
-            Bizz.tempEnterprise.Name = TextBoxName.Text;
+            Bizz.TempEnterprise.Name = TextBoxName.Text;
         }
 
         private void TextBoxElaboration_TextChanged(object sender, TextChangedEventArgs e)
@@ -199,7 +199,7 @@ namespace JudGui
                 TextBoxElaboration.Text = textBlock;
                 TextBoxElaboration.Select(TextBoxElaboration.Text.Length, 0);
             }
-            Bizz.tempEnterprise.Elaboration = TextBoxElaboration.Text;
+            Bizz.TempEnterprise.Elaboration = TextBoxElaboration.Text;
         }
 
         private void TextBoxOfferList_TextChanged(object sender, TextChangedEventArgs e)
@@ -211,7 +211,7 @@ namespace JudGui
                 TextBoxOfferList.Text = textBlock;
                 TextBoxOfferList.Select(TextBoxOfferList.Text.Length, 0);
             }
-            Bizz.tempEnterprise.OfferList = TextBoxOfferList.Text;
+            Bizz.TempEnterprise.OfferList = TextBoxOfferList.Text;
         }
 
         #endregion

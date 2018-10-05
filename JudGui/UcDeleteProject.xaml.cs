@@ -54,13 +54,13 @@ namespace JudGui
                 if (MessageBox.Show("Er du sikker på, at du vil slette projektet? Alle data vil gå tabt!", "Slet Projekt", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
                     // Code that changes project status
-                    bool result = Bizz.CPR.DeleteFromProject(Bizz.tempProject.Id);
+                    bool result = Bizz.CPR.DeleteFromProject(Bizz.TempProject.Id);
 
                     if (result)
                     {
                         foreach (Enterprise enterprise in Bizz.EnterpriseList)
                         {
-                            if (enterprise.Project == Bizz.tempProject.CaseId)
+                            if (enterprise.Project == Bizz.TempProject.CaseId)
                             {
                                 foreach (SubEntrepeneur subEntrepeneur in Bizz.SubEntrepeneurs)
                                 {
@@ -113,7 +113,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
         }

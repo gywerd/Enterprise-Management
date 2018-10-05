@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JudBizz
 {
@@ -13,7 +14,7 @@ namespace JudBizz
         private int id;
         protected string legalEntity;
         protected string name;
-        protected string description;
+        protected string area;
         protected int contactInfo;
 
         private static string strConnection;
@@ -37,7 +38,7 @@ namespace JudBizz
             executor = new Executor(strConnection);
             legalEntity = "";
             name = "";
-            description = "";
+            area = "";
             contactInfo = 0;
         }
 
@@ -53,7 +54,7 @@ namespace JudBizz
         {
             this.legalEntity = legalEntity;
             this.name = name;
-            this.description = description;
+            this.area = description;
             this.contactInfo = contactInfo;
         }
 
@@ -71,7 +72,7 @@ namespace JudBizz
             this.id = id;
             this.legalEntity = legalEntity;
             this.name = name;
-            this.description = description;
+            this.area = description;
             this.contactInfo = contactInfo;
         }
 
@@ -86,7 +87,7 @@ namespace JudBizz
                 this.id = contact.Id;
                 this.legalEntity = contact.LegalEntity;
                 this.name = contact.Name;
-                this.description = contact.Description;
+                this.area = contact.Area;
                 this.contactInfo = contact.ContactInfo;
             }
             else
@@ -94,7 +95,7 @@ namespace JudBizz
                 id = 0;
                 legalEntity = "";
                 name = "";
-                description = "";
+                area = "";
                 contactInfo = 0;
             }
         }
@@ -102,6 +103,34 @@ namespace JudBizz
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Method, that creates a new Contact in Db
+        /// </summary>
+        /// <param name="tempContact">Contact</param>
+        /// <returns>int</returns>
+        public int CreateContactInDb(Contact tempContact)
+        {
+            int result = 0;
+            int count = 0;
+            bool dbAnswer = false;
+            List<Contact> tempContacts = new List<Contact>();
+            //INSERT INTO [dbo].[Contacts]([LegalEntity], [Name], [Area], [ContactInfo]) VALUES(<LegalEntity, nvarchar(10),>, <Name, nvarchar(10),>, <Area, nvarchar(10),>, <ContactInfo, int,>)
+            string strSql = "INSERT INTO[dbo].[Contacts]([Status], [SentDate], [ReceivedDate]) VALUES(" + tempContact.LegalEntity + ", '" + tempContact.Name + "', '" + tempContact.Area + "', '" + tempContact.ContactInfo + "')";
+            dbAnswer = executor.WriteToDataBase(strSql);
+            if (!dbAnswer)
+            {
+                MessageBox.Show("Databasen returnerede en fejl ved forsøg på at oprette en ny kontakt.", "Databasefejl", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            tempContacts = GetContacts();
+            count = tempContacts.Count;
+            result = tempContacts[count - 1].Id;
+            return result;
+        }
+
+        /// <summary>
+        /// Method, that fetches a list of Contacts
+        /// </summary>
+        /// <returns></returns>
         public List<Contact> GetContacts()
         {
             List<string> results = executor.ReadListFromDataBase("Contacts");
@@ -117,15 +146,33 @@ namespace JudBizz
         }
 
         /// <summary>
+        /// Method, that sets id, if id == 0
+        /// </summary>
+        public void SetId(int id)
+        {
+            try
+            {
+                if (this.id == 0 && id >= 1)
+                {
+                    this.id = id;
+                }
+            }
+            catch (Exception)
+            {
+                this.id = 0;
+            }
+        }
+
+        /// <summary>
         /// Method, that returns main info as string
         /// </summary>
         /// <returns>string</returns>
         public override string ToString()
         {
             string tempName = name;
-            if (description != "")
+            if (area != "")
             {
-                tempName += " (" + description + ")";
+                tempName += " (" + area + ")";
             }
             return tempName;
         }
@@ -175,16 +222,16 @@ namespace JudBizz
             }
         }
 
-        public string Description
+        public string Area
         {
-            get => description;
+            get => area;
             set
             {
                 try
                 {
                     if (value != null)
                     {
-                        description = value;
+                        area = value;
                     }
                 }
                 catch (Exception ex)

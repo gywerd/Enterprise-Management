@@ -16,17 +16,17 @@ namespace JudBizz
         #region Ordinary Fields
         public static string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=JortonSubEnt;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
         public User CurrentUser = new User(strConnection);
-        public Address tempAddress = new Address(strConnection);
-        public Contact tempContact = new Contact(strConnection);
-        public ContactInfo tempContactInfo = new ContactInfo(strConnection);
-        public Enterprise tempEnterprise = new Enterprise(strConnection);
-        public IttLetter tempIttLetter = new IttLetter(strConnection);
-        public LegalEntity tempLegalEntity = new LegalEntity();
-        public Offer tempOffer = new Offer(strConnection);
-        public Project tempProject = new Project(strConnection);
-        public Request tempRequest = new Request(strConnection);
-        public SubEntrepeneur tempSubEntrepeneur;
-        public ZipTown tempZipTown = new ZipTown(strConnection);
+        public Address TempAddress = new Address(strConnection);
+        public Contact TempContact = new Contact(strConnection);
+        public ContactInfo TempContactInfo = new ContactInfo(strConnection);
+        public Enterprise TempEnterprise = new Enterprise(strConnection);
+        public IttLetter TempIttLetter = new IttLetter(strConnection);
+        public LegalEntity TempLegalEntity = new LegalEntity();
+        public Offer TempOffer = new Offer(strConnection);
+        public Project TempProject = new Project(strConnection);
+        public Request TempRequest = new Request(strConnection);
+        public SubEntrepeneur TempSubEntrepeneur;
+        public ZipTown TempZipTown = new ZipTown(strConnection);
         public bool UcRightActive = false;
         #endregion
 

@@ -94,6 +94,7 @@
                  Height="290" Width="955" 
                  HorizontalAlignment="Left" 
                  SelectionChanged="ListBoxLegalEntities_SelectionChanged"
+                 SelectionMode="Multiple" 
                  VerticalAlignment="Top" />
         <ComboBox x:Name="ComboBoxContact" 
                   FontSize="30" 

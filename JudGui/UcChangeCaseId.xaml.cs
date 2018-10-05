@@ -51,7 +51,7 @@ namespace JudGui
         private void ButtonEdit_Click(object sender, RoutedEventArgs e)
         {
             // Code that save changed CaseId to the project
-            bool result = Bizz.CPR.UpdateProject(Bizz.tempProject);
+            bool result = Bizz.CPR.UpdateProject(Bizz.TempProject);
 
             if (result)
             {
@@ -85,10 +85,10 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
-            TextBoxName.Text = Bizz.tempProject.Name;
+            TextBoxName.Text = Bizz.TempProject.Name;
         }
 
         private void TextBoxCaseId_TextChanged(object sender, TextChangedEventArgs e)
@@ -100,7 +100,7 @@ namespace JudGui
                 TextBoxCaseId.Text = id;
                 TextBoxCaseId.Select(TextBoxCaseId.Text.Length, 0);
             }
-            Bizz.tempProject.CaseId = Convert.ToInt32(TextBoxCaseId.Text);
+            Bizz.TempProject.CaseId = Convert.ToInt32(TextBoxCaseId.Text);
         }
 
         #endregion

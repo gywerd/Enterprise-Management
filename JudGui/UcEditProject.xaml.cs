@@ -55,7 +55,7 @@ namespace JudGui
         private void ButtonEdit_Click(object sender, RoutedEventArgs e)
         {
             // Code that save changes to the project
-            bool result = Bizz.CPR.UpdateProject(Bizz.tempProject);
+            bool result = Bizz.CPR.UpdateProject(Bizz.TempProject);
 
             if (result)
             {
@@ -91,45 +91,45 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.tempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
-            TextBoxCaseName.Text = Bizz.tempProject.Name;
-            ComboBoxBuilder.SelectedIndex = Bizz.tempProject.Builder;
-            ComboBoxProjectStatus.SelectedIndex = Bizz.tempProject.Status;
-            ComboBoxTenderForm.SelectedIndex = Bizz.tempProject.TenderForm;
-            ComboBoxEnterpriseForm.SelectedIndex = Bizz.tempProject.EnterpriseForm;
-            ComboBoxExecutive.SelectedIndex = Bizz.tempProject.Executive;
+            TextBoxCaseName.Text = Bizz.TempProject.Name;
+            ComboBoxBuilder.SelectedIndex = Bizz.TempProject.Builder;
+            ComboBoxProjectStatus.SelectedIndex = Bizz.TempProject.Status;
+            ComboBoxTenderForm.SelectedIndex = Bizz.TempProject.TenderForm;
+            ComboBoxEnterpriseForm.SelectedIndex = Bizz.TempProject.EnterpriseForm;
+            ComboBoxExecutive.SelectedIndex = Bizz.TempProject.Executive;
         }
 
         private void TextBoxCaseName_TextChanged(object sender, RoutedEventArgs e)
         {
-            Bizz.tempProject.Name = TextBoxCaseName.Text;
+            Bizz.TempProject.Name = TextBoxCaseName.Text;
         }
 
         private void ComboBoxBuilder_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempProject.Builder = ComboBoxBuilder.SelectedIndex;
+            Bizz.TempProject.Builder = ComboBoxBuilder.SelectedIndex;
         }
 
         private void ComboBoxProjectStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempProject.Status = ComboBoxProjectStatus.SelectedIndex;
+            Bizz.TempProject.Status = ComboBoxProjectStatus.SelectedIndex;
         }
 
         private void ComboBoxTenderForm_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempProject.TenderForm = ComboBoxTenderForm.SelectedIndex;
+            Bizz.TempProject.TenderForm = ComboBoxTenderForm.SelectedIndex;
         }
 
         private void ComboBoxEnterpriseForm_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempProject.EnterpriseForm = ComboBoxEnterpriseForm.SelectedIndex;
+            Bizz.TempProject.EnterpriseForm = ComboBoxEnterpriseForm.SelectedIndex;
         }
 
         private void ComboBoxExecutive_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.tempProject.Executive = ComboBoxExecutive.SelectedIndex;
+            Bizz.TempProject.Executive = ComboBoxExecutive.SelectedIndex;
         }
 
         #endregion

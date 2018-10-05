@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace JudBizz
 {
@@ -12,7 +13,7 @@ namespace JudBizz
         #region Fields
         private int id;
         private bool sent;
-        private DateTime? sentDate;
+        private DateTime sentDate;
 
         private static string strConnection;
         private Executor executor;
@@ -22,7 +23,11 @@ namespace JudBizz
         /// <summary>
         /// Empty constructor
         /// </summary>
-        public IttLetter() { }
+        public IttLetter()
+        {
+            this.sent = false;
+            this.sentDate = Convert.ToDateTime("1932-03-17");
+        }
 
         /// <summary>
         /// Empty constructor, that activates Db-connection
@@ -32,6 +37,9 @@ namespace JudBizz
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
+
+            this.sent = false;
+            this.sentDate = Convert.ToDateTime("1932-03-17");
         }
 
         /// <summary>
@@ -42,7 +50,18 @@ namespace JudBizz
         public IttLetter(bool sent, DateTime? sentDate)
         {
             this.sent = sent;
-            this.sentDate = sentDate;
+            if (sentDate == null)
+            {
+                if (sent)
+                {
+                    sentDate = DateTime.Now;
+                }
+                else
+                {
+                    sentDate = Convert.ToDateTime("1932-03-17");
+                }
+            }
+            this.sentDate = Convert.ToDateTime(sentDate);
         }
 
         /// <summary>
@@ -51,11 +70,22 @@ namespace JudBizz
         /// <param name="id"></param>
         /// <param name="sent"></param>
         /// <param name="sentDate"></param>
-        public IttLetter(int id, bool sent, DateTime? sentDate)
+        public IttLetter(int id, bool sent, DateTime? sentDate = null)
         {
             this.id = id;
             this.sent = sent;
-            this.sentDate = sentDate;
+            if (sentDate == null)
+            {
+                if (sent)
+                {
+                    sentDate = DateTime.Now;
+                }
+                else
+                {
+                    sentDate = Convert.ToDateTime("1932-03-17");
+                }
+            }
+            this.sentDate = Convert.ToDateTime(sentDate);
         }
 
         /// <summary>
@@ -88,6 +118,31 @@ namespace JudBizz
         }
 
         /// <summary>
+        /// Method, that creates a new Offer in Db
+        /// </summary>
+        /// <param name="tempIttLetter">Offer</param>
+        /// <returns>int</returns>
+        public int CreateIttLetterInDb(IttLetter tempIttLetter)
+        {
+            int result = 0;
+            int count = 0;
+            bool dbAnswer = false;
+            List<IttLetter> tempIttLetters = new List<IttLetter>();
+            //INSERT INTO [dbo].[IttLetters]([Sent], [SentDate]) VALUES(<Sent, bit,>, <SentDate, date,>)
+            string tempSentDate = tempIttLetter.SentDate.Year + "-" + tempIttLetter.SentDate.Month + "-" + tempIttLetter.SentDate.Day;
+            string strSql = "INSERT INTO[dbo].[IttLetters]([Sent], [SentDate]) VALUES('" + tempIttLetter.Sent + "', '" + tempSentDate + "')";
+            dbAnswer = executor.WriteToDataBase(strSql);
+            if (!dbAnswer)
+            {
+                MessageBox.Show("Databasen returnerede en fejl ved forsøg på at oprette et nyt tilbud.", "Databasefejl", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            tempIttLetters = GetIttLetters();
+            count = tempIttLetters.Count;
+            result = tempIttLetters[count - 1].Id;
+            return result;
+        }
+
+        /// <summary>
         /// Method, that creates sqlQuery to update status of a Request entry in Db
         /// </summary>
         /// <param name="sent">int</param>
@@ -103,7 +158,7 @@ namespace JudBizz
             }
             else
             {
-                query = @"UPDATE [dbo].[IttLetters] SET [Sent] = 'false', [SentDate] = '1899-12-31' WHERE [Id] = " + id.ToString();
+                query = @"UPDATE [dbo].[IttLetters] SET [Sent] = 'false', [SentDate] = '1932-03-17' WHERE [Id] = " + id.ToString();
             }
             return query;
         }
@@ -132,17 +187,35 @@ namespace JudBizz
                 IttLetter ittLetter;
                 string[] resultArray = new string[3];
                 resultArray = result.Split(';');
-                if (resultArray[2] != "")
+                if (resultArray[2] != "" & resultArray[2] != null)
                 {
                     ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDateTime(resultArray[2]));
                 }
                 else
                 {
-                    ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), null);
+                    ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDateTime("1932-03-17"));
                 }
                 ittLetters.Add(ittLetter);
             }
             return ittLetters;
+        }
+
+        /// <summary>
+        /// Method, that sets id, if id == 0
+        /// </summary>
+        public void SetId(int id)
+        {
+            try
+            {
+                if (this.id == 0 && id >= 1)
+                {
+                    this.id = id;
+                }
+            }
+            catch (Exception)
+            {
+                this.id = 0;
+            }
         }
 
         /// <summary>
@@ -168,7 +241,7 @@ namespace JudBizz
         {
             if (sent)
             {
-                string result = "Tilbudsbrev sendt: " + sentDate.Value.ToShortDateString();
+                string result = "Tilbudsbrev sendt: " + sentDate.ToShortDateString();
                 return result;
             }
             else
@@ -196,8 +269,10 @@ namespace JudBizz
 
         #region Properties
         public int Id { get => id; }
+
         public bool Sent { get => sent; }
-        public DateTime? SentDate { get => sentDate; set => sentDate = value; }
+
+        public DateTime SentDate { get => sentDate; set => sentDate = value; }
 
         #endregion
     }

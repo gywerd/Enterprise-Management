@@ -151,10 +151,10 @@ namespace JudBizz
         /// <returns>string</returns>
         private string CreateInsertIntoSqlQuery(SubEntrepeneur subEntrepeneur)
         {
-            //INSERT INTO table_name (column1, column2, column3, ...) VALUES(value1, value2, value3, ...);
+            //"INSERT INTO[dbo].[SubEntrepeneurs]([EnterpriseList], [Entrepeneur], [Contact], [Request], [IttLetter], [Offer], [Reservations], [Uphold], [AgreementConcluded], [Active]) VALUES (" + dataString + ")"
             string dataString = GetDataStringFromSubEntrepeneur(subEntrepeneur);
-            string result = @"INSERT INTO dbo.SubEntrepeneurs(EnterpriseList, Entrepeneur, Contact, Request, IttLetter, Offer, Reservations, Uphold, AgreementConcluded, Active) VALUES(";
-            result += dataString + @");";
+            string result = @"INSERT INTO[dbo].[SubEntrepeneurs]([EnterpriseList], [Entrepeneur], [Contact], [Request], [IttLetter], [Offer], [Reservations], [Uphold], [AgreementConcluded], [Active]) VALUES(";
+            result += dataString + @")";
             return result;
         }
 
@@ -188,7 +188,8 @@ namespace JudBizz
         /// <returns>string</returns>
         private string GetDataStringFromSubEntrepeneur(SubEntrepeneur subEntrepeneur)
         {
-            string result = subEntrepeneur.EnterpriseList.ToString() + @", '" + subEntrepeneur.EnterpriseList.ToString() + @"', '" + subEntrepeneur.Entrepeneur + @"', " + subEntrepeneur.Contact.ToString() + @", " + subEntrepeneur.Request.ToString() + @", " + subEntrepeneur.IttLetter.ToString() + @", " + subEntrepeneur.Offer.ToString() + @", '" + subEntrepeneur.Reservations.ToString() + @", '" + subEntrepeneur.Uphold.ToString() + @", '" + subEntrepeneur.AgreementConcluded.ToString() + @", '" + subEntrepeneur.Active.ToString() + @"'";
+            //< EnterpriseList, int,>, < Entrepeneur, nvarchar(50),>, < Contact, int,>, < Request, int,>, < IttLetter, int,>, < Offer, int,>, < Reservations, bit,>, < Uphold, bit,>, < AgreementConcluded, bit,>, < Active, bit,>
+            string result = subEntrepeneur.EnterpriseList.ToString() + @", '" + subEntrepeneur.Entrepeneur + @"', " + subEntrepeneur.Contact.ToString() + @", " + subEntrepeneur.Request.ToString() + @", " + subEntrepeneur.IttLetter.ToString() + @", " + subEntrepeneur.Offer.ToString() + @", '" + subEntrepeneur.Reservations.ToString() + @"', '" + subEntrepeneur.Uphold.ToString() + @"', '" + subEntrepeneur.AgreementConcluded.ToString() + @"', '" + subEntrepeneur.Active.ToString() + @"'";
             return result;
         }
 
@@ -234,7 +235,7 @@ namespace JudBizz
         /// <returns>bool</returns>
         public bool InsertIntoSubEntrepeneurs(SubEntrepeneur tempSubEntrepeneur)
         {
-            bool result;
+            bool result = false;
             string strSql = CreateInsertIntoSqlQuery(tempSubEntrepeneur);
             result = executor.WriteToDataBase(strSql);
             return result;

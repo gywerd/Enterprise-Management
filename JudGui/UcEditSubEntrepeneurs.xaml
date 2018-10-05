@@ -177,6 +177,12 @@
                   HorizontalAlignment="Center" 
                   SelectionChanged="ComboBoxRequest_SelectionChanged"
                   VerticalAlignment="Top" />
+        <StackPanel x:Name="StackPanelIttLetterSent" 
+                    Grid.Column="4" Grid.Row="6" Grid.RowSpan="2" 
+                    HorizontalAlignment="Left" 
+                    Height="50" Width="150" 
+                    Margin="5,5,0,0" 
+                    VerticalAlignment="Top" >
             <RadioButton x:Name="RadioButtonIttLetterSentYes" 
                          Checked="RadioButtonIttLetterSentYes_Checked" 
                          Content="Ja" 
@@ -204,13 +210,20 @@
                          VerticalAlignment="Top" >
                 <RadioButton.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform CenterX="15" CenterY="-30" ScaleX="2" ScaleY="2"  />
+                        <ScaleTransform CenterX="5" CenterY="-18" ScaleX="2" ScaleY="2"  />
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </RadioButton.RenderTransform>
             </RadioButton>
+        </StackPanel>
+        <StackPanel x:Name="StackPanelOfferReceived" 
+                    Grid.Column="5" Grid.Row="6" Grid.RowSpan="2" 
+                    HorizontalAlignment="Left" 
+                    Height="50" Width="150" 
+                    Margin="5,5,0,0" 
+                    VerticalAlignment="Top" >
             <RadioButton x:Name="RadioButtonOfferReceivedYes" 
                          Checked="RadioButtonOfferReceivedYes_Checked"  
                          Content="Ja" 
@@ -238,13 +251,20 @@
                          VerticalAlignment="Top" >
                 <RadioButton.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform CenterX="15" CenterY="-30" ScaleX="2" ScaleY="2"  />
+                        <ScaleTransform CenterX="5" CenterY="-18" ScaleX="2" ScaleY="2"  />
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </RadioButton.RenderTransform>
             </RadioButton>
+        </StackPanel>
+        <StackPanel x:Name="StackPanelReservations" 
+                    Grid.Column="6" Grid.Row="6" Grid.RowSpan="2" 
+                    HorizontalAlignment="Left" 
+                    Height="50" Width="150" 
+                    Margin="5,5,0,0" 
+                    VerticalAlignment="Top" >
             <RadioButton x:Name="RadioButtonReservationsYes" 
                          Checked="RadioButtonReservationsYes_Checked" 
                          Content="Ja" 
@@ -272,13 +292,20 @@
                          VerticalAlignment="Top" >
                 <RadioButton.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform CenterX="15" CenterY="-30" ScaleX="2" ScaleY="2"  />
+                        <ScaleTransform CenterX="5" CenterY="-18" ScaleX="2" ScaleY="2"  />
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </RadioButton.RenderTransform>
             </RadioButton>
+        </StackPanel>
+        <StackPanel x:Name="StackPanelUpholdSent" 
+                    Grid.Column="7" Grid.Row="6" Grid.RowSpan="2" 
+                    HorizontalAlignment="Left" 
+                    Height="50" Width="150" 
+                    Margin="5,5,0,0" 
+                    VerticalAlignment="Top" >
             <RadioButton x:Name="RadioButtonUpholdYes" 
                          Checked="RadioButtonUpholdYes_Checked"  
                          Content="Ja" 
@@ -306,13 +333,20 @@
                          VerticalAlignment="Top" >
                 <RadioButton.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform CenterX="15" CenterY="-30" ScaleX="2" ScaleY="2"  />
+                        <ScaleTransform CenterX="5" CenterY="-18" ScaleX="2" ScaleY="2"  />
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </RadioButton.RenderTransform>
             </RadioButton>
+        </StackPanel>
+        <StackPanel x:Name="StackPanelOfferChosen" 
+                    Grid.Column="8" Grid.Row="6" Grid.RowSpan="2" 
+                    HorizontalAlignment="Left" 
+                    Height="50" Width="150" 
+                    Margin="5,5,0,0" 
+                    VerticalAlignment="Top" >
             <RadioButton x:Name="RadioButtonOfferChosenYes" 
                          Checked="RadioButtonOfferChosenYes_Checked" 
                          Content="Ja" 
@@ -340,19 +374,21 @@
                          VerticalAlignment="Top" >
                 <RadioButton.RenderTransform>
                     <TransformGroup>
-                        <ScaleTransform CenterX="15" CenterY="-30" ScaleX="2" ScaleY="2"  />
+                        <ScaleTransform CenterX="5" CenterY="-18" ScaleX="2" ScaleY="2"  />
                         <SkewTransform/>
                         <RotateTransform/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </RadioButton.RenderTransform>
             </RadioButton>
+        </StackPanel>
         <DatePicker x:Name="DateRequest" 
                     FontSize="8" 
                     Grid.Column="3" Grid.Row="7" 
                     HorizontalAlignment="Left" 
                     MaxWidth="150"
                     RenderTransformOrigin="1,1"
+                    SelectedDateChanged="DateRequest_SelectedDateChanged" 
                     VerticalAlignment="Top">
             <DatePicker.RenderTransform>
                 <TransformGroup>
@@ -367,9 +403,10 @@
                     FontSize="8" 
                     Grid.Column="4" Grid.Row="7" 
                     HorizontalAlignment="Left" 
-                    MaxWidth="160"
-                    RenderTransformOrigin="1,1"
-                    VerticalAlignment="Top">
+                    MaxWidth="160" 
+                    RenderTransformOrigin="1,1" 
+                    SelectedDateChanged="DateIttLetter_SelectedDateChanged" 
+                    VerticalAlignment="Top" >
             <DatePicker.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform CenterX="-88" CenterY="-30" ScaleX="1.80" ScaleY="1.8"  />
@@ -385,6 +422,7 @@
                     HorizontalAlignment="Left" 
                     MaxWidth="160"
                     RenderTransformOrigin="1,1"
+                    SelectedDateChanged="DateOffer_SelectedDateChanged" 
                     VerticalAlignment="Top">
             <DatePicker.RenderTransform>
                 <TransformGroup>
@@ -410,12 +448,18 @@
                  TextChanged="TextBoxOfferPrice_TextChanged" 
                  TextWrapping="Wrap" 
                  VerticalAlignment="Top" Margin="0,0,5,0" />
-        <Label x:Name="LabelAgreementConcluded" Content="Afsluttet:" 
+        <Label x:Name="LabelAgreementConcluded" Content="Aftalt :" 
                FontSize="30" 
                Grid.Column="7" Grid.Row="8" Grid.ColumnSpan="1" 
                HorizontalAlignment="Left" 
                VerticalAlignment="Top" />
-        <RadioButton x:Name="RadioButtonAgreementConcludedYes" 
+        <StackPanel x:Name="StackPanelAgreementConcluded" 
+                    Grid.Column="8" Grid.Row="8" Grid.RowSpan="2" 
+                    HorizontalAlignment="Left" 
+                    Height="50" Width="150" 
+                    Margin="5,5,0,0" 
+                    VerticalAlignment="Top" >
+            <RadioButton x:Name="RadioButtonAgreementConcludedYes" 
                          Checked="RadioButtonAgreementConcludedYes_Checked" 
                          Content="Ja" 
                          FontSize="9" 
@@ -423,32 +467,33 @@
                          HorizontalAlignment="Left" 
                          RenderTransformOrigin="1,1"
                          VerticalAlignment="Top" >
-            <RadioButton.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform CenterX="-40" CenterY="-30" ScaleX="2" ScaleY="2"  />
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </RadioButton.RenderTransform>
-        </RadioButton>
-        <RadioButton x:Name="RadioButtonAgreementConcludedNo" 
-                         Checked="RadioButtonAgreementConcludedNo_Checked" 
-                         Content="Nej" 
-                         FontSize="9" 
-                         Grid.Column="8" Grid.Row="8" 
-                         HorizontalAlignment="Right" 
-                         RenderTransformOrigin="1,1"
-                         VerticalAlignment="Top" >
-            <RadioButton.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform CenterX="15" CenterY="-30" ScaleX="2" ScaleY="2"  />
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </RadioButton.RenderTransform>
-        </RadioButton>
+                <RadioButton.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform CenterX="-40" CenterY="-30" ScaleX="2" ScaleY="2"  />
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </RadioButton.RenderTransform>
+            </RadioButton>
+            <RadioButton x:Name="RadioButtonAgreementConcludedNo" 
+                             Checked="RadioButtonAgreementConcludedNo_Checked" 
+                             Content="Nej" 
+                             FontSize="9" 
+                             Grid.Column="8" Grid.Row="8" 
+                             HorizontalAlignment="Right" 
+                             RenderTransformOrigin="1,1"
+                             VerticalAlignment="Top" >
+                <RadioButton.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform CenterX="5" CenterY="-18" ScaleX="2" ScaleY="2"  />
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </RadioButton.RenderTransform>
+            </RadioButton>
+        </StackPanel>
         <Button x:Name="ButtonClose" Content="Luk"
                 Click="ButtonClose_Click" 
                 FontSize="48" FontWeight="Bold" 
