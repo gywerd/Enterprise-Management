@@ -18,7 +18,6 @@ namespace JudBizz
 
         private static string strConnection;
         private Executor executor;
-
         #endregion
 
         #region Constructors
@@ -27,37 +26,14 @@ namespace JudBizz
         /// </summary>
         public Request()
         {
-            DateTime date = Convert.ToDateTime("1932-03-17");
-            this.status = 0;
-            this.sentDate = date;
-            this.receivedDate = date;
-        }
-
-        /// <summary>
-        /// Empty constructor, that activates Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public Request(string strCon)
-        {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
 
+            this.id = 0;
             DateTime date = Convert.ToDateTime("1932-03-17");
             this.status = 0;
             this.sentDate = date;
             this.receivedDate = date;
-        }
-
-        /// <summary>
-        /// Constructor, that accepts data from existing Request
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public Request(Request request)
-        {
-            this.id = request.Id;
-            this.status = request.Status;
-            this.sentDate = request.SentDate;
-            this.receivedDate = request.ReceivedDate;
         }
 
         /// <summary>
@@ -66,97 +42,134 @@ namespace JudBizz
         /// <param name="status">bool</param>
         /// <param name="sentDate">DateTime?</param>
         /// <param name="receivedDate">DateTime?</param>
-        public Request(int status, DateTime? sentDate = null, DateTime? receivedDate = null)
+        public Request(int status, DateTime sentDate, DateTime receivedDate)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.status = status;
-            if (sentDate == null)
-            {
-                if (status <= 1)
-                {
-                    sentDate = Convert.ToDateTime("1932-03-17");
-                }
-                else
-                {
-                    sentDate = DateTime.Now;
-                }
-            }
-            this.sentDate = Convert.ToDateTime(sentDate);
-            if (receivedDate == null)
-            {
-                if (status <= 1)
-                {
-                    receivedDate = Convert.ToDateTime("1932-03-17");
-                }
-                else
-                {
-                    receivedDate = DateTime.Now;
-                }
-            }
-            this.receivedDate = Convert.ToDateTime(receivedDate);
+            CheckDates(status, sentDate, receivedDate);
         }
 
         /// <summary>
         /// Constructor to add Request from Db
         /// </summary>
         /// <param name="id">int</param>
-        /// <param name="regionName">string</param>
-        /// <param name="zips">string</param>
-        public Request(int id, int status, DateTime? sentDate = null, DateTime? receivedDate = null)
+        /// <param name="status">bool</param>
+        /// <param name="sentDate">DateTime?</param>
+        /// <param name="receivedDate">DateTime?</param>
+        public Request(int id, int status, DateTime sentDate, DateTime receivedDate)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.status = status;
-            if (sentDate == null)
+            this.sentDate = sentDate;
+            this.receivedDate = receivedDate;
+        }
+
+        /// <summary>
+        /// Constructor, that accepts data from existing Request
+        /// </summary>
+        /// <param name="request">Request</param>
+        public Request(Request request)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (request != null)
             {
-                if (status <= 1)
-                {
-                    sentDate = Convert.ToDateTime("1932-03-17");
-                }
-                else
-                {
-                    sentDate = DateTime.Now;
-                }
+                this.id = request.Id;
+                this.status = request.Status;
+                this.sentDate = request.SentDate;
+                this.receivedDate = request.ReceivedDate;
             }
-            this.sentDate = Convert.ToDateTime(sentDate);
-            if (receivedDate == null)
+            else
             {
-                if (status <= 1)
-                {
-                    receivedDate = Convert.ToDateTime("1932-03-17");
-                }
-                else
-                {
-                    receivedDate = DateTime.Now;
-                }
+                this.id = 0;
+                this.status = 0;
+                DateTime date = Convert.ToDateTime("1932-03-17");
+                this.sentDate = date;
+                this.receivedDate = date;
             }
-            this.receivedDate = Convert.ToDateTime(receivedDate);
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Method that checks a date
+        /// If date is receivedDate: status = {1, 2, 3}
+        /// If date is sentDate: status = {2, 3}
+        /// </summary>
+        /// <param name="date">DateTime</param>
+        public void CheckDate(DateTime date)
+        {
+            if (date.ToShortDateString().Substring(0, 10) != "17-03-1932")
+            {
+                this.receivedDate = date;
+            }
+            else
+            {
+                this.receivedDate = DateTime.Now;
+            }
+        }
+
+        /// <summary>
+        /// Method, that checks sentDate and receivedDate
+        /// </summary>
+        /// <param name="status">int</param>
+        /// <param name="sentDate">DateTime</param>
+        /// <param name="receivedDate">DateTime</param>
+        private void CheckDates(int status, DateTime sentDate, DateTime receivedDate)
+        {
+            switch (status)
+            {
+                case 0:
+                    this.receivedDate = Convert.ToDateTime("1932-03-17");
+                    this.sentDate = Convert.ToDateTime("1932-03-17");
+                    break;
+                case 1:
+                    CheckDate(receivedDate);
+                    this.sentDate = Convert.ToDateTime("1932-03-17");
+                    break;
+                case 2:
+                    CheckDate(receivedDate);
+                    CheckDate(sentDate);
+                    break;
+                case 3:
+                    CheckDate(receivedDate);
+                    CheckDate(sentDate);
+                    break;
+            }
+        }
+
         /// <summary>
         /// Method, that creates a new Request in Db
         /// </summary>
         /// <param name="tempRequest">Request</param>
         /// <returns>int</returns>
         public int CreateRequestInDb(Request tempRequest)
-        {
-            int result = 0;
-            int count = 0;
-            bool dbAnswer = false;
-            List<Request> tempRequests = new List<Request>();
-            //INSERT INTO [dbo].[Requests]([Status], [SentDate], [ReceivedDate]) VALUES(< Status, int,>, < SentDate, date,>, < ReceivedDate, date,>)
-            string strSql = "INSERT INTO[dbo].[Requests]([Status], [SentDate], [ReceivedDate]) VALUES(0, '1932-03-17', '1932-03-17')";
-            dbAnswer = executor.WriteToDataBase(strSql);
-            if (!dbAnswer)
-            {
-                MessageBox.Show("Databasen returnerede en fejl ved forsøg på at oprette en ny forespørgsel.", "Databasefejl", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            tempRequests = GetRequests();
-            count = tempRequests.Count;
-            result = tempRequests[count - 1].Id;
-            return result;
-        }
+                {
+                    int result = 0;
+                    int count = 0;
+                    bool dbAnswer = false;
+                    List<Request> tempRequests = new List<Request>();
+                    //INSERT INTO [dbo].[Requests]([Status], [SentDate], [ReceivedDate]) VALUES(< Status, int,>, < SentDate, date,>, < ReceivedDate, date,>)
+                    string strSql = "INSERT INTO[dbo].[Requests]([Status], [SentDate], [ReceivedDate]) VALUES(0, '1932-03-17', '1932-03-17')";
+                    dbAnswer = executor.WriteToDataBase(strSql);
+                    if (!dbAnswer)
+                    {
+                        MessageBox.Show("Databasen returnerede en fejl ved forsøg på at oprette en ny forespørgsel.", "Databasefejl", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    tempRequests = GetRequests();
+                    count = tempRequests.Count;
+                    result = tempRequests[count - 1].Id;
+                    return result;
+                }
 
         /// <summary>
         /// Method, that create Delete SQL-query
@@ -243,21 +256,8 @@ namespace JudBizz
             {
                 string[] resultArray = new string[6];
                 resultArray = result.Split(';');
-                if (resultArray[2] == null && resultArray[3] == null)
-                {
-                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]));
-                    requests.Add(request);
-                }
-                else if (resultArray[2] != null && resultArray[3] == null)
-                {
-                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), Convert.ToDateTime(resultArray[2]));
-                    requests.Add(request);
-                }
-                else
-                {
-                    Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), Convert.ToDateTime(resultArray[2]), Convert.ToDateTime(resultArray[3]));
-                    requests.Add(request);
-                }
+                Request request = new Request(Convert.ToInt32(resultArray[0]), Convert.ToInt32(resultArray[1]), Convert.ToDateTime(resultArray[2]), Convert.ToDateTime(resultArray[3]));
+                requests.Add(request);
             }
             return requests;
         }

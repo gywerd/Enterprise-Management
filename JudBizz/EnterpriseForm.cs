@@ -15,23 +15,18 @@ namespace JudBizz
 
         private static string strConnection;
         private Executor executor;
-
         #endregion
 
         #region Constructors
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public EnterpriseForm() { }
-
-        /// <summary>
-        /// Empty constructor, that activates Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public EnterpriseForm(string strCon)
+        public EnterpriseForm()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.abbreviation = "";
         }
 
         /// <summary>
@@ -41,22 +36,38 @@ namespace JudBizz
         /// <param name="name">string</param>
         public EnterpriseForm(string abbreviation, string name)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.abbreviation = abbreviation;
             this.name = name;
+        }
+
+        /// <summary>
+        /// Constructor, that accepts an existing Enterprise Form
+        /// </summary>
+        /// <param name="abbreviation">string</param>
+        /// <param name="form">string</param>
+        public EnterpriseForm(EnterpriseForm form)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (form != null)
+            {
+                this.abbreviation = form.Abbreviation;
+                this.name = form.Name;
+            }
+            else
+            {
+                this.abbreviation = "";
+                this.name = "";
+            }
         }
 
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Returns main content as a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return name;
-        }
-
         /// <summary>
         /// Retrieves a list of Enterprise Forms from Db
         /// </summary>
@@ -73,6 +84,15 @@ namespace JudBizz
                 enterpriseForms.Add(address);
             }
             return enterpriseForms;
+        }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return name;
         }
 
         #endregion

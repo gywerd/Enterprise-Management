@@ -32,15 +32,12 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public LegalEntity() { }
-
-        /// <summary>
-        /// Constructor for access to db methods
-        /// </summary>
-        public LegalEntity(string strCon)
+        public LegalEntity()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.id = "";
             name = "";
             address = 0;
             contactInfo = 0;
@@ -61,9 +58,21 @@ namespace JudBizz
         /// <param name="name">string</param>
         /// <param name="address">int</param>
         /// <param name="contactInfo">int</param>
+        /// <param name="url">string</param>
         /// <param name="craftGroup1">int</param>
+        /// <param name="craftGroup2">int</param>
+        /// <param name="craftGroup3">int</param>
+        /// <param name="craftGroup4">int</param>
+        /// <param name="region">int</param>
+        /// <param name="countryWide">bool</param>
+        /// <param name="cooperative">bool</param>
+        /// <param name="active"></param>
         public LegalEntity(string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int region, bool countryWide = false, bool cooperative = false, bool active=false)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = "";
             this.name = name;
             this.address = address;
             this.contactInfo = contactInfo;
@@ -82,12 +91,23 @@ namespace JudBizz
         /// Constructor for adding a legal entity from Db to list
         /// </summary>
         /// <param name="id">int</param>
-        /// <param name="companyName">string</param>
+        /// <param name="name">string</param>
         /// <param name="address">int</param>
-        /// <param name="contact">int</param>
-        /// <param name="craftGroup">int</param>
+        /// <param name="contactInfo">int</param>
+        /// <param name="url">string</param>
+        /// <param name="craftGroup1">int</param>
+        /// <param name="craftGroup2">int</param>
+        /// <param name="craftGroup3">int</param>
+        /// <param name="craftGroup4">int</param>
+        /// <param name="region">int</param>
+        /// <param name="countryWide">bool</param>
+        /// <param name="cooperative">bool</param>
+        /// <param name="active"></param>
         public LegalEntity(string id, string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int region, bool countryWide, bool cooperative, bool active)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.name = name;
             this.address = address;
@@ -109,34 +129,46 @@ namespace JudBizz
         /// <param name="legalEntity">LegalEntity</param>
         public LegalEntity(LegalEntity legalEntity)
         {
-            this.id = legalEntity.Id;
-            this.name = legalEntity.Name;
-            this.address = legalEntity.Address;
-            this.contactInfo = legalEntity.ContactInfo;
-            this.url = legalEntity.Url;
-            this.craftGroup1 = legalEntity.CraftGroup1;
-            this.craftGroup2 = legalEntity.CraftGroup2;
-            this.craftGroup3 = legalEntity.CraftGroup3;
-            this.craftGroup4 = legalEntity.CraftGroup4;
-            this.region = legalEntity.Region;
-            this.countryWide = legalEntity.CountryWide;
-            this.cooperative = legalEntity.Cooperative;
-            this.active = legalEntity.Active;
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (legalEntity != null)
+            {
+                this.id = legalEntity.Id;
+                this.name = legalEntity.Name;
+                this.address = legalEntity.Address;
+                this.contactInfo = legalEntity.ContactInfo;
+                this.url = legalEntity.Url;
+                this.craftGroup1 = legalEntity.CraftGroup1;
+                this.craftGroup2 = legalEntity.CraftGroup2;
+                this.craftGroup3 = legalEntity.CraftGroup3;
+                this.craftGroup4 = legalEntity.CraftGroup4;
+                this.region = legalEntity.Region;
+                this.countryWide = legalEntity.CountryWide;
+                this.cooperative = legalEntity.Cooperative;
+                this.active = legalEntity.Active;
+            }
+            else
+            {
+                this.id = "";
+                name = "";
+                address = 0;
+                contactInfo = 0;
+                url = "";
+                craftGroup1 = 0;
+                craftGroup2 = 0;
+                craftGroup3 = 0;
+                craftGroup4 = 0;
+                region = 0;
+                countryWide = false;
+                cooperative = false;
+                active = false;
+            }
         }
         
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Returns main content as a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            string result = name + ", (" + id + ")";
-            return result;
-        }
-
         public List<LegalEntity> GetLegalEntities()
         {
             List<string> results = executor.ReadListFromDataBase("LegalEntities");
@@ -149,6 +181,16 @@ namespace JudBizz
                 entities.Add(legalEntity);
             }
             return entities;
+        }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string result = name + ", (" + id + ")";
+            return result;
         }
 
         #endregion

@@ -25,7 +25,7 @@ namespace JudGui
         public Bizz Bizz;
         public UserControl UcRight;
         public List<IndexableContact> IndexableContacts = new List<IndexableContact>();
-        public List<IndexableEnterprise> IndexableEnterpriseList = new List<IndexableEnterprise>();
+        public List<Enterprise> IndexableEnterpriseList = new List<Enterprise>();
         public List<IndexableLegalEntity> IndexableLegalEntities = new List<IndexableLegalEntity>();
 
         #endregion
@@ -49,7 +49,7 @@ namespace JudGui
             if (ListBoxLegalEntities.SelectedItems.Count == 0)
             {
                 //Show Confirmation
-                MessageBox.Show("Du har ikke valgt nogen underentrepenører", "Vælg Underentrepenør", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Du har ikke valgt nogen underentrepenører.", "Vælg Underentrepenør", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (ListBoxLegalEntities.SelectedItems.Count == 1)
             {
@@ -87,38 +87,6 @@ namespace JudGui
                 //Show error
                 MessageBox.Show("Databasen returnerede en fejl. Underentrepenøren blev ikke føjet til Entrepriselisten. Prøv igen.", "Rediger Projekt", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-        }
-
-        private bool AddMultipleSubentrepeneurs()
-        {
-            bool result = false;
-            List<IndexableLegalEntity> tempList = new List<IndexableLegalEntity>();
-            foreach (IndexableLegalEntity entity in ListBoxLegalEntities.SelectedItems)
-            {
-                Bizz.TempLegalEntity = entity;
-                Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
-                Bizz.TempSubEntrepeneur.EnterpriseList = Bizz.TempEnterprise.Id;
-                Bizz.TempSubEntrepeneur.Entrepeneur = entity.Id;
-                if (!Bizz.TempSubEntrepeneur.Active)
-                {
-                    Bizz.TempSubEntrepeneur.ToggleActive();
-                }
-                Bizz.TempSubEntrepeneur.Contact = 0;
-                CreateIttLetter();
-                CreateOffer();
-                CreateRequest();
-
-                //Code that ads a enterprise to Enterprise List
-                bool tempResult = Bizz.CSE.InsertIntoSubEntrepeneurs(Bizz.TempSubEntrepeneur);
-
-                //Code, that checks result
-                if (!result)
-                {
-                    result = tempResult;
-                }
-            }
-
-            return result;
         }
 
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
@@ -187,7 +155,7 @@ namespace JudGui
                     if (temp.Index == selectedIndex)
                     {
                         Bizz.TempLegalEntity = temp;
-                        Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
+                        Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.LegalEntities);
                         Bizz.TempSubEntrepeneur.EnterpriseList = Bizz.TempEnterprise.Id;
                         Bizz.TempSubEntrepeneur.Entrepeneur = temp.Id;
                         if (!Bizz.TempSubEntrepeneur.Active)
@@ -209,6 +177,42 @@ namespace JudGui
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Method, that adds multiple SubEntrepeneurs to Db
+        /// </summary>
+        /// <returns></returns>
+        private bool AddMultipleSubentrepeneurs()
+        {
+            bool result = false;
+            List<IndexableLegalEntity> tempList = new List<IndexableLegalEntity>();
+            foreach (IndexableLegalEntity entity in ListBoxLegalEntities.SelectedItems)
+            {
+                Bizz.TempLegalEntity = entity;
+                Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.LegalEntities);
+                Bizz.TempSubEntrepeneur.EnterpriseList = Bizz.TempEnterprise.Id;
+                Bizz.TempSubEntrepeneur.Entrepeneur = entity.Id;
+                if (!Bizz.TempSubEntrepeneur.Active)
+                {
+                    Bizz.TempSubEntrepeneur.ToggleActive();
+                }
+                Bizz.TempSubEntrepeneur.Contact = 0;
+                CreateIttLetter();
+                CreateOffer();
+                CreateRequest();
+
+                //Code that ads a enterprise to Enterprise List
+                bool tempResult = Bizz.CSE.InsertIntoSubEntrepeneurs(Bizz.TempSubEntrepeneur);
+
+                //Code, that checks result
+                if (!result)
+                {
+                    result = tempResult;
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Method that compares CraftGroups in LegalEntities and EnterpriseList
         /// </summary>
@@ -252,7 +256,7 @@ namespace JudGui
         /// </summary>
         private void CreateIttLetter()
         {
-            Bizz.TempIttLetter = new IttLetter(Bizz.strConnection);
+            Bizz.TempIttLetter = new IttLetter();
             int id = Bizz.CIL.CreateIttLetterInDb(Bizz.TempIttLetter);
             Bizz.TempIttLetter.SetId(id);
             Bizz.TempSubEntrepeneur.IttLetter = id;
@@ -263,7 +267,7 @@ namespace JudGui
         /// </summary>
         private void CreateOffer()
         {
-            Bizz.TempOffer = new Offer(Bizz.strConnection);
+            Bizz.TempOffer = new Offer();
             int id = Bizz.COF.CreateOfferInDb(Bizz.TempOffer);
             Bizz.TempOffer.SetId(id);
             Bizz.TempSubEntrepeneur.Offer = id;
@@ -349,7 +353,7 @@ namespace JudGui
         {
             ComboBoxEnterprise.Items.Clear();
             IndexableEnterpriseList = GetIndexableEnterpriseList();
-            foreach (IndexableEnterprise temp in IndexableEnterpriseList)
+            foreach (Enterprise temp in IndexableEnterpriseList)
             {
                     ComboBoxEnterprise.Items.Add(temp);
             }
@@ -400,9 +404,13 @@ namespace JudGui
             return result;
         }
 
-        private List<IndexableEnterprise> GetIndexableEnterpriseList()
+        /// <summary>
+        /// Method, that creates an indexable EnterpriseList
+        /// </summary>
+        /// <returns>List<IndexableEnterprise></returns>
+        private List<Enterprise> GetIndexableEnterpriseList()
         {
-            List<IndexableEnterprise> result = new List<IndexableEnterprise>();
+            List<Enterprise> result = new List<Enterprise>();
             int i = 0;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {

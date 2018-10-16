@@ -23,8 +23,8 @@ namespace JudGui
     {
         #region Fields
         public Bizz Bizz;
-        public UserControl UcRight;
         public UserControl UcLeft;
+        public UserControl UcRight;
 
         #endregion
 
@@ -43,15 +43,15 @@ namespace JudGui
         private void ButtonRequests_Click(object sender, RoutedEventArgs e)
         {
             Bizz.UcRightActive = true;
-            UcRequests ucRequests = new UcRequests(Bizz, UcRight);
-            UcRight.Content = ucRequests;
+            UcRequests ucRequests = new UcRequests(Bizz, UcLeft, UcRight);
+            UcLeft.Content = ucRequests;
         }
 
         private void ButtonIttLetters_Click(object sender, RoutedEventArgs e)
         {
-            Bizz.UcRightActive = true;
-            UcIttLetters ucIttLetters = new UcIttLetters(Bizz, UcRight);
-            UcRight.Content = ucIttLetters;
+            Bizz.UcRightActive = false;
+            UcIttLetters ucIttLetters = new UcIttLetters(Bizz, UcLeft, UcRight);
+            UcLeft.Content = ucIttLetters;
         }
 
         #endregion

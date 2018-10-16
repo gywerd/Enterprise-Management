@@ -23,15 +23,34 @@ namespace JudGui
     {
         #region Fields
         public Bizz Bizz;
+        public UserControl UcLeft;
         public UserControl UcRight;
 
         #endregion
 
-        public UcIttLetters(Bizz bizz, UserControl ucRight)
+        public UcIttLetters(Bizz bizz, UserControl ucLeft, UserControl ucRight)
         {
             InitializeComponent();
             this.Bizz = bizz;
+            this.UcLeft = ucLeft;
             this.UcRight = ucRight;
+        }
+
+        private void ButtonChooseReceivers_Click(object sender, RoutedEventArgs e)
+        {
+            Bizz.UcRightActive = true;
+            UcIttLettersChooseReceivers ucIttLettersChooseReceivers = new UcIttLettersChooseReceivers(Bizz, UcRight);
+            UcRight.Content = ucIttLettersChooseReceivers;
+        }
+
+        private void ButtonPrepareIttLetters_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonSendIttLetters_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

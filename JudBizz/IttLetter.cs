@@ -25,80 +25,80 @@ namespace JudBizz
         /// </summary>
         public IttLetter()
         {
-            this.sent = false;
-            this.sentDate = Convert.ToDateTime("1932-03-17");
-        }
-
-        /// <summary>
-        /// Empty constructor, that activates Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public IttLetter(string strCon)
-        {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
 
+            this.id = 0;
             this.sent = false;
             this.sentDate = Convert.ToDateTime("1932-03-17");
         }
 
         /// <summary>
-        /// Constructor for adding new ITT letter
+        /// Constructor for adding new ITT Letter
         /// </summary>
         /// <param name="sent">bool</param>
         /// <param name="sentDate">DateTime</param>
-        public IttLetter(bool sent, DateTime? sentDate)
+        public IttLetter(bool sent, DateTime sentDate)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.sent = sent;
-            if (sentDate == null)
+            if (sent)
             {
-                if (sent)
+                if (sentDate.ToShortDateString().Substring(0, 10) == "1932-03-17")
                 {
-                    sentDate = DateTime.Now;
+                    this.sentDate = DateTime.Now;
                 }
                 else
                 {
-                    sentDate = Convert.ToDateTime("1932-03-17");
+                    this.sentDate = sentDate;
                 }
             }
-            this.sentDate = Convert.ToDateTime(sentDate);
+            else
+            {
+                this.sentDate = Convert.ToDateTime("1932-03-17");
+            }
         }
 
         /// <summary>
-        /// Constructor for adding ITT letter from Db
+        /// Constructor for adding ITT Letter from Db
         /// </summary>
         /// <param name="id"></param>
         /// <param name="sent"></param>
         /// <param name="sentDate"></param>
-        public IttLetter(int id, bool sent, DateTime? sentDate = null)
+        public IttLetter(int id, bool sent, DateTime sentDate)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.sent = sent;
-            if (sentDate == null)
-            {
-                if (sent)
-                {
-                    sentDate = DateTime.Now;
-                }
-                else
-                {
-                    sentDate = Convert.ToDateTime("1932-03-17");
-                }
-            }
-            this.sentDate = Convert.ToDateTime(sentDate);
+            this.sentDate = sentDate;
         }
 
         /// <summary>
-        /// Constructor for adding ITT letter from Db
+        /// Constructor for accepts an existing Itt Letter
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="sent"></param>
-        /// <param name="sentDate"></param>
+        /// <param name="ittLetter">IttLetter</param>
         public IttLetter(IttLetter ittLetter)
         {
-            this.id = ittLetter.Id;
-            this.sent = ittLetter.Sent;
-            this.sentDate = ittLetter.SentDate;
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (ittLetter != null)
+            {
+                this.id = ittLetter.Id;
+                this.sent = ittLetter.Sent;
+                this.sentDate = ittLetter.SentDate;
+            }
+            else
+            {
+                this.id = 0;
+                this.sent = false;
+                this.sentDate = Convert.ToDateTime("1932-03-17");
+            }
         }
         
         #endregion
@@ -118,14 +118,13 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Method, that creates a new Offer in Db
+        /// Method, that creates a new IttLetter in Db
         /// </summary>
-        /// <param name="tempIttLetter">Offer</param>
+        /// <param name="tempIttLetter">IttLetter</param>
         /// <returns>int</returns>
         public int CreateIttLetterInDb(IttLetter tempIttLetter)
         {
             int result = 0;
-            int count = 0;
             bool dbAnswer = false;
             List<IttLetter> tempIttLetters = new List<IttLetter>();
             //INSERT INTO [dbo].[IttLetters]([Sent], [SentDate]) VALUES(<Sent, bit,>, <SentDate, date,>)
@@ -136,14 +135,16 @@ namespace JudBizz
             {
                 MessageBox.Show("Databasen returnerede en fejl ved forsøg på at oprette et nyt tilbud.", "Databasefejl", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            tempIttLetters = GetIttLetters();
-            count = tempIttLetters.Count;
-            result = tempIttLetters[count - 1].Id;
+            else
+            {
+                tempIttLetters = GetIttLetters();
+                result = tempIttLetters[tempIttLetters.Count - 1].Id;
+            }
             return result;
         }
 
         /// <summary>
-        /// Method, that creates sqlQuery to update status of a Request entry in Db
+        /// Method, that creates sqlQuery to update status of a IttLetter entry in Db
         /// </summary>
         /// <param name="sent">int</param>
         /// <param name="id">int</param>
@@ -164,9 +165,9 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Method, that deletes a Request from Db
+        /// Method, that deletes a IttLetter from Db
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">int</param>
         public void DeleteFromIttLetters(int id)
         {
             bool result;
@@ -175,9 +176,9 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Retrieves a list of regions from Db
+        /// Retrieves a list of IttLetters from Db
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List<IttLetter></returns>
         public List<IttLetter> GetIttLetters()
         {
             List<string> results = executor.ReadListFromDataBase("IttLetters");
@@ -187,14 +188,7 @@ namespace JudBizz
                 IttLetter ittLetter;
                 string[] resultArray = new string[3];
                 resultArray = result.Split(';');
-                if (resultArray[2] != "" & resultArray[2] != null)
-                {
-                    ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDateTime(resultArray[2]));
-                }
-                else
-                {
-                    ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDateTime("1932-03-17"));
-                }
+                ittLetter = new IttLetter(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDateTime(resultArray[2]));
                 ittLetters.Add(ittLetter);
             }
             return ittLetters;
@@ -272,7 +266,30 @@ namespace JudBizz
 
         public bool Sent { get => sent; }
 
-        public DateTime SentDate { get => sentDate; set => sentDate = value; }
+        public DateTime SentDate
+        {
+            get => sentDate;
+            set
+            {
+                DateTime tempValue = Convert.ToDateTime("1932-03-17");
+
+                try
+                {
+                    if (value != tempValue)
+                    {
+                        sentDate = value;
+                    }
+                    else
+                    {
+                        sentDate = tempValue;
+                    }
+                }
+                catch (Exception)
+                {
+                    sentDate = tempValue;
+                }
+            }
+        }
 
         #endregion
     }

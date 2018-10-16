@@ -25,24 +25,39 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public CraftGroup() { }
-
-        /// <summary>
-        /// Constructor for access to db methods
-        /// </summary>
-        /// <param name="strCon"></param>
-        public CraftGroup(string strCon)
+        public CraftGroup()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
-            category = 0;
-            designation = "";
-            description = "";
-            active = false;
+
+            this.id = 0;
+            this.category = 0;
+            this.designation = "";
+            this.description = "";
+            this.active = false;
         }
 
         /// <summary>
-        /// Constructor to add craft group
+        /// Constructor to add craft new group
+        /// </summary>
+        /// <param name="active">bool</param>
+        /// <param name="category">int</param>
+        /// <param name="designation">string</param>
+        /// <param name="description">string</param>
+        public CraftGroup(int category, string designation, string description, bool active)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.category = category;
+            this.designation = designation;
+            this.description = description;
+            this.active = active;
+        }
+
+        /// <summary>
+        /// Constructor to add craft group from Db
         /// </summary>
         /// <param name="id">string</param>
         /// <param name="active">bool</param>
@@ -51,6 +66,9 @@ namespace JudBizz
         /// <param name="description">string</param>
         public CraftGroup(int id, int category, string designation, string description, bool active)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.category = category;
             this.designation = designation;
@@ -58,14 +76,40 @@ namespace JudBizz
             this.active = active;
         }
 
+        /// <summary>
+        /// Constructor to add craft group
+        /// </summary>
+        /// <param name="craftGroup">CraftGroup</param>
+        public CraftGroup(CraftGroup craftGroup)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (craftGroup != null)
+            {
+                this.id = craftGroup.Id;
+                this.category = craftGroup.Category;
+                this.designation = craftGroup.Designation;
+                this.description = craftGroup.Description;
+                this.active = craftGroup.Active;
+            }
+            else
+            {
+                this.id = craftGroup.Id;
+                this.category = 0;
+                this.designation = "";
+                this.description = "";
+                this.active = false;
+            }
+        }
+
         #endregion
 
         #region Methods
-        public override string ToString()
-        {
-            return designation;
-        }
-
+        /// <summary>
+        /// Method, that reads a List of CraftGroups from Db
+        /// </summary>
+        /// <returns>List<CraftGroup></returns>
         public List<CraftGroup> GetCraftGroups()
         {
             List<string> results = executor.ReadListFromDataBase("CraftGroups");
@@ -78,6 +122,15 @@ namespace JudBizz
                 craftGroups.Add(craftGroup);
             }
             return craftGroups;
+        }
+
+        /// <summary>
+        /// Method, that returns main info as string
+        /// </summary>
+        /// <returns>string</returns>
+        public override string ToString()
+        {
+            return designation;
         }
 
         #endregion

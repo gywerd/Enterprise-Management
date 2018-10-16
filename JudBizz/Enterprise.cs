@@ -30,37 +30,20 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public Enterprise() { }
-
-        /// <summary>
-        /// Empty Constructor with Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public Enterprise(string strCon)
+        public Enterprise()
         {
-
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
-        }
 
-        /// <summary>
-        /// Constructor for that accepts data from existing Enterprise
-        /// </summary>
-        /// <param name="enterprise">Enterprise</param>
-        public Enterprise(Enterprise enterprise)
-        {
-            if (enterprise != null)
-            {
-                this.id = enterprise.id;
-                this.project = enterprise.Project;
-                this.name = enterprise.Name;
-                this.elaboration = enterprise.Elaboration;
-                this.offerList = enterprise.OfferList;
-                this.craftGroup1 = enterprise.CraftGroup1;
-                this.craftGroup2 = enterprise.CraftGroup2;
-                this.craftGroup3 = enterprise.CraftGroup3;
-                this.craftGroup4 = enterprise.CraftGroup4;
-            }
+            this.id = 0;
+            project = 0;
+            name = "";
+            elaboration = "";
+            offerList = "";
+            craftGroup1 = 0;
+            craftGroup2 = 0;
+            craftGroup3 = 0;
+            craftGroup4 = 0;
         }
 
         /// <summary>
@@ -76,6 +59,10 @@ namespace JudBizz
         /// <param name="craftGroup4">int</param>
         public Enterprise(int project, string name, int craftGroup1, string elaboration = "", string offerList = "", int craftGroup2 = 0, int craftGroup3 = 0, int craftGroup4 = 0)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.project = project;
             this.name = name;
             this.elaboration = elaboration;
@@ -100,6 +87,9 @@ namespace JudBizz
         /// <param name="craftGroup4">int</param>
         public Enterprise(int id, int project, string name, string elaboration, string offerList, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.project = project;
             this.name = name;
@@ -109,6 +99,41 @@ namespace JudBizz
             this.craftGroup2 = craftGroup2;
             this.craftGroup3 = craftGroup3;
             this.craftGroup4 = craftGroup4;
+        }
+
+        /// <summary>
+        /// Constructor for that accepts data from existing Enterprise
+        /// </summary>
+        /// <param name="enterprise">Enterprise</param>
+        public Enterprise(Enterprise enterprise)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (enterprise != null)
+            {
+                this.id = enterprise.id;
+                this.project = enterprise.Project;
+                this.name = enterprise.Name;
+                this.elaboration = enterprise.Elaboration;
+                this.offerList = enterprise.OfferList;
+                this.craftGroup1 = enterprise.CraftGroup1;
+                this.craftGroup2 = enterprise.CraftGroup2;
+                this.craftGroup3 = enterprise.CraftGroup3;
+                this.craftGroup4 = enterprise.CraftGroup4;
+            }
+            else
+            {
+                this.id = 0;
+                this.project = 0;
+                this.name = "";
+                this.elaboration = "";
+                this.offerList = "";
+                this.craftGroup1 = 0;
+                this.craftGroup2 = 0;
+                this.craftGroup3 = 0;
+                this.craftGroup4 = 0;
+            }
         }
 
         #endregion
@@ -183,7 +208,7 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Method, that loads the Enterprise List from Db
+        /// Method, that reads the Enterprise List from Db
         /// </summary>
         /// <returns>List<Enterprise></returns>
         public List<Enterprise> GetEnterpriseList()

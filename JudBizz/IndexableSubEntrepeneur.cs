@@ -14,19 +14,11 @@ namespace JudBizz
         #endregion
 
         #region Constructors
-        /// <summary>
-        /// Empty Constructor
-        /// </summary>
-        public IndexableSubEntrepeneur()
-        {
-        }
-
-        /// <summary>
         /// Constructor, that adds an index to an existing SubEntrepeneur
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="subEntrepeneur"></param>
-        public IndexableSubEntrepeneur(string strCon, List<LegalEntity> entrepeneurs, int index, SubEntrepeneur subEntrepeneur) : base(strCon, entrepeneurs, subEntrepeneur)
+        /// <param name="index">int</param>
+        /// <param name="subEntrepeneur">SubEntrepeneur</param>
+        public IndexableSubEntrepeneur(List<LegalEntity> entrepeneurs, int index, SubEntrepeneur subEntrepeneur) : base(entrepeneurs, subEntrepeneur)
         {
             this.index = index;
         }

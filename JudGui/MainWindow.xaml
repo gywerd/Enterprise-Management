@@ -8,8 +8,8 @@
         mc:Ignorable="d"
         Title="Jorton Underentrepenør Database" 
         Height="1080" Width="1920" 
-        MaxHeight="1080" MaxWidth="1920" 
-        Background="LightGray" 
+        MaxHeight="1080" MaxWidth="1940" 
+        Background="#185074" 
         WindowState="Maximized" 
         ResizeMode="CanMinimize" >
     <Grid>
@@ -114,7 +114,7 @@
                 </RibbonGroup>
             </RibbonTab>
             <!-- Ribbon Tab #2: Administration -->
-            <RibbonTab x:Name="TabAdministration" Header="Administration" >
+            <RibbonTab x:Name="TabAdministration" Header="Administration">
                 <!-- Information Group-->
                 <RibbonGroup x:Name="Information" Header="Information" IsEnabled="False">
                     <RibbonButton x:Name="ButtonUsers"

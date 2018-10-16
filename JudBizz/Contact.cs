@@ -26,16 +26,12 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public Contact() { }
-
-        /// <summary>
-        /// Constructor for access to db methods
-        /// </summary>
-        /// <param name="strCon"></param>
-        public Contact(string strCon)
+        public Contact()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.id = 0;
             legalEntity = "";
             name = "";
             area = "";
@@ -52,6 +48,10 @@ namespace JudBizz
         /// <param name="mobile">string</param>
         public Contact(string legalEntity, string name, string description = "", int contactInfo = 0)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.legalEntity = legalEntity;
             this.name = name;
             this.area = description;
@@ -69,6 +69,9 @@ namespace JudBizz
         /// <param name="mobile">string</param>
         public Contact(int id, string legalEntity, string name, string description, int contactInfo)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.legalEntity = legalEntity;
             this.name = name;
@@ -82,6 +85,9 @@ namespace JudBizz
         /// <param name="contact">Contact</param>
         public Contact(Contact contact)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             if (contact != null)
             {
                 this.id = contact.Id;

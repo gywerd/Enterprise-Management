@@ -30,18 +30,12 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public Project() { }
-
-        /// <summary>
-        /// Empty Constructor with Db Connection
-        /// </summary>
-        /// <param name="strCon"></param>
-        public Project(string strCon)
+        public Project()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
 
-            caseId = 0;
+            this.id = 0;
             this.name = "";
             this.builder = 0;
             this.status = 1;
@@ -50,24 +44,6 @@ namespace JudBizz
             this.executive = 0;
             enterpriseList = false;
             copy = false;
-        }
-
-        /// <summary>
-        /// Constructor that receives data from an existing Project
-        /// </summary>
-        /// <param name="project"></param>
-        public Project(Project project)
-        {
-            this.id = project.Id;
-            this.caseId = project.CaseId;
-            this.name = project.Name;
-            this.builder = project.Builder;
-            this.status = project.Status;
-            this.tenderForm = project.TenderForm;
-            this.enterpriseForm = project.EnterpriseForm;
-            this.executive = project.Executive;
-            this.enterpriseList = project.EnterpriseList;
-            this.copy = project.Copy;
         }
 
         /// <summary>
@@ -84,6 +60,10 @@ namespace JudBizz
         /// <param name="copy">bool</param>
         public Project(int caseId, string name, int builder = 0, int status = 0, int tenderForm = 0, int enterpriseForm = 1, int executive = 0, bool enterpriseList = false,  bool copy = false)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.caseId = caseId;
             this.name = name;
             this.builder = builder;
@@ -110,6 +90,9 @@ namespace JudBizz
         /// <param name="copy">bool</param>
         public Project(int id, int caseId, string name, int builder, int status, int tenderForm, int enterpriseForm, int executive, bool enterpriseList, bool copy = false)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.caseId = caseId;
             this.name = name;
@@ -121,6 +104,44 @@ namespace JudBizz
             this.enterpriseList = enterpriseList;
             this.copy = copy;
         }
+
+        /// <summary>
+        /// Constructor that receives data from an existing Project
+        /// </summary>
+        /// <param name="project"></param>
+        public Project(Project project)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (project != null)
+            {
+                this.id = project.Id;
+                this.caseId = project.CaseId;
+                this.name = project.Name;
+                this.builder = project.Builder;
+                this.status = project.Status;
+                this.tenderForm = project.TenderForm;
+                this.enterpriseForm = project.EnterpriseForm;
+                this.executive = project.Executive;
+                this.enterpriseList = project.EnterpriseList;
+                this.copy = project.Copy;
+            }
+            else
+            {
+                this.id = 0;
+                this.caseId = 0;
+                this.name = "";
+                this.builder = 0;
+                this.status = 1;
+                this.tenderForm = 0;
+                this.enterpriseForm = 0;
+                this.executive = 0;
+                this.enterpriseList = false;
+                this.copy = false;
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -187,7 +208,7 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Method that loads a Project List from Db
+        /// Method that reads a Project List from Db
         /// </summary>
         /// <returns></returns>
         public List<Project> GetProjects()

@@ -24,7 +24,7 @@ namespace JudGui
         #region Fields
         public Bizz Bizz;
         public UserControl UcRight;
-        public List<IndexableEnterprise> IndexableEnterpriseList = new List<IndexableEnterprise>();
+        public List<Enterprise> IndexableEnterpriseList = new List<Enterprise>();
 
         #endregion
 
@@ -48,7 +48,7 @@ namespace JudGui
         private void ButtonGeneratePdf_Click(object sender, RoutedEventArgs e)
         {
             PdfCreator pdfCreator = new PdfCreator();
-            string path = pdfCreator.GenerateEnterpriseListPdf(Bizz.TempProject, IndexableEnterpriseList, Bizz.Users);
+            string path = pdfCreator.GenerateEnterpriseListPdf(Bizz, IndexableEnterpriseList, Bizz.Users);
             System.Diagnostics.Process.Start(path);
         }
 
@@ -81,9 +81,9 @@ namespace JudGui
         //    }
         //}
 
-        private List<IndexableEnterprise> GetIndexableEnterpriseList()
+        private List<Enterprise> GetIndexableEnterpriseList()
         {
-            List<IndexableEnterprise> result = new List<IndexableEnterprise>();
+            List<Enterprise> result = new List<Enterprise>();
             int i = 0;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {

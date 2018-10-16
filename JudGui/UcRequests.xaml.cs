@@ -21,17 +21,33 @@ namespace JudGui
     /// </summary>
     public partial class UcRequests : UserControl
     {
-        #region Fields
         public Bizz Bizz;
+        public UserControl UcLeft;
         public UserControl UcRight;
 
-        #endregion
-
-        public UcRequests(Bizz bizz, UserControl ucRight)
+        public UcRequests(Bizz bizz, UserControl ucLeft, UserControl ucRight)
         {
             InitializeComponent();
             this.Bizz = bizz;
+            this.UcLeft = ucLeft;
             this.UcRight = ucRight;
+        }
+
+        private void ButtonChooseReceivers_Click(object sender, RoutedEventArgs e)
+        {
+            Bizz.UcRightActive = true;
+            UcRequestsChooseReceivers ucRequestsChooseReceivers = new UcRequestsChooseReceivers(Bizz, UcRight);
+            UcRight.Content = ucRequestsChooseReceivers;
+        }
+
+        private void ButtonPrepareRequests_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonSendRequests_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

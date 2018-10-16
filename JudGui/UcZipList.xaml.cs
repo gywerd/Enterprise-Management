@@ -39,7 +39,7 @@ namespace JudGui
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
             //Update lists and fields
-            Bizz.TempZipTown = new ZipTown(Bizz.strConnection);
+            Bizz.TempZipTown = new ZipTown();
             Bizz.ZipCodeList.Clear();
             Bizz.ZipCodeList = Bizz.CZT.GetZipTownList();
 
@@ -60,7 +60,7 @@ namespace JudGui
                 MessageBox.Show("Postnummeret blev oprettet", "Opret Postnummer", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 //Update lists and fields
-                Bizz.TempZipTown = new ZipTown(Bizz.strConnection);
+                Bizz.TempZipTown = new ZipTown();
                 Bizz.ZipCodeList.Clear();
                 Bizz.ZipCodeList = Bizz.CZT.GetZipTownList();
 
@@ -122,7 +122,7 @@ namespace JudGui
         private void CheckBoxAddNewZipCode_Checked(object sender, RoutedEventArgs e)
         {
             ListBoxZipList.SelectedIndex = -1;
-            Bizz.TempZipTown = new ZipTown(Bizz.strConnection);
+            Bizz.TempZipTown = new ZipTown();
             TextBoxZip.Text = "";
             TextBoxTown.Text = "";
             ButtonCreate.Visibility = Visibility.Visible;
@@ -137,7 +137,7 @@ namespace JudGui
         private void CheckBoxAddNewZipCode_Unchecked(object sender, RoutedEventArgs e)
         {
             ListBoxZipList.SelectedIndex = -1;
-            Bizz.TempZipTown = new ZipTown(Bizz.strConnection);
+            Bizz.TempZipTown = new ZipTown();
             TextBoxZip.Text = "";
             TextBoxTown.Text = "";
             ButtonCreate.Visibility = Visibility.Hidden;
@@ -170,7 +170,7 @@ namespace JudGui
         private void CheckBoxDeleteZipCode_Unchecked(object sender, RoutedEventArgs e)
         {
             ListBoxZipList.SelectedIndex = -1;
-            Bizz.TempZipTown = new ZipTown(Bizz.strConnection);
+            Bizz.TempZipTown = new ZipTown();
             TextBoxZip.Text = "";
             TextBoxTown.Text = "";
             ButtonCreate.Visibility = Visibility.Hidden;
@@ -203,7 +203,7 @@ namespace JudGui
         private void CheckBoxEditZipCode_Unchecked(object sender, RoutedEventArgs e)
         {
             ListBoxZipList.SelectedIndex = -1;
-            Bizz.TempZipTown = new ZipTown(Bizz.strConnection);
+            Bizz.TempZipTown = new ZipTown();
             TextBoxZip.Text = "";
             TextBoxTown.Text = "";
             ButtonCreate.Visibility = Visibility.Hidden;
@@ -218,6 +218,7 @@ namespace JudGui
         #endregion
 
         #region Methods
+
         #endregion
 
     }

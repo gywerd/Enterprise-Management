@@ -21,35 +21,38 @@ namespace JudBizz
         /// <summary>
         /// Empty constructor
         /// </summary>
-        public ZipTown() { }
-
-        /// <summary>
-        /// Constructor for access to db methods
-        /// </summary>
-        /// <param name="stringConnection"></param>
-        public ZipTown(string strCon)
+        public ZipTown()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.zip = "";
+            this.town = "";
         }
 
         /// <summary>
-        /// Constructor for adding ZipTown to Db or List
+        /// Constructor for adding ZipTown
         /// </summary>
         /// <param name="zip">string</param>
         /// <param name="town">string</param>
         public ZipTown(string zip, string town)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.zip = zip;
             this.town = town;
         }
 
         /// <summary>
-        /// Constructor that accepts an existing ZipTown
+        /// Constructor, that accepts an existing ZipTown
         /// </summary>
         /// <param name="zipTown">ZipTown</param>
         public ZipTown(ZipTown zipTown)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             if (zipTown != null)
             {
                 this.zip = zipTown.zip;

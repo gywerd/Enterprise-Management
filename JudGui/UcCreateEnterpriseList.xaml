@@ -32,9 +32,9 @@
             <RowDefinition Height="110*"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
-        <Label x:Name="LabelCreateEnterpriseList" Content="Opret Projektliste" 
+        <Label x:Name="LabelCreateEnterpriseList" Content="Opret Entrepriselisteliste" 
                FontSize="48" FontWeight="Bold"
-               Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" 
+               Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="4" 
                HorizontalAlignment="Left" 
                VerticalAlignment="Top" />
         <Label x:Name="LabelCaseId" Content="Sagsnummer*:" 

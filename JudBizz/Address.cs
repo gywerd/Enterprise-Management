@@ -17,7 +17,6 @@ namespace JudBizz
 
         private static string strConnection;
         private Executor executor;
-
         public static ZipTown CZT;
 
         #endregion
@@ -26,19 +25,12 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public Address() { }
-
-        /// <summary>
-        /// Empty constructor, that activates Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public Address(string strCon)
+        public Address()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
 
-            CZT = new ZipTown(strConnection);
-
+            this.id = 0;
             this.street = "";
             this.place = "";
             this.zip = "";
@@ -52,6 +44,12 @@ namespace JudBizz
         /// <param name="place">string</param>
         public Address(string street, string zip, string place = "")
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            CZT = new ZipTown();
+
+            this.id = 0;
             this.street = street;
             this.place = place;
             this.zip = zip;
@@ -64,12 +62,12 @@ namespace JudBizz
         /// <param name="street">string</param>
         /// <param name="zip">int</param>
         /// <param name="place">string</param>
-        public Address(string strCon, int id, string street, string place, string zip)
+        public Address(int id, string street, string place, string zip)
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
 
-            CZT = new ZipTown(strConnection);
+            CZT = new ZipTown();
 
             this.id = id;
             this.street = street;
@@ -77,9 +75,71 @@ namespace JudBizz
             this.zip = zip;
         }
 
+        /// <summary>
+        /// Constructor that accepts an existing Address
+        /// </summary>
+        /// <param name="bizz">Bizz</param>
+        /// <param name="address">Address</param>
+        /// <param name="street">string</param>
+        /// <param name="zip">int</param>
+        /// <param name="place">string</param>
+        public Address(Address address)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            CZT = new ZipTown();
+
+            if (address != null)
+            {
+                this.id = address.Id;
+                this.street = address.Street;
+                this.place = address.Place;
+                this.zip = address.Zip;
+            }
+        }
+
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Method, that fetches a list of Adresse from Db
+        /// </summary>
+        /// <returns>List<Address></returns>
+        public List<Address> GetAddresses()
+        {
+            List<string> results = executor.ReadListFromDataBase("Addresses");
+            List<Address> addresses = new List<Address>();
+            foreach (string result in results)
+            {
+                string[] resultArray = new string[4];
+                resultArray = result.Split(';');
+                Address address = new Address(Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2], resultArray[3]);
+                addresses.Add(address);
+            }
+            return addresses;
+        }
+
+        /// <summary>
+        /// Method, that finds ZipTown from a Zip
+        /// </summary>
+        /// <param name="zip">string</param>
+        /// <returns>ZipTown</returns>
+        public ZipTown GetZipTown(string zip)
+        {
+            ZipTown result = new ZipTown();
+            List<ZipTown> zips = CZT.GetZipTownList();
+            foreach (ZipTown zip2 in zips)
+            {
+                if (zip2.Zip.Equals(zip))
+                {
+                    result = zip2;
+                    return result;
+                }
+            }
+            return result;
+        }
+
         /// <summary>
         /// Returns main content as a string
         /// </summary>
@@ -97,46 +157,8 @@ namespace JudBizz
             return tempAddress;
         }
 
-        /// <summary>
-        /// Method, that fetches a lis of Adresse from Db
-        /// </summary>
-        /// <returns>List<Address></returns>
-        public List<Address> GetAddresses()
-        {
-            List<string> results = executor.ReadListFromDataBase("Addresses");
-            List<Address> addresses = new List<Address>();
-            foreach (string result in results)
-            {
-                string[] resultArray = new string[4];
-                resultArray = result.Split(';');
-                Address address = new Address(strConnection, Convert.ToInt32(resultArray[0]), resultArray[1], resultArray[2], resultArray[3]);
-                addresses.Add(address);
-            }
-            return addresses;
-        }
-
-        /// <summary>
-        /// Method, that finds ZipTown from a Zip
-        /// </summary>
-        /// <param name="zip">string</param>
-        /// <returns>ZipTown</returns>
-        public ZipTown GetZipTown(string zip)
-        {
-            ZipTown result = new ZipTown(strConnection);
-            List<ZipTown> zips = CZT.GetZipTownList();
-            foreach (ZipTown zip2 in zips)
-            {
-                if (zip2.Zip.Equals(zip))
-                {
-                    result = zip2;
-                    return result;
-                }
-            }
-            return result;
-        }
-
         #endregion
-        
+
         #region Properties
         public int Id { get => id; }
 

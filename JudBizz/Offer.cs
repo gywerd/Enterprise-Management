@@ -28,21 +28,10 @@ namespace JudBizz
         /// </summary>
         public Offer()
         {
-            this.received = false;
-            this.receivedDate = Convert.ToDateTime("1932-03-17");
-            this.price = 0;
-            this.chosen = false;
-        }
-
-        /// <summary>
-        /// Empty constructor, that activates Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public Offer(string strCon)
-        {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
 
+            this.id = 0;
             this.received = false;
             this.receivedDate = Convert.ToDateTime("1932-03-17");
             this.price = 0;
@@ -50,27 +39,34 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Constructor used to add new offer with all data
+        /// Constructor used to add new offer
         /// </summary>
         /// <param name="received">bool</param>
         /// <param name="receivedDate">DateTime?</param>
         /// <param name="price">double</param>
         /// <param name="chosen">bool</param>
-        public Offer(bool received, double price, bool chosen, DateTime? receivedDate = null)
+        public Offer(bool received, double price, bool chosen, DateTime receivedDate)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.received = received;
-            if (receivedDate == null)
+            if (received)
             {
-                if (received)
+                if (receivedDate.ToShortDateString().Substring(0, 10) != "17-03-1932")
                 {
-                    receivedDate = DateTime.Now;
+                    this.receivedDate = DateTime.Now;
                 }
                 else
                 {
-                    receivedDate = Convert.ToDateTime("1932-03-17");
+                    this.receivedDate = Convert.ToDateTime(receivedDate);
                 }
             }
-            this.receivedDate = Convert.ToDateTime(receivedDate);
+            else
+            {
+                    this.receivedDate = Convert.ToDateTime("1932-03-17");
+            }
             this.price = price;
             this.chosen = chosen;
         }
@@ -83,42 +79,45 @@ namespace JudBizz
         /// <param name="receivedDate">DateTime?</param>
         /// <param name="price">double</param>
         /// <param name="chosen">bool</param>
-        public Offer(int id, bool received, double price, bool chosen, DateTime? receivedDate)
+        public Offer(int id, bool received, double price, bool chosen, DateTime receivedDate)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.received = received;
-            if (receivedDate == null)
-            {
-                if (received)
-                {
-                    receivedDate = DateTime.Now;
-                }
-                else
-                {
-                    receivedDate = Convert.ToDateTime("1932-03-17");
-                }
-            }
             this.receivedDate = Convert.ToDateTime(receivedDate);
             this.price = price;
             this.chosen = chosen;
         }
 
         /// <summary>
-        /// Constructor used to add offer from Db to list
+        /// Constructor, thats accepts an existing Offer
         /// </summary>
-        /// <param name="id">int</param>
-        /// <param name="received">bool</param>
-        /// <param name="receivedDate">DateTime</param>
-        /// <param name="price">double</param>
-        /// <param name="chosen">bool</param>
+        /// <param name="offer">Offer</param>
         public Offer(Offer offer)
         {
-            this.id = offer.Id;
-            this.received = offer.Received;
-            this.receivedDate = offer.ReceivedDate;
-            this.price = offer.Price;
-            this.chosen = offer.Chosen;
+            if (offer != null)
+            {
+                strConnection = Bizz.StrConnection;
+                executor = new Executor(strConnection);
+
+                this.id = offer.Id;
+                this.received = offer.Received;
+                this.receivedDate = offer.ReceivedDate;
+                this.price = offer.Price;
+                this.chosen = offer.Chosen;
+            }
+            else
+        	{
+                this.id = 0;
+                this.received = false;
+                this.receivedDate = Convert.ToDateTime("1932-03-17");
+                this.price = 0;
+                this.chosen = false;
+            }
         }
+
         #endregion
 
         #region Methods
@@ -184,19 +183,19 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Method, that creste a Update Offer ReceivedSQL-query
+        /// Method, that create a Update Offer ReceivedSQL-query
         /// </summary>
-        /// <param name="sent"></param>
-        /// <param name="id"></param>
+        /// <param name="sent">bool</param>
+        /// <param name="offer">Offer</param>
         /// <returns></returns>
-        private string CreateUpdateOfferReceivedSqlQuery(bool sent, int id, string date, double price, bool chosen)
+        private string CreateUpdateOfferReceivedSqlQuery(Offer offer)
         {
             string query = "";
 
             //UPDATE [dbo].[Offers] SET [Status] = <Status, int,>,[ReceivedDate] = <ReceivedDate, date,>, [Price] = <Price, money,>, [Chosen] = <Chosen, bit,> WHERE [Id] = <Id, int>;
-            if (sent)
+            if (offer.Received)
             {
-                query = @"UPDATE [dbo].[Offers] SET [Received] = 'true', [ReceivedDate] = '" + date + @"', [Price] = " + price.ToString() + ", [Chosen] = '" + chosen + "' WHERE [Id] = " + id.ToString();
+                query = @"UPDATE [dbo].[Offers] SET [Received] = 'true', [ReceivedDate] = '" + offer.ReceivedDate + @"', [Price] = " + offer.Price.ToString() + ", [Chosen] = '" + offer.Chosen + "' WHERE [Id] = " + offer.Id.ToString();
             }
             else
             {
@@ -228,16 +227,7 @@ namespace JudBizz
             {
                 string[] resultArray = new string[5];
                 resultArray = result.Split(';');
-                if (resultArray[2] != null)
-                {
-                    Offer offer = new Offer(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDouble(resultArray[3]), Convert.ToBoolean(resultArray[4]), Convert.ToDateTime(resultArray[2]));
-                    offers.Add(offer);
-                }
-                else
-                {
-                    Offer offer = new Offer(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToInt32(resultArray[3]), Convert.ToBoolean(resultArray[4]), Convert.ToDateTime("1932-03-17"));
-                    offers.Add(offer);
-                }
+                Offer offer = new Offer(Convert.ToInt32(resultArray[0]), Convert.ToBoolean(resultArray[1]), Convert.ToDouble(resultArray[3]), Convert.ToBoolean(resultArray[4]), Convert.ToDateTime(resultArray[2]));
             }
             return offers;
         }
@@ -331,12 +321,12 @@ namespace JudBizz
         /// Method, that updates received status for an Offer in Db
         /// </summary>
         /// <param name="sent">bool</param>
-        /// <param name="id">int</param>
+        /// <param name="offer">Offer</param>
         /// <returns>bool</returns>
-        public bool UpdateOfferReceived(int id, bool sent, string date, double price, bool chosen)
+        public bool UpdateOfferReceived(Offer offer)
         {
             bool result;
-            string strSql = CreateUpdateOfferReceivedSqlQuery(sent, id, date, price, chosen);
+            string strSql = CreateUpdateOfferReceivedSqlQuery(offer);
             result = executor.WriteToDataBase(strSql);
             return result;
         }

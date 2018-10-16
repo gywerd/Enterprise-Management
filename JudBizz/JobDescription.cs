@@ -10,7 +10,7 @@ namespace JudBizz
     public class JobDescription
     {
         #region Fields
-        private int jobDescriptionId;
+        private int id;
         private string occupation;
         private string area;
         private bool procuration;
@@ -23,44 +23,77 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public JobDescription() { }
-
-        /// <summary>
-        /// Empty constructor, that activates Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public JobDescription(string strCon)
+        public JobDescription()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.occupation = "";
+            this.area = "";
+            this.procuration = false;
         }
 
         /// <summary>
         /// Constructor for adding a new job descripton
         /// </summary>
-        /// <param name="jobTitle">string</param>
-        /// <param name="expertise">string</param>
+        /// <param name="occupation">string</param>
+        /// <param name="area">string</param>
         /// <param name="procuration">bool</param>
-        public JobDescription(string jobTitle, string expertise, bool procuration = false)
+        public JobDescription(string occupation, string area, bool procuration = false)
         {
-            this.occupation = jobTitle;
-            this.area = expertise;
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.occupation = occupation;
+            this.area = area;
             this.procuration = procuration;
         }
+
         /// <summary>
         /// Constructor for adding a job descripton from Db to List
         /// </summary>
         /// <param name="id">int</param>
-        /// <param name="jobTitle">string</param>
-        /// <param name="expertise">string</param>
+        /// <param name="occupation">string</param>
+        /// <param name="area">string</param>
         /// <param name="procuration">bool</param>
-        public JobDescription(int id, string jobTitle, string expertise, bool procuration = false)
+        public JobDescription(int id, string occupation, string area, bool procuration = false)
         {
-            this.jobDescriptionId = id;
-            this.occupation = jobTitle;
-            this.area = expertise;
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = id;
+            this.occupation = occupation;
+            this.area = area;
             this.procuration = procuration;
         }
+
+        /// <summary>
+        /// Constructor for adding a job descripton from Db to List
+        /// </summary>
+        /// <param name="JobDescription">description</param>
+        public JobDescription(JobDescription description)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (description != null)
+            {
+                this.id = description.Id;
+                this.occupation = description.Occupation;
+                this.area = description.Area;
+                this.procuration = description.Procuration;
+            }
+            else
+            {
+                this.id = 0;
+                this.occupation = "";
+                this.area = "";
+                this.procuration = false;
+            }
+        }
+        
         #endregion
 
         #region Methods
@@ -106,7 +139,7 @@ namespace JudBizz
         #endregion
 
         #region Properties
-        public int JobDescriptionId { get => jobDescriptionId; }
+        public int Id { get => id; }
         public string Occupation { get => occupation; set => occupation = value; }
         public string Area { get => area; set => area = value; }
         public bool Procuration { get => procuration; }

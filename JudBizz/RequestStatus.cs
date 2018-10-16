@@ -23,36 +23,64 @@ namespace JudBizz
         /// </summary>
         public RequestStatus()
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.description = "";
         }
 
         /// <summary>
-        /// Empty constructor, that activates Db-connection
+        /// Costructor used to add new RequestStatus
         /// </summary>
-        /// <param name="strCon">string</param>
-        public RequestStatus(string strCon)
+        /// <param name="description">string</param>
+        public RequestStatus(string description)
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.description = description;
         }
 
+        /// <summary>
+        /// Costructor used to add RequestStatus from Db
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="description"></param>
         public RequestStatus(int id, string description)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.description = description;
+        }
+
+        /// <summary>
+        /// Costructor used to add RequestStatus from Db
+        /// </summary>
+        /// <param name="status">RequestStatus</param>
+        public RequestStatus(RequestStatus status)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (status != null)
+            {
+                this.id = status.Id;
+                this.description = status.Description;
+            }
+            else
+            {
+                this.id = 0;
+                this.description = "";
+            }
         }
 
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Returns main content as a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return description;
-        }
-
         /// <summary>
         /// Retrieves a list of project statuses from Db
         /// </summary>
@@ -69,6 +97,15 @@ namespace JudBizz
                 statuses.Add(status);
             }
             return statuses;
+        }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return description;
         }
 
         #endregion

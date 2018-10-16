@@ -24,7 +24,7 @@ namespace JudGui
         #region Fields
         public Bizz Bizz;
         public UserControl UcRight;
-        public List<IndexableEnterprise> IndexableEnterpriseList = new List<IndexableEnterprise>();
+        public List<Enterprise> IndexableEnterpriseList = new List<Enterprise>();
 
         #endregion
 
@@ -228,9 +228,9 @@ namespace JudGui
             }
         }
 
-        private List<IndexableEnterprise> GetIndexableEnterpriseList()
+        private List<Enterprise> GetIndexableEnterpriseList()
         {
-            List<IndexableEnterprise> result = new List<IndexableEnterprise>();
+            List<Enterprise> result = new List<Enterprise>();
             int i = 0;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {

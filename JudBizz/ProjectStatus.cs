@@ -21,36 +21,65 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public ProjectStatus() { }
-
-        /// <summary>
-        /// Empty constructor, that activates Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public ProjectStatus(string strCon)
+        public ProjectStatus()
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.description = "";
         }
 
+        /// <summary>
+        /// Constructor add a new ProjectStatus
+        /// </summary>
+        /// <param name="description">string</param>
+        public ProjectStatus(string description)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.description = description;
+        }
+
+        /// <summary>
+        /// Constructor add a ProjectStatus from Db
+        /// </summary>
+        /// <param name="description"></param>
         public ProjectStatus(int id, string description)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.description = description;
+        }
+
+        /// <summary>
+        /// Constructor add a ProjectStatus
+        /// </summary>
+        /// <param name="status">ProjectStatus</param>
+        public ProjectStatus(ProjectStatus status)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (status != null)
+            {
+                this.id = status.Id;
+                this.description = status.Description;
+            }
+            else
+            {
+                this.id = 0;
+                this.description = "";
+            }
         }
 
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Returns main content as a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return description;
-        }
-
         /// <summary>
         /// Retrieves a list of project statuses from Db
         /// </summary>
@@ -67,6 +96,15 @@ namespace JudBizz
                 statuses.Add(status);
             }
             return statuses;
+        }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return description;
         }
 
         #endregion

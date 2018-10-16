@@ -23,38 +23,66 @@ namespace JudBizz
         /// </summary>
         public TenderForm()
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.description = "";
         }
 
         /// <summary>
-        /// Empty constructor, that activates Db-connection
+        /// Method to add a new Tender Form
         /// </summary>
-        /// <param name="strCon">string</param>
-        public TenderForm(string strCon)
+        /// <param name="description">string</param>
+        public TenderForm(string description)
         {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.description = description;
         }
 
+        /// <summary>
+        /// Method to add a Tender Form from Db
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="description"></param>
         public TenderForm(int id, string description)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.description = description;
+        }
+
+        /// <summary>
+        /// Method to add a Tender Form
+        /// </summary>
+        /// <param name="form">TenderForm</param>
+        public TenderForm(TenderForm form)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (form != null)
+            {
+                this.id = form.Id;
+                this.description = form.Description;
+            }
+            else
+            {
+                this.id = 0;
+                this.description = "";
+            }
         }
 
         #endregion
 
         #region Methods
         /// <summary>
-        /// Returns main content as a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return description;
-        }
-
-        /// <summary>
-        /// Retrieves a list of project statuses from Db
+        /// Retrieves a list of TenderForms from Db
         /// </summary>
         /// <returns></returns>
         public List<TenderForm> GetTenderForms()
@@ -71,13 +99,19 @@ namespace JudBizz
             return statuses;
         }
 
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return description;
+        }
+
         #endregion
 
         #region Properties
-        public int Id
-        {
-            get => id;
-        }
+        public int Id { get => id; }
 
         public string Description
         {

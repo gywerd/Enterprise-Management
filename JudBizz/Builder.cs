@@ -27,15 +27,10 @@ namespace JudBizz
         /// </summary>
         public Builder()
         {
-        }
-
-        /// <summary>
-        /// Constructor for access to db methods
-        /// </summary>
-        public Builder(string strCon)
-        {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            id = 0;
             cvr = "0";
             name = "";
             address = 0;
@@ -44,7 +39,7 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Constructor for adding new legal entity
+        /// Constructor for adding new builder
         /// </summary>
         /// <param name="name">string</param>
         /// <param name="address">int</param>
@@ -52,6 +47,10 @@ namespace JudBizz
         /// <param name="craftGroup1">int</param>
         public Builder(string cvr, string name, int address = 0, int contactInfo = 0, string url = "")
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.cvr = cvr;
             this.name = name;
             this.address = address;
@@ -60,7 +59,7 @@ namespace JudBizz
         }
 
         /// <summary>
-        /// Constructor for adding a legal entity from Db to list
+        /// Constructor for adding a builder from Db to list
         /// </summary>
         /// <param name="id">int</param>
         /// <param name="companyName">string</param>
@@ -69,12 +68,44 @@ namespace JudBizz
         /// <param name="craftGroup">int</param>
         public Builder(int id, string cvr, string name, int address, int contactInfo, string url)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.name = name;
             this.address = address;
             this.contactInfo = contactInfo;
             this.url = url;
         }
+
+        /// <summary>
+        /// Constructor, that accepts an existing builder
+        /// </summary>
+        /// <param name="builder">Builder</param>
+        public Builder(Builder builder)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (builder != null)
+            {
+                this.id = builder.Id;
+                this.name = builder.Name;
+                this.address = builder.Address;
+                this.contactInfo = builder.ContactInfo;
+                this.url = builder.Url;
+            }
+            else
+            {
+                this.id = 0;
+                this.name = "";
+                this.address = 0;
+                this.contactInfo = 0;
+                this.url = "";
+            }
+        }
+
+
         #endregion
 
         #region Methods
@@ -88,6 +119,10 @@ namespace JudBizz
             return result;
         }
 
+        /// <summary>
+        /// Method, that reads Builders list from Db
+        /// </summary>
+        /// <returns></returns>
         public List<Builder> GetBuilders()
         {
             List<string> results = executor.ReadListFromDataBase("Builders");

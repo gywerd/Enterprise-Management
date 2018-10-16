@@ -73,7 +73,7 @@ namespace JudGui
                 //Update EnterpriseList
                 Bizz.EnterpriseList.Clear();
                 Bizz.EnterpriseList = Bizz.CEP.GetEnterpriseList();
-                Bizz.TempEnterprise = new Enterprise(Bizz.strConnection);
+                Bizz.TempEnterprise = new Enterprise();
 
                 //Close right UserControl
                 Bizz.UcRightActive = false;

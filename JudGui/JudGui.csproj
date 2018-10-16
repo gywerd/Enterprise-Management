@@ -155,6 +155,9 @@
     <Compile Include="UcIttLetters.xaml.cs">
       <DependentUpon>UcIttLetters.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UcIttLettersChooseReceivers.xaml.cs">
+      <DependentUpon>UcIttLettersChooseReceivers.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UcJobDescritions.xaml.cs">
       <DependentUpon>UcJobDescritions.xaml</DependentUpon>
     </Compile>
@@ -181,6 +184,9 @@
     </Compile>
     <Compile Include="UcRequests.xaml.cs">
       <DependentUpon>UcRequests.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UcRequestsChooseReceivers.xaml.cs">
+      <DependentUpon>UcRequestsChooseReceivers.xaml</DependentUpon>
     </Compile>
     <Compile Include="UcSubEntrepeneurList.xaml.cs">
       <DependentUpon>UcSubEntrepeneurList.xaml</DependentUpon>
@@ -324,6 +330,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UcIttLettersChooseReceivers.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UcJobDescritions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -357,6 +367,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UcRequests.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UcRequestsChooseReceivers.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -452,7 +466,11 @@
   <ItemGroup>
     <Resource Include="Images\ceo.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\jorton-logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

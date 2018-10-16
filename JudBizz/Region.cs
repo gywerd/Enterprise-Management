@@ -16,7 +16,6 @@ namespace JudBizz
 
         private static string strConnection;
         private Executor executor;
-
         #endregion
 
         #region Constructors
@@ -25,16 +24,12 @@ namespace JudBizz
         /// </summary>
         public Region()
         {
-        }
-
-        /// <summary>
-        /// Empty constructor, that activates Db-connection
-        /// </summary>
-        /// <param name="strCon">string</param>
-        public Region(string strCon)
-        {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.id = 0;
+            this.region = "";
+            this.zips = "";
         }
 
         /// <summary>
@@ -44,6 +39,10 @@ namespace JudBizz
         /// <param name="zips">string</param>
         public Region(string regionName, string zips)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.region = regionName;
             this.zips = zips;
         }
@@ -56,23 +55,40 @@ namespace JudBizz
         /// <param name="zips">string</param>
         public Region(int id, string regionName, string zips)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.region = regionName;
             this.zips = zips;
         }
 
+        /// <summary>
+        /// Constructor to add Enterprise Form from Db
+        /// </summary>
+        /// <param name="region">Region</param>
+        public Region(Region region)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (region != null)
+            {
+                this.id = region.Id;
+                this.region = region.RegionName;
+                this.zips = region.Zips;
+            }
+            else
+            {
+                this.id = 0;
+                this.region = "";
+                this.zips = "";
+            }
+        }
+
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Returns main content as a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return region;
-        }
-
         /// <summary>
         /// Retrieves a list of regions from Db
         /// </summary>
@@ -89,6 +105,15 @@ namespace JudBizz
                 geography.Add(region);
             }
             return geography;
+        }
+
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return region;
         }
 
         #endregion

@@ -31,13 +31,10 @@ namespace JudBizz
         /// </summary>
         public User()
         {
-        }
-
-        //
-        public User(string strCon)
-        {
-            strConnection = strCon;
+            strConnection = Bizz.StrConnection;
             executor = new Executor(strConnection);
+
+            this.id = 0;
             this.name = "";
             this.passWord = "1234";
             this.contactInfo = 0;
@@ -56,6 +53,10 @@ namespace JudBizz
         /// <param name="admin">bool</param>
         public User(string initials, string name, string password = "1234", int contactInfo = 0, int jobDescription = 0, bool admin = false)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            this.id = 0;
             this.initials = initials;
             this.name = name;
             this.passWord = password;
@@ -74,27 +75,71 @@ namespace JudBizz
         /// <param name="jobDescription">int</param>
         /// <param name="passWord">string</param>
         /// <param name="admin">bool</param>
-        public User(int id, string initials, string name, string password, int contactInfo, int jobDescription, bool admin)
+        public User(int id, string initials, string name, string passWord, int contactInfo, int jobDescription, bool admin)
         {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
             this.id = id;
             this.initials = initials;
             this.name = name;
-            this.passWord = password;
+            this.passWord = passWord;
             this.contactInfo = contactInfo;
             this.jobDescription = jobDescription;
             this.administrator = admin;
         }
+
+        /// <summary>
+        /// Constructor to add user from Db to list
+        /// </summary>
+        /// <param name="user">User</param>
+        public User(User user)
+        {
+            strConnection = Bizz.StrConnection;
+            executor = new Executor(strConnection);
+
+            if (user != null)
+            {
+                this.id = user.Id;
+                this.initials = user.Initials;
+                this.name = user.Name;
+                this.passWord = user.PassWord;
+                this.contactInfo = user.ContactInfo;
+                this.jobDescription = user.JobDescription;
+                this.administrator = user.Administrator;
+            }
+            else
+            {
+                id = 0;
+                initials = "";
+                name = "";
+                this.passWord = "1234";
+                this.contactInfo = 0;
+                this.jobDescription = 0;
+                this.administrator = false;
+            }
+        }
+
         #endregion
 
         #region Methods
         /// <summary>
-        /// Method returns user name as string
+        /// Method, that changes password, if eligible
         /// </summary>
-        /// <returns>string</returns>
-        public override string ToString()
+        /// <param name="oldPassWord"></param>
+        /// <param name="newPassWord"></param>
+        /// <returns></returns>
+        public bool ChangePassword(string oldPassWord, string newPassWord)
         {
-            string result = name + " (" + initials + ")";
-            return result;
+            if (passWord == oldPassWord)
+            {
+                passWord = newPassWord;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public List<User> GetUsers()
@@ -111,19 +156,6 @@ namespace JudBizz
             return users;
         }
 
-        public bool ChangePassword(string oldPassWord, string newPassWord)
-        {
-            if (passWord == oldPassWord)
-            {
-                passWord = newPassWord;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public void ToggleAdministrator()
         {
             if (administrator)
@@ -134,6 +166,16 @@ namespace JudBizz
             {
                 administrator = true;
             }
+        }
+
+        /// <summary>
+        /// Method returns user name as string
+        /// </summary>
+        /// <returns>string</returns>
+        public override string ToString()
+        {
+            string result = name + " (" + initials + ")";
+            return result;
         }
 
         #endregion
