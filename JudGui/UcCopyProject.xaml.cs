@@ -1,4 +1,5 @@
 ﻿using JudBizz;
+using JudRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace JudGui
         private void ButtonCopy_Click(object sender, RoutedEventArgs e)
         {
             // Code that copies the current project into a new project
-            Project project = new Project(Bizz.TempProject.CaseId, Bizz.TempProject.Name, Bizz.TempProject.Builder, 1, Bizz.TempProject.TenderForm, Bizz.TempProject.EnterpriseForm, Bizz.TempProject.Executive);
+            Project project = new Project(Bizz.StrConnection, Bizz.TempProject.CaseId, Bizz.TempProject.Name, Bizz.TempProject.Builder, 1, Bizz.TempProject.TenderForm, Bizz.TempProject.EnterpriseForm, Bizz.TempProject.Executive);
             bool result = Bizz.CPR.InsertIntoProject(Bizz.TempProject);
 
             if (result)
@@ -83,7 +84,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxCaseName.Text = Bizz.TempProject.Name;
@@ -136,7 +137,7 @@ namespace JudGui
             {
                 if (tempProject.Status == 1)
                 {
-                    IndexableProject result = new IndexableProject(i, tempProject);
+                    IndexableProject result = new IndexableProject(Bizz.StrConnection, i, tempProject);
                     Bizz.ActiveProjects.Add(result);
                     i++;
                 }
@@ -152,7 +153,7 @@ namespace JudGui
             int i = 0;
             foreach (Project temp in Bizz.Projects)
             {
-                IndexableProject result = new IndexableProject(i, temp);
+                IndexableProject result = new IndexableProject(Bizz.StrConnection, i, temp);
                 Bizz.IndexableProjects.Add(result);
                 i++;
             }

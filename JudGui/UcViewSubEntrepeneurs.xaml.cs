@@ -1,4 +1,5 @@
 ﻿using JudBizz;
+using JudRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +63,7 @@ namespace JudGui
                 return;
             }
             string path = "";
-            PdfCreator pdfCreator = new PdfCreator();
+            PdfCreator pdfCreator = new PdfCreator(Bizz.StrConnection);
             if (RadioButtonShowAll.IsChecked.Value)
             {
                 path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz, IndexableEnterpriseList, IndexableSubEntrepeneurs, Bizz.Users);
@@ -96,7 +97,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxCaseName.Text = Bizz.TempProject.Name;
@@ -245,7 +246,7 @@ namespace JudGui
             {
                 if (enterprise.Project == Bizz.TempProject.Id)
                 {
-                    IndexableEnterprise temp = new IndexableEnterprise(i, enterprise);
+                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
                     result.Add(temp);
                     EnterpriseIds.Add(temp.Id);
                 }
@@ -268,7 +269,7 @@ namespace JudGui
                 {
                     if (entrepeneur.EnterpriseList == id)
                     {
-                        IndexableSubEntrepeneur temp = new IndexableSubEntrepeneur(Bizz.LegalEntities, i, entrepeneur);
+                        IndexableSubEntrepeneur temp = new IndexableSubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities, i, entrepeneur);
                         result.Add(temp);
                     }
                     i++;

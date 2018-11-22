@@ -88,7 +88,7 @@ namespace JudDataAccess
             }
             catch (SqlException ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString(), "Database", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return dtRes;

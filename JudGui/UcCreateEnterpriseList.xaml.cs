@@ -1,4 +1,5 @@
 ﻿using JudBizz;
+using JudRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +74,7 @@ namespace JudGui
                 //Update EnterpriseList
                 Bizz.EnterpriseList.Clear();
                 Bizz.EnterpriseList = Bizz.CEP.GetEnterpriseList();
-                Bizz.TempEnterprise = new Enterprise();
+                Bizz.TempEnterprise = new Enterprise(Bizz.StrConnection);
 
                 //Close right UserControl
                 Bizz.UcRightActive = false;
@@ -143,7 +144,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxCaseName.Content = Bizz.TempProject.Name;
@@ -252,7 +253,7 @@ namespace JudGui
             {
                 if (tempProject.Status == 1)
                 {
-                    IndexableProject result = new IndexableProject(i, tempProject);
+                    IndexableProject result = new IndexableProject(Bizz.StrConnection, i, tempProject);
                     Bizz.ActiveProjects.Add(result);
                     i++;
                 }
@@ -268,7 +269,7 @@ namespace JudGui
             int i = 0;
             foreach (Project temp in Bizz.Projects)
             {
-                IndexableProject result = new IndexableProject(i, temp);
+                IndexableProject result = new IndexableProject(Bizz.StrConnection, i, temp);
                 Bizz.IndexableProjects.Add(result);
                 i++;
             }

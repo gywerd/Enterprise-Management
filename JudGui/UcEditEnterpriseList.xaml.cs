@@ -1,4 +1,5 @@
 ﻿using JudBizz;
+using JudRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace JudGui
         {
             //Code that deletes a project from Db
             bool result = Bizz.CEP.DeleteFromEnterpriseList(Bizz.TempEnterprise.Id);
-            Bizz.TempEnterprise = new Enterprise();
+            Bizz.TempEnterprise = new Enterprise(Bizz.StrConnection);
 
             if (result)
             {
@@ -125,7 +126,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             IndexableEnterpriseList = GetIndexableEnterpriseList();
@@ -154,7 +155,7 @@ namespace JudGui
 
         private void ListBoxEnterpriseList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Enterprise temp = new Enterprise((Enterprise)ListBoxEnterpriseList.SelectedItem);
+            Enterprise temp = new Enterprise(Bizz.StrConnection, (Enterprise)ListBoxEnterpriseList.SelectedItem);
             Bizz.TempEnterprise = temp;
             TextBoxName.Text = temp.Name;
             TextBoxElaboration.Text = temp.Elaboration;
@@ -236,7 +237,7 @@ namespace JudGui
             {
                 if (enterprise.Project == Bizz.TempProject.Id)
                 {
-                    IndexableEnterprise temp = new IndexableEnterprise(i, enterprise);
+                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
                     result.Add(temp);
                 }
                 i++;

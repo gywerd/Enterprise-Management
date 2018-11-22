@@ -1,4 +1,5 @@
 ﻿using JudBizz;
+using JudRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,7 +111,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxName.Text = Bizz.TempProject.Name;
@@ -134,7 +135,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempEnterprise = new Enterprise(temp.Id, temp.Project, temp.Name, temp.Elaboration, temp.OfferList, temp.CraftGroup1, temp.CraftGroup2, temp.CraftGroup3, temp.CraftGroup4);
+                    Bizz.TempEnterprise = new Enterprise(Bizz.StrConnection, temp.Id, temp.Project, temp.Name, temp.Elaboration, temp.OfferList, temp.CraftGroup1, temp.CraftGroup2, temp.CraftGroup3, temp.CraftGroup4);
                     break;
                 }
             }
@@ -155,7 +156,7 @@ namespace JudGui
                     if (temp.Index == selectedIndex)
                     {
                         Bizz.TempLegalEntity = temp;
-                        Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.LegalEntities);
+                        Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
                         Bizz.TempSubEntrepeneur.EnterpriseList = Bizz.TempEnterprise.Id;
                         Bizz.TempSubEntrepeneur.Entrepeneur = temp.Id;
                         if (!Bizz.TempSubEntrepeneur.Active)
@@ -188,7 +189,7 @@ namespace JudGui
             foreach (IndexableLegalEntity entity in ListBoxLegalEntities.SelectedItems)
             {
                 Bizz.TempLegalEntity = entity;
-                Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.LegalEntities);
+                Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
                 Bizz.TempSubEntrepeneur.EnterpriseList = Bizz.TempEnterprise.Id;
                 Bizz.TempSubEntrepeneur.Entrepeneur = entity.Id;
                 if (!Bizz.TempSubEntrepeneur.Active)
@@ -256,7 +257,7 @@ namespace JudGui
         /// </summary>
         private void CreateIttLetter()
         {
-            Bizz.TempIttLetter = new IttLetter();
+            Bizz.TempIttLetter = new IttLetter(Bizz.StrConnection);
             int id = Bizz.CIL.CreateIttLetterInDb(Bizz.TempIttLetter);
             Bizz.TempIttLetter.SetId(id);
             Bizz.TempSubEntrepeneur.IttLetter = id;
@@ -267,7 +268,7 @@ namespace JudGui
         /// </summary>
         private void CreateOffer()
         {
-            Bizz.TempOffer = new Offer();
+            Bizz.TempOffer = new Offer(Bizz.StrConnection);
             int id = Bizz.COF.CreateOfferInDb(Bizz.TempOffer);
             Bizz.TempOffer.SetId(id);
             Bizz.TempSubEntrepeneur.Offer = id;
@@ -278,7 +279,7 @@ namespace JudGui
         /// </summary>
         private void CreateRequest()
         {
-            Bizz.TempRequest = new Request();
+            Bizz.TempRequest = new Request(Bizz.StrConnection);
             int id = Bizz.CRQ.CreateRequestInDb(Bizz.TempRequest);
             Bizz.TempRequest.SetId(id);
             Bizz.TempSubEntrepeneur.Request = id;
@@ -293,7 +294,7 @@ namespace JudGui
         {
             List<LegalEntity> tempResult = new List<LegalEntity>();
             List<IndexableLegalEntity> result = new List<IndexableLegalEntity>();
-            LegalEntity tempEntity = new LegalEntity();
+            LegalEntity tempEntity = new LegalEntity(Bizz.StrConnection);
             foreach (LegalEntity entity in list)
             {
                 if (entity.Region == ComboBoxArea.SelectedIndex)
@@ -313,7 +314,7 @@ namespace JudGui
             {
                 if (!IdExistsInSubEntrepeneurs(Bizz.TempEnterprise.Id, temp.Id))
                 {
-                    IndexableLegalEntity entity = new IndexableLegalEntity(i, temp);
+                    IndexableLegalEntity entity = new IndexableLegalEntity(Bizz.StrConnection, i, temp);
                     result.Add(entity);
                     i++;
                 }
@@ -365,7 +366,7 @@ namespace JudGui
         /// <returns>Contact</returns>
         private Contact GetContact()
         {
-            Contact result = new Contact();
+            Contact result = new Contact(Bizz.StrConnection);
             int index = ComboBoxContact.SelectedIndex;
             if (IndexableContacts.Count == 0)
             {
@@ -389,14 +390,14 @@ namespace JudGui
         private List<IndexableContact> GetIndexableContacts()
         {
             List<IndexableContact> result = new List<IndexableContact>();
-            IndexableContact iContact = new IndexableContact(0, Bizz.Contacts[0]);
+            IndexableContact iContact = new IndexableContact(Bizz.StrConnection, 0, Bizz.Contacts[0]);
             result.Add(iContact);
             int i = 1;
             foreach (Contact contact in Bizz.Contacts)
             {
                 if (contact.LegalEntity == Bizz.TempLegalEntity.Id)
                 {
-                    IndexableContact temp = new IndexableContact(i, contact);
+                    IndexableContact temp = new IndexableContact(Bizz.StrConnection, i, contact);
                     result.Add(temp);
                     i++;
                 }
@@ -416,7 +417,7 @@ namespace JudGui
             {
                 if (enterprise.Project == Bizz.TempProject.Id)
                 {
-                    IndexableEnterprise temp = new IndexableEnterprise(i, enterprise);
+                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
                     result.Add(temp);
                     i++;
                 }
@@ -432,7 +433,7 @@ namespace JudGui
         {
             List<LegalEntity> tempResult = new List<LegalEntity>();
             List<IndexableLegalEntity> result = new List<IndexableLegalEntity>();
-            IndexableLegalEntity temp = new IndexableLegalEntity(0, Bizz.LegalEntities[0]);
+            IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.StrConnection, 0, Bizz.LegalEntities[0]);
             result.Add(temp);
             int i = 1;
             foreach (LegalEntity entity in Bizz.LegalEntities)

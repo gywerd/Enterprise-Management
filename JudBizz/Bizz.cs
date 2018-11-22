@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JudRepository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -14,80 +15,87 @@ namespace JudBizz
     public class Bizz
     {
         #region Fields
-        #region Ordinary Fields
-        private static string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=JortonSubEnt;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        public static string macAdresss = GetMacAddress();
-        public User CurrentUser;
-        public Address TempAddress;
-        public Contact TempContact;
-        public ContactInfo TempContactInfo;
-        public Enterprise TempEnterprise;
-        public IttLetter TempIttLetter;
-        public IttLetterReceiver TempIttLetterReceiver;
-        public IttLetterShipping TempIttLetterShipping;
-        public LegalEntity TempLegalEntity;
-        public Offer TempOffer;
-        public Project TempProject;
-        public Request TempRequest;
-        public SubEntrepeneur TempSubEntrepeneur;
-        public ZipTown TempZipTown;
-        public bool UcRightActive = false;
 
-        #endregion
+            #region Ordinary Fields
+            private static string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=JortonSubEnt;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            public static string macAdresss = GetMacAddress();
+            public User CurrentUser = new User(strConnection);
+            public Address TempAddress = new Address(strConnection);
+            public Contact TempContact = new Contact(strConnection);
+            public ContactInfo TempContactInfo = new ContactInfo(strConnection);
+            public Enterprise TempEnterprise = new Enterprise(strConnection);
+            public IttLetter TempIttLetter = new IttLetter(strConnection);
+            public IttLetterBullet TempIttLetterBullet = new IttLetterBullet(strConnection);
+            public IttLetterParagraph TempIttLetterParagraph = new IttLetterParagraph(strConnection);
+            public IttLetterReceiver TempIttLetterReceiver = new IttLetterReceiver(strConnection);
+            public IttLetterShipping TempIttLetterShipping = new IttLetterShipping(strConnection);
+            public LegalEntity TempLegalEntity = new LegalEntity(strConnection);
+            public Offer TempOffer = new Offer(strConnection);
+            public Project TempProject = new Project(strConnection);
+            public Request TempRequest = new Request(strConnection);
+            public SubEntrepeneur TempSubEntrepeneur;
+            public ZipTown TempZipTown = new ZipTown(strConnection);
+            public bool UcRightActive = false;
 
-        #region Entities used for methods
-        public static Address CAD = new Address();
-        public static Builder CBU = new Builder();
-        public static Category CCT = new Category();
-        public static ContactInfo CCI = new ContactInfo();
-        public static Contact CCP = new Contact();
-        public static CraftGroup CCG = new CraftGroup();
-        public static Enterprise CEP = new Enterprise();
-        public static EnterpriseForm CEF = new EnterpriseForm();
-        public static IttLetter CIL = new IttLetter();
-        public static IttLetterReceiver CIR = new IttLetterReceiver();
-        public static IttLetterShipping CIS = new IttLetterShipping();
-        public static JobDescription CJD = new JobDescription();
-        public static LegalEntity CLE = new LegalEntity();
-        public static Offer COF = new Offer();
-        public static Project CPR = new Project();
-        public static ProjectStatus CPS = new ProjectStatus();
-        public static Region CRG = new Region();
-        public static Request CRQ = new Request();
-        public static RequestStatus CRS = new RequestStatus();
-        public static SubEntrepeneur CSE;
-        public static TenderForm CTF = new TenderForm();
-        public static User CUS = new User();
-        public static ZipTown CZT = new ZipTown();
-        #endregion
+            #endregion
 
-        #region Lists
-        public List<Address> Addresses = CAD.GetAddresses();
-        public List<Builder> Builders = CBU.GetBuilders();
-        public List<Category> Categories = CCT.GetCategories();
-        public List<Contact> Contacts = CCP.GetContacts();
-        public List<ContactInfo> ContactInfoList = CCI.GetContactInfoList();
-        public List<CraftGroup> CraftGroups = CCG.GetCraftGroups();
-        public List<Enterprise> EnterpriseList = CEP.GetEnterpriseList();
-        public List<EnterpriseForm> EnterpriseForms = CEF.GetEnterpriseForms();
-        public List<Region> Geography = CRG.GetRegions();
-        public List<IttLetter> IttLetters = CIL.GetIttLetters();
-        public List<IttLetterReceiver> IttLetterReceivers = CIR.GetIttLetterReceivers();
-        public List<IttLetterShipping> IttLetterShippingList = CIS.GetIttLetterShippingList();
-        public List<JobDescription> JobDescriptions = CJD.GetJobDescriptions();
-        public List<LegalEntity> LegalEntities = CLE.GetLegalEntities();
-        public List<Offer> Offers = COF.GetOffers();
-        public List<Project> Projects = CPR.GetProjects();
-        public List<IndexableProject> ActiveProjects = new List<IndexableProject>();
-        public List<IndexableProject> IndexableProjects = new List<IndexableProject>();
-        public List<ProjectStatus> ProjectStatusList = CPS.GetProjectStatusList();
-        public List<Region> Regions = CRG.GetRegions();
-        public List<Request> Requests = CRQ.GetRequests();
-        public List<RequestStatus> RequestStatusList = CRS.GetRequestStatusList();
-        public List<SubEntrepeneur> SubEntrepeneurs;
-        public List<TenderForm> TenderForms = CTF.GetTenderForms();
-        public List<User> Users = CUS.GetUsers();
-        public List<ZipTown> ZipCodeList = CZT.GetZipTownList();
+            #region Entities used for methods
+            public static Address CAD = new Address(strConnection);
+            public static Builder CBU = new Builder(strConnection);
+            public static Category CCT = new Category(strConnection);
+            public static ContactInfo CCI = new ContactInfo(strConnection);
+            public static Contact CCP = new Contact(strConnection);
+            public static CraftGroup CCG = new CraftGroup(strConnection);
+            public static Enterprise CEP = new Enterprise(strConnection);
+            public static EnterpriseForm CEF = new EnterpriseForm(strConnection);
+            public static IttLetterBullet CIB = new IttLetterBullet(strConnection);
+            public static IttLetter CIL = new IttLetter(strConnection);
+            public static IttLetterParagraph CIP = new IttLetterParagraph(strConnection);
+            public static IttLetterReceiver CIR = new IttLetterReceiver(strConnection);
+            public static IttLetterShipping CIS = new IttLetterShipping(strConnection);
+            public static JobDescription CJD = new JobDescription(strConnection);
+            public static LegalEntity CLE = new LegalEntity(strConnection);
+            public static Offer COF = new Offer(strConnection);
+            public static Project CPR = new Project(strConnection);
+            public static ProjectStatus CPS = new ProjectStatus(strConnection);
+            public static Region CRG = new Region(strConnection);
+            public static Request CRQ = new Request(strConnection);
+            public static RequestStatus CRS = new RequestStatus(strConnection);
+            public static SubEntrepeneur CSE;
+            public static TenderForm CTF = new TenderForm(strConnection);
+            public static User CUS = new User(strConnection);
+            public static ZipTown CZT = new ZipTown(strConnection);
+            #endregion
+
+            #region Lists
+            public List<Address> Addresses = CAD.GetAddresses(strConnection);
+            public List<Builder> Builders = CBU.GetBuilders();
+            public List<Category> Categories = CCT.GetCategories();
+            public List<Contact> Contacts = CCP.GetContacts();
+            public List<ContactInfo> ContactInfoList = CCI.GetContactInfoList();
+            public List<CraftGroup> CraftGroups = CCG.GetCraftGroups();
+            public List<Enterprise> EnterpriseList = CEP.GetEnterpriseList();
+            public List<EnterpriseForm> EnterpriseForms = CEF.GetEnterpriseForms();
+            public List<Region> Geography = CRG.GetRegions();
+            public List<IttLetter> IttLetters = CIL.GetIttLetters();
+            public List<IttLetterBullet> IttLetterBulletList = CIB.GetIttLetterBulletList();
+            public List<IttLetterParagraph> IttLetterParagraphList = CIP.GetIttLetterParagraphList(); 
+            public List<IttLetterReceiver> IttLetterReceivers = CIR.GetIttLetterReceivers();
+            public List<IttLetterShipping> IttLetterShippingList = CIS.GetIttLetterShippingList();
+            public List<JobDescription> JobDescriptions = CJD.GetJobDescriptions();
+            public List<LegalEntity> LegalEntities = CLE.GetLegalEntities();
+            public List<Offer> Offers = COF.GetOffers();
+            public List<Project> Projects = CPR.GetProjects();
+            public List<IndexableProject> ActiveProjects = new List<IndexableProject>();
+            public List<IndexableProject> IndexableProjects = new List<IndexableProject>();
+            public List<ProjectStatus> ProjectStatusList = CPS.GetProjectStatusList();
+            public List<Region> Regions = CRG.GetRegions();
+            public List<Request> Requests = CRQ.GetRequests();
+            public List<RequestStatus> RequestStatusList = CRS.GetRequestStatusList();
+            public List<SubEntrepeneur> SubEntrepeneurs;
+            public List<TenderForm> TenderForms = CTF.GetTenderForms();
+            public List<User> Users = CUS.GetUsers();
+            public List<ZipTown> ZipCodeList = CZT.GetZipTownList();
 
         #endregion
 
@@ -99,7 +107,7 @@ namespace JudBizz
         /// </summary>
         public Bizz()
         {
-            ActivateFields();
+            ActivateSubEntrepeneurs();
             ActiveProjects = GetListActiveProjects();
             IndexableProjects = GetListIndexableProjects();
         }
@@ -108,42 +116,13 @@ namespace JudBizz
 
         #region Methods
 
-        private void ActivateFields()
-        {
-            ActivateSubEntrepeneurs();
-            ActivateOrdinaryFields();
-        }
-
         /// <summary>
-        /// Method, that loads data into Entities for Methods
+        /// Method, that loads data into list of SubEntrepeneurs
         /// </summary>
         private void ActivateSubEntrepeneurs()
         {
-            Bizz temp = this;
-            CSE = new SubEntrepeneur(LegalEntities);
+            CSE = new SubEntrepeneur(strConnection, LegalEntities);
             SubEntrepeneurs = CSE.GetSubEntrepeneurs();
-        }
-
-        /// <summary>
-        /// Method, that loads data into Fields
-        /// </summary>
-        private void ActivateOrdinaryFields()
-        {
-            Bizz temp = this;
-            CurrentUser = new User();
-            TempAddress = new Address();
-            TempContact = new Contact();
-            TempContactInfo = new ContactInfo();
-            TempEnterprise = new Enterprise();
-            TempIttLetter = new IttLetter();
-            TempIttLetterReceiver = new IttLetterReceiver();
-            TempIttLetterShipping = new IttLetterShipping();
-            TempLegalEntity = new LegalEntity();
-            TempOffer = new Offer();
-            TempProject = new Project();
-            TempRequest = new Request();
-            TempSubEntrepeneur = new SubEntrepeneur(LegalEntities);
-            TempZipTown = new ZipTown();
         }
 
         /// <summary>
@@ -185,7 +164,7 @@ namespace JudBizz
             {
                 if (tempProject.Status == 1)
                 {
-                    IndexableProject temp = new IndexableProject(i, tempProject);
+                    IndexableProject temp = new IndexableProject(strConnection, i, tempProject);
                     result.Add(temp);
                     i++;
                 }
@@ -203,7 +182,7 @@ namespace JudBizz
             int i = 0;
             foreach (Project tempProject in Projects)
             {
-                    IndexableProject temp = new IndexableProject(i, tempProject);
+                    IndexableProject temp = new IndexableProject(strConnection,i, tempProject);
                     result.Add(temp);
                     i++;
             }
@@ -222,6 +201,19 @@ namespace JudBizz
                 .Select(nic => nic.GetPhysicalAddress().ToString())
                 .FirstOrDefault();
             return result;
+        }
+
+        public void UpdateIttLetterReceivers()
+        {
+            IttLetterReceivers.Clear();
+            IttLetterReceivers = CIR.GetIttLetterReceivers();
+        }
+
+        public void UpdateIttLetterShippingList()
+        {
+            IttLetterShippingList.Clear();
+            IttLetterShippingList = CIS.GetIttLetterShippingList();
+
         }
 
         #endregion

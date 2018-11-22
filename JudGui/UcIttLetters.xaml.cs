@@ -43,7 +43,12 @@ namespace JudGui
             UcRight.Content = ucIttLettersChooseReceivers;
         }
 
-        private void ButtonPrepareIttLetters_Click(object sender, RoutedEventArgs e)
+        private void ButtonPreparePersonalIttLetters_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ButtonPrepareCommonIttLetters_Click(object sender, RoutedEventArgs e)
         {
 
         }
@@ -52,5 +57,6 @@ namespace JudGui
         {
 
         }
+
     }
 }

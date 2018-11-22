@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JudBizz", "JudBizz\JudBizz.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JudGui", "JudGui\JudGui.csproj", "{AEC956EC-C29F-424D-87A3-13FA3FE947A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JudRepository", "JudRepository\JudRepository.csproj", "{E1D9B59F-506B-428E-9A6C-52BE7691DF15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AEC956EC-C29F-424D-87A3-13FA3FE947A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEC956EC-C29F-424D-87A3-13FA3FE947A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEC956EC-C29F-424D-87A3-13FA3FE947A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1D9B59F-506B-428E-9A6C-52BE7691DF15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1D9B59F-506B-428E-9A6C-52BE7691DF15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1D9B59F-506B-428E-9A6C-52BE7691DF15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1D9B59F-506B-428E-9A6C-52BE7691DF15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,7 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using itextsharp.pdfa;
+using JudRepository;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,6 +32,7 @@ namespace JudBizz
         string date = "";
         string fileName = string.Empty;
         string pdfPath = "";
+        string strConnection = "";
         FileStream fileStreamCreate;
         IttLetterPdfData letterData;
 
@@ -40,7 +42,10 @@ namespace JudBizz
         /// <summary>
         /// Empty Constructor
         /// </summary>
-        public PdfCreator() { }
+        public PdfCreator(string strCon)
+        {
+            strConnection = strCon;
+        }
 
         #endregion
 
@@ -612,7 +617,7 @@ namespace JudBizz
 
         private Contact GetContact(int id)
         {
-            Contact result = new Contact();
+            Contact result = new Contact(strConnection);
             foreach (Contact contact in Bizz.Contacts)
             {
                 if (contact.Id == id)
@@ -626,7 +631,7 @@ namespace JudBizz
 
         private ContactInfo GetContactInfo(int id)
         {
-            ContactInfo result = new ContactInfo();
+            ContactInfo result = new ContactInfo(strConnection);
             foreach (ContactInfo info in Bizz.ContactInfoList)
             {
                 if (info.Id == id)
@@ -656,7 +661,7 @@ namespace JudBizz
 
         private User GetExecutive(int id)
         {
-            User result = new User();
+            User result = new User(strConnection);
             foreach (User user in Bizz.Users)
             {
                 if (user.Id == id)

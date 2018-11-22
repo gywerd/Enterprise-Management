@@ -1,4 +1,5 @@
 ﻿using JudBizz;
+using JudRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace JudGui
 
         private void ButtonGeneratePdf_Click(object sender, RoutedEventArgs e)
         {
-            PdfCreator pdfCreator = new PdfCreator();
+            PdfCreator pdfCreator = new PdfCreator(Bizz.StrConnection);
             string path = pdfCreator.GenerateEnterpriseListPdf(Bizz, IndexableEnterpriseList, Bizz.Users);
             System.Diagnostics.Process.Start(path);
         }
@@ -62,7 +63,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxCaseName.Text = Bizz.TempProject.Name;
@@ -89,7 +90,7 @@ namespace JudGui
             {
                 if (enterprise.Project == Bizz.TempProject.Id)
                 {
-                    IndexableEnterprise temp = new IndexableEnterprise(i, enterprise);
+                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
                     result.Add(temp);
                 }
                 i++;
