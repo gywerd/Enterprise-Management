@@ -10,15 +10,18 @@ namespace JudRepository
     public class Builder
     {
         #region Fields
+        private static string strConnection;
+        private Executor executor;
+
         private int id;
         private string cvr;
         private string name;
-        private int address;
-        private int contactInfo;
+        private Address address;
+        private ContactInfo contactInfo;
         private string url;
 
-        private static string strConnection;
-        private Executor executor;
+        private Address CAD = new Address(strConnection);
+        private ContactInfo CCI = new ContactInfo(strConnection);
         #endregion
 
         #region Constructors
@@ -33,8 +36,8 @@ namespace JudRepository
             id = 0;
             cvr = "0";
             name = "";
-            address = 0;
-            contactInfo = 0;
+            address = new Address(strConnection);
+            contactInfo = new ContactInfo(strConnection);
             url = "";
         }
 
@@ -53,8 +56,8 @@ namespace JudRepository
             this.id = 0;
             this.cvr = cvr;
             this.name = name;
-            this.address = address;
-            this.contactInfo = contactInfo;
+            this.address = CAD.GetAddress(address);
+            this.contactInfo = CCI.GetContactInfo(contactInfo);
             this.url = url;
         }
 
@@ -63,18 +66,18 @@ namespace JudRepository
         /// </summary>
         /// <param name="id">int</param>
         /// <param name="companyName">string</param>
-        /// <param name="address">int</param>
-        /// <param name="contact">int</param>
+        /// <param name="addressId">int</param>
+        /// <param name="contactInfoId">int</param>
         /// <param name="craftGroup">int</param>
-        public Builder(string strCon, int id, string cvr, string name, int address, int contactInfo, string url)
+        public Builder(string strCon, int id, string cvr, string name, int addressId, int contactInfoId, string url)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
 
             this.id = id;
             this.name = name;
-            this.address = address;
-            this.contactInfo = contactInfo;
+            this.address = CAD.GetAddress(addressId);
+            this.contactInfo = CCI.GetContactInfo(contactInfoId);
             this.url = url;
         }
 
@@ -99,8 +102,8 @@ namespace JudRepository
             {
                 this.id = 0;
                 this.name = "";
-                this.address = 0;
-                this.contactInfo = 0;
+                this.address = new Address(strConnection);
+                this.contactInfo = new ContactInfo(strConnection);
                 this.url = "";
             }
         }
@@ -109,13 +112,17 @@ namespace JudRepository
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Returns main content as a string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
+        public Builder GetBuilder(int builderId)
         {
-            string result = name;
+            List<Builder> entities = GetBuilders();
+            Builder result = new Builder(strConnection);
+            foreach (Builder builder in entities)
+            {
+                if (builder.Id == builderId)
+                {
+                    result = builder;
+                }
+            }
             return result;
         }
 
@@ -137,6 +144,16 @@ namespace JudRepository
             return entities;
         }
 
+        /// <summary>
+        /// Returns main content as a string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string result = name;
+            return result;
+        }
+
         #endregion
 
         #region Properties
@@ -149,15 +166,11 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        cvr = value;
-                    }
+                    cvr = value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    cvr = "";
                 }
             }
         }
@@ -169,58 +182,18 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        name = value;
-                    }
+                    name = value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    name = "";
                 }
             }
         }
 
-        public int Address
-        {
-            get => address;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        address = value;
-                    }
-                }
-                catch (Exception ex)
-                {
+        public Address Address { get; set; }
 
-                    throw ex;
-                }
-            }
-        }
-
-        public int ContactInfo
-        {
-            get => contactInfo;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        contactInfo = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
+        public ContactInfo ContactInfo { get; set; }
 
         public string Url
         {
@@ -229,14 +202,10 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        url = value;
-                    }
+                   url = value;
                 }
                 catch (Exception ex)
                 {
-
                     throw ex;
                 }
             }

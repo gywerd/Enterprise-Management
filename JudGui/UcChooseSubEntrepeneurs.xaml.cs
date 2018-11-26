@@ -111,7 +111,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.strConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxName.Text = Bizz.TempProject.Name;
@@ -135,7 +135,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempEnterprise = new Enterprise(Bizz.StrConnection, temp.Id, temp.Project, temp.Name, temp.Elaboration, temp.OfferList, temp.CraftGroup1, temp.CraftGroup2, temp.CraftGroup3, temp.CraftGroup4);
+                    Bizz.TempEnterprise = new Enterprise(Bizz.strConnection, temp.Id, temp.Project.Id, temp.Name, temp.Elaboration, temp.OfferList, temp.CraftGroup1.Id, temp.CraftGroup2.Id, temp.CraftGroup3.Id, temp.CraftGroup4.Id);
                     break;
                 }
             }
@@ -156,7 +156,7 @@ namespace JudGui
                     if (temp.Index == selectedIndex)
                     {
                         Bizz.TempLegalEntity = temp;
-                        Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
+                        Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
                         Bizz.TempSubEntrepeneur.EnterpriseList = Bizz.TempEnterprise.Id;
                         Bizz.TempSubEntrepeneur.Entrepeneur = temp.Id;
                         if (!Bizz.TempSubEntrepeneur.Active)
@@ -189,7 +189,7 @@ namespace JudGui
             foreach (IndexableLegalEntity entity in ListBoxLegalEntities.SelectedItems)
             {
                 Bizz.TempLegalEntity = entity;
-                Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
+                Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
                 Bizz.TempSubEntrepeneur.EnterpriseList = Bizz.TempEnterprise.Id;
                 Bizz.TempSubEntrepeneur.Entrepeneur = entity.Id;
                 if (!Bizz.TempSubEntrepeneur.Active)
@@ -221,30 +221,30 @@ namespace JudGui
         /// <returns></returns>
         private bool CheckCraftGroups(LegalEntity entity)
         {
-            if (entity.CraftGroup1 != 0)
+            if (entity.CraftGroup1.Id != 0)
             {
-                if (entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup4)
+                if (entity.CraftGroup1.Id == Bizz.TempEnterprise.CraftGroup1.Id || entity.CraftGroup1.Id == Bizz.TempEnterprise.CraftGroup2.Id || entity.CraftGroup1.Id == Bizz.TempEnterprise.CraftGroup3.Id || entity.CraftGroup1.Id == Bizz.TempEnterprise.CraftGroup4.Id)
                 {
                     return true;
                 }
             }
-            if (entity.CraftGroup2 != 0)
+            if (entity.CraftGroup2.Id != 0)
             {
-                if (entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup4)
+                if (entity.CraftGroup2.Id == Bizz.TempEnterprise.CraftGroup1.Id || entity.CraftGroup2.Id == Bizz.TempEnterprise.CraftGroup2.Id || entity.CraftGroup2.Id == Bizz.TempEnterprise.CraftGroup3.Id || entity.CraftGroup2.Id == Bizz.TempEnterprise.CraftGroup4.Id)
                 {
                     return true;
                 }
             }
-            if (entity.CraftGroup3 != 0)
+            if (entity.CraftGroup3.Id != 0)
             {
-                if (entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup4)
+                if (entity.CraftGroup3.Id == Bizz.TempEnterprise.CraftGroup1.Id || entity.CraftGroup3.Id == Bizz.TempEnterprise.CraftGroup2.Id || entity.CraftGroup3.Id == Bizz.TempEnterprise.CraftGroup3.Id || entity.CraftGroup3.Id == Bizz.TempEnterprise.CraftGroup4.Id)
                 {
                     return true;
                 }
             }
-            if (entity.CraftGroup4 != 0)
+            if (entity.CraftGroup4.Id != 0)
             {
-                if (entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup4)
+                if (entity.CraftGroup4.Id == Bizz.TempEnterprise.CraftGroup1.Id || entity.CraftGroup4.Id == Bizz.TempEnterprise.CraftGroup2.Id || entity.CraftGroup4.Id == Bizz.TempEnterprise.CraftGroup3.Id || entity.CraftGroup4.Id == Bizz.TempEnterprise.CraftGroup4.Id)
                 {
                     return true;
                 }
@@ -257,7 +257,7 @@ namespace JudGui
         /// </summary>
         private void CreateIttLetter()
         {
-            Bizz.TempIttLetter = new IttLetter(Bizz.StrConnection);
+            Bizz.TempIttLetter = new IttLetter(Bizz.strConnection);
             int id = Bizz.CIL.CreateIttLetterInDb(Bizz.TempIttLetter);
             Bizz.TempIttLetter.SetId(id);
             Bizz.TempSubEntrepeneur.IttLetter = id;
@@ -268,7 +268,7 @@ namespace JudGui
         /// </summary>
         private void CreateOffer()
         {
-            Bizz.TempOffer = new Offer(Bizz.StrConnection);
+            Bizz.TempOffer = new Offer(Bizz.strConnection);
             int id = Bizz.COF.CreateOfferInDb(Bizz.TempOffer);
             Bizz.TempOffer.SetId(id);
             Bizz.TempSubEntrepeneur.Offer = id;
@@ -279,7 +279,7 @@ namespace JudGui
         /// </summary>
         private void CreateRequest()
         {
-            Bizz.TempRequest = new Request(Bizz.StrConnection);
+            Bizz.TempRequest = new Request(Bizz.strConnection);
             int id = Bizz.CRQ.CreateRequestInDb(Bizz.TempRequest);
             Bizz.TempRequest.SetId(id);
             Bizz.TempSubEntrepeneur.Request = id;
@@ -294,17 +294,17 @@ namespace JudGui
         {
             List<LegalEntity> tempResult = new List<LegalEntity>();
             List<IndexableLegalEntity> result = new List<IndexableLegalEntity>();
-            LegalEntity tempEntity = new LegalEntity(Bizz.StrConnection);
+            LegalEntity tempEntity = new LegalEntity(Bizz.strConnection);
             foreach (LegalEntity entity in list)
             {
-                if (entity.Region == ComboBoxArea.SelectedIndex)
+                if (entity.Region.Id == ComboBoxArea.SelectedIndex)
                 {
                     tempResult.Add(entity);
                 }
             }
             foreach (LegalEntity entity in tempResult)
             {
-                if (entity.Region != ComboBoxArea.SelectedIndex && entity.CountryWide.Equals(true))
+                if (entity.Region.Id != ComboBoxArea.SelectedIndex && entity.CountryWide.Equals(true))
                 {
                     tempResult.Add(entity);
                 }
@@ -314,7 +314,7 @@ namespace JudGui
             {
                 if (!IdExistsInSubEntrepeneurs(Bizz.TempEnterprise.Id, temp.Id))
                 {
-                    IndexableLegalEntity entity = new IndexableLegalEntity(Bizz.StrConnection, i, temp);
+                    IndexableLegalEntity entity = new IndexableLegalEntity(Bizz.strConnection, i, temp);
                     result.Add(entity);
                     i++;
                 }
@@ -366,7 +366,7 @@ namespace JudGui
         /// <returns>Contact</returns>
         private Contact GetContact()
         {
-            Contact result = new Contact(Bizz.StrConnection);
+            Contact result = new Contact(Bizz.strConnection);
             int index = ComboBoxContact.SelectedIndex;
             if (IndexableContacts.Count == 0)
             {
@@ -390,14 +390,14 @@ namespace JudGui
         private List<IndexableContact> GetIndexableContacts()
         {
             List<IndexableContact> result = new List<IndexableContact>();
-            IndexableContact iContact = new IndexableContact(Bizz.StrConnection, 0, Bizz.Contacts[0]);
+            IndexableContact iContact = new IndexableContact(Bizz.strConnection, 0, Bizz.Contacts[0]);
             result.Add(iContact);
             int i = 1;
             foreach (Contact contact in Bizz.Contacts)
             {
                 if (contact.LegalEntity == Bizz.TempLegalEntity.Id)
                 {
-                    IndexableContact temp = new IndexableContact(Bizz.StrConnection, i, contact);
+                    IndexableContact temp = new IndexableContact(Bizz.strConnection, i, contact);
                     result.Add(temp);
                     i++;
                 }
@@ -415,9 +415,9 @@ namespace JudGui
             int i = 0;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.TempProject.Id)
+                if (enterprise.Project.Id == Bizz.TempProject.Id)
                 {
-                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
+                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.strConnection, i, enterprise);
                     result.Add(temp);
                     i++;
                 }
@@ -433,7 +433,7 @@ namespace JudGui
         {
             List<LegalEntity> tempResult = new List<LegalEntity>();
             List<IndexableLegalEntity> result = new List<IndexableLegalEntity>();
-            IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.StrConnection, 0, Bizz.LegalEntities[0]);
+            IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.strConnection, 0, Bizz.LegalEntities[0]);
             result.Add(temp);
             int i = 1;
             foreach (LegalEntity entity in Bizz.LegalEntities)

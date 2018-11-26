@@ -12,9 +12,12 @@ namespace JudRepository
     public class IttLetterReceiver
     {
         #region Fields
+        private static string strConnection;
+        private Executor executor;
+
         private int id = 0;
-        private int shippingId = 0;
-        private int project = 0;
+        private IttLetterShipping shipping;
+        private Project project;
         private string companyId = "";
         private string companyName = "";
         private string attention = "";
@@ -23,8 +26,8 @@ namespace JudRepository
         private string zip = "";
         private string email = "";
 
-        private static string strConnection;
-        private Executor executor;
+        IttLetterShipping CIS = new IttLetterShipping(strConnection);
+        Project CPJ = new Project(strConnection);
 
         #endregion
 
@@ -38,7 +41,7 @@ namespace JudRepository
             executor = new Executor(strConnection);
 
             this.id = 0;
-            this.shippingId = 0;
+            this.shipping = new IttLetterShipping(strConnection);
             this.companyId = "";
             this.companyName = "";
             this.attention = "";
@@ -50,8 +53,8 @@ namespace JudRepository
         /// <summary>
         /// Constructor for adding new ITT Letter Reciver
         /// </summary>
-        /// <param name="shippingId">int</param>
-        /// <param name="project">int</param>
+        /// <param name="shipping">IttLetterShipping</param>
+        /// <param name="project">Project</param>
         /// <param name="companyId">string</param>
         /// <param name="companyName">string</param>
         /// <param name="attention">string</param>
@@ -59,13 +62,13 @@ namespace JudRepository
         /// <param name="zip">string</param>
         /// <param name="email">string</param>
         /// <param name="place">string</param>
-        public IttLetterReceiver(string strCon, int shippingId, int project, string companyId, string companyName, string attention, string street, string zip, string email, string place = "")
+        public IttLetterReceiver(string strCon, IttLetterShipping shipping, Project project, string companyId, string companyName, string attention, string street, string zip, string email, string place = "")
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
 
             this.id = 0;
-            this.shippingId = shippingId;
+            this.shipping = shipping;
             this.project = project;
             this.companyId = companyId;
             this.companyName = companyName;
@@ -81,7 +84,7 @@ namespace JudRepository
         /// </summary>
         /// <param name="id">int</param>
         /// <param name="shippingId">int</param>
-        /// <param name="project">int</param>
+        /// <param name="projectId">int</param>
         /// <param name="companyId">string</param>
         /// <param name="companyName">string</param>
         /// <param name="attention">string</param>
@@ -89,14 +92,14 @@ namespace JudRepository
         /// <param name="place">string</param>
         /// <param name="zip">string</param>
         /// <param name="email">string</param>
-        public IttLetterReceiver(string strCon, int id, int shippingId, int project, string companyId, string companyName, string attention, string street, string place, string zip, string email)
+        public IttLetterReceiver(string strCon, int id, int shippingId, int projectId, string companyId, string companyName, string attention, string street, string place, string zip, string email)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
 
             this.id = id;
-            this.shippingId = shippingId;
-            this.project = project;
+            this.shipping = CIS.GetIttLetterShipping(shippingId);
+            this.project = CPJ.GetProject(projectId);
             this.companyId = companyId;
             this.companyName = companyName;
             this.attention = attention;
@@ -118,7 +121,7 @@ namespace JudRepository
             if (receiver != null)
             {
                 this.id = receiver.Id;
-                this.shippingId = receiver.shippingId;
+                this.shipping = receiver.shipping;
                 this.project = receiver.Project;
                 this.companyId = receiver.companyId;
                 this.companyName = receiver.companyName;
@@ -131,7 +134,7 @@ namespace JudRepository
             else
             {
                 this.id = receiver.Id;
-                this.shippingId = 0;
+                this.shipping = new IttLetterShipping(strConnection);
                 this.companyId = "";
                 this.companyName = "";
                 this.attention = "";
@@ -165,10 +168,10 @@ namespace JudRepository
         public bool CreateIttLetterReceiverInDb(IttLetterReceiver receiver)
         {
             bool dbAnswer = false;
-            List<IttLetterReceiver> tempIttLetterReceivers = new List<IttLetterReceiver>();
+            //List<IttLetterReceiver> tempIttLetterReceivers = new List<IttLetterReceiver>();
             
             //INSERT INTO [dbo].[IttLetterReceivers]([ShippingId], [Project], [CompanyId], [CompanyName], [Attention], [Street], [Place], [Zip], [Email]) VALUES(<ShippingId, int,>, < Project, int,>, < CompanyId, nvarchar(255),>, < CompanyName, nvarchar(255),>, < Attention, nvarchar(50),>, < Street, nvarchar(50),>, < Place, nvarchar(50),>, < Zip, nvarchar(50),>, < Email, nvarchar(50),>)
-            string strSql = "INSERT INTO[dbo].[IttLetterReceivers]([ShippingId], [Project], [CompanyId], [CompanyName], [Attention], [Street], [Place], [Zip], [Email]) VALUES(" + receiver.ShippingId + ", " + receiver.Project + ", '" + receiver.CompanyId + "', '" + receiver.CompanyName + "', '" + receiver.Attention + "', '" + receiver.Street + "', '" + receiver.Place + "', '" + receiver.Zip + "', '" + receiver.Email + "')";
+            string strSql = "INSERT INTO[dbo].[IttLetterReceivers]([ShippingId], [Project], [CompanyId], [CompanyName], [Attention], [Street], [Place], [Zip], [Email]) VALUES(" + receiver.Shipping.Id + ", " + receiver.Project.Id + ", '" + receiver.CompanyId + "', '" + receiver.CompanyName + "', '" + receiver.Attention + "', '" + receiver.Street + "', '" + receiver.Place + "', '" + receiver.Zip + "', '" + receiver.Email + "')";
 
             dbAnswer = executor.WriteToDataBase(strSql);
             if (!dbAnswer)
@@ -183,7 +186,7 @@ namespace JudRepository
         /// </summary>
         /// <param name="receiver">IttLetterReceiver</param>
         /// <returns>string</returns>
-        private string CreateUpdateIttLetterSentSqlQuery(IttLetterReceiver letter)
+        private string CreateUpdateIttLetterReceiverSqlQuery(IttLetterReceiver letter)
         {
             //UPDATE [dbo].[IttLetterReceiver] SET [CompanyId] = <CompanyId, nvarchar(10),>, [CompanyName] = <CompanyName, nvarchar(255),>, [Attention] = <Attention, nvarchar(50),>, [Street] = <Street, nvarchar(50),>, [Place] = <Place, nvarchar(50),>, [Zip] = <Zip, nvarchar(65),>, [Email] = <Email, nvarchar(255),> WHERE [Id] = <Id, int>;
             return "UPDATE[dbo].[IttLetterReceivers] SET[CompanyId] = '" + letter.CompanyId + "', [CompanyName] = '" + letter.CompanyName + "', [Attention] = '" + letter.Attention + "', [Street] = '" + letter.street + "', [Place] = '" + letter.Place + "', [Zip] = '" + letter.Zip + "', [Email] = '" + letter.Email + "' WHERE[Id] = " + letter.Id;
@@ -201,7 +204,7 @@ namespace JudRepository
         }
 
         /// <summary>
-        /// Retrieves a list of IttLetterReceiver from Db
+        /// Retrieves the IttLetter Receiver list from Db
         /// </summary>
         /// <returns>List<IttLetterReceiver></returns>
         public List<IttLetterReceiver> GetIttLetterReceivers()
@@ -219,19 +222,37 @@ namespace JudRepository
         }
 
         /// <summary>
+        /// Retrieves an IttLetter Receiver list for project from Db
+        /// </summary>
+        /// <param name="projectId">int</param>
+        /// <returns>List<IttLetterReceiver></returns>
+        public List<IttLetterReceiver> GetIttLetterReceivers(int projectId)
+        {
+            List<IttLetterReceiver> ittLetterReceivers = GetIttLetterReceivers();
+            List<IttLetterReceiver> result = new List<IttLetterReceiver>();
+
+            foreach (IttLetterReceiver ittLetterReceiver in ittLetterReceivers)
+            {
+                if (ittLetterReceiver.Project.Id == projectId)
+                {
+                    result.Add(ittLetterReceiver);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Method, that sets id, if id == 0
         /// </summary>
         /// <param name="id">int</param>
         public void SetId(int id)
         {
-            try
+            if (int.TryParse(id.ToString(), out int parsedId) && this.id == 0 && parsedId >= 1)
             {
-                if (this.id == 0 && id >= 1)
-                {
-                    this.id = id;
-                }
+                this.id = parsedId;
             }
-            catch (Exception)
+            else
             {
                 this.id = 0;
             }
@@ -284,7 +305,7 @@ namespace JudRepository
         public bool UpdateIttLetterReceiver(IttLetterReceiver receiver)
         {
             bool result;
-            string strSql = CreateUpdateIttLetterSentSqlQuery(receiver);
+            string strSql = CreateUpdateIttLetterReceiverSqlQuery(receiver);
             result = executor.WriteToDataBase(strSql);
             return result;
         }
@@ -294,48 +315,9 @@ namespace JudRepository
         #region Properties
         public int Id { get => id; }
 
-        public int ShippingId
-        {
-            get => shippingId;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        shippingId = value;
-                    }
-                    else
-                        shippingId = 0;
-                }
-                catch (Exception)
-                {
-                    shippingId = 0;
-                }
-            }
-        }
+        public IttLetterShipping Shipping { get; set; }
 
-        public int Project
-        {
-            get => project;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        project = value;
-                    }
-                    else
-                        project = 0;
-                }
-                catch (Exception)
-                {
-                    project = 0;
-                }
-            }
-        }
-
+        public Project Project { get; set; }
         public string CompanyId
         {
             get => companyId;
@@ -343,14 +325,7 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        companyId = value;
-                    }
-                    else
-                    {
-                        companyId = "";
-                    }
+                    companyId = value;
                 }
                 catch (Exception)
                 {
@@ -366,14 +341,7 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        companyName = value;
-                    }
-                    else
-                    {
-                        companyName = "";
-                    }
+                    companyName = value;
                 }
                 catch (Exception)
                 {
@@ -389,14 +357,7 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        attention = value;
-                    }
-                    else
-                    {
-                        attention = "";
-                    }
+                    attention = value;
                 }
                 catch (Exception)
                 {
@@ -412,14 +373,7 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        street = value;
-                    }
-                    else
-                    {
-                        street = "";
-                    }
+                    street = value;
                 }
                 catch (Exception)
                 {
@@ -435,14 +389,7 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        place = value;
-                    }
-                    else
-                    {
-                        place = "";
-                    }
+                    place = value;
                 }
                 catch (Exception)
                 {
@@ -458,14 +405,7 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        zip = value;
-                    }
-                    else
-                    {
-                        zip = "";
-                    }
+                    zip = value;
                 }
                 catch (Exception)
                 {
@@ -481,14 +421,7 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        email = value;
-                    }
-                    else
-                    {
-                        email = "";
-                    }
+                    email = value;
                 }
                 catch (Exception)
                 {

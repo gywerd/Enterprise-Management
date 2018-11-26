@@ -58,6 +58,11 @@ namespace JudRepository
             this.email = email;
         }
 
+        internal ContactInfo GetContactInfo(int contactInfo)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Constructor for adding ContactPerson from Db
         /// </summary>

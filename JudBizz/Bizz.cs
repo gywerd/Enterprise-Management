@@ -17,7 +17,7 @@ namespace JudBizz
         #region Fields
 
             #region Ordinary Fields
-            private static string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=JortonSubEnt;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            public static string strConnection = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=JortonSubEnt;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             public static string macAdresss = GetMacAddress();
             public User CurrentUser = new User(strConnection);
             public Address TempAddress = new Address(strConnection);
@@ -219,8 +219,6 @@ namespace JudBizz
         #endregion
 
         #region Properties
-        public static string StrConnection { get => strConnection; }
-
         public static string MacAdresss { get => macAdresss; }
 
         #endregion

@@ -48,11 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Address.cs" />
+    <Compile Include="BluePrint.cs" />
     <Compile Include="Builder.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="Contact.cs" />
     <Compile Include="ContactInfo.cs" />
     <Compile Include="CraftGroup.cs" />
+    <Compile Include="Description.cs" />
     <Compile Include="Enterprise.cs" />
     <Compile Include="EnterpriseForm.cs" />
     <Compile Include="IndexableContact.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="IttLetterShipping.cs" />
     <Compile Include="JobDescription.cs" />
     <Compile Include="LegalEntity.cs" />
+    <Compile Include="Miscellaneous.cs" />
     <Compile Include="Offer.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="ProjectStatus.cs" />
@@ -80,6 +83,7 @@
     <Compile Include="RequestStatus.cs" />
     <Compile Include="SubEntrepeneur.cs" />
     <Compile Include="TenderForm.cs" />
+    <Compile Include="TimeSchedule.cs" />
     <Compile Include="User.cs" />
     <Compile Include="ZipTown.cs" />
   </ItemGroup>

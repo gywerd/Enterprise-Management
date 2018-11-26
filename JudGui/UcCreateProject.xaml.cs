@@ -53,7 +53,7 @@ namespace JudGui
         private void ButtonCreateClose_Click(object sender, RoutedEventArgs e)
         {
             //Code that creates a new project
-            Project project = new Project(Bizz.StrConnection, Convert.ToInt32(TextBoxCaseId.Text), TextBoxCaseName.Text, ComboBoxBuilder.SelectedIndex, 1, ComboBoxTenderForm.SelectedIndex, ComboBoxEnterpriseForm.SelectedIndex, ComboBoxExecutive.SelectedIndex);
+            Project project = new Project(Bizz.strConnection, Convert.ToInt32(TextBoxCaseId.Text), TextBoxCaseName.Text, ComboBoxBuilder.SelectedIndex, 1, ComboBoxTenderForm.SelectedIndex, ComboBoxEnterpriseForm.SelectedIndex, ComboBoxExecutive.SelectedIndex);
             bool result = Bizz.CPR.InsertIntoProject(project);
 
             if (result)
@@ -83,7 +83,7 @@ namespace JudGui
         private void ButtonCreateNew_Click(object sender, RoutedEventArgs e)
         {
             //Code that creates a new project
-            Project project = new Project(Bizz.StrConnection, Convert.ToInt32(TextBoxCaseId.Text), TextBoxCaseName.Text, ComboBoxBuilder.SelectedIndex, 1, ComboBoxTenderForm.SelectedIndex, ComboBoxEnterpriseForm.SelectedIndex, ComboBoxExecutive.SelectedIndex);
+            Project project = new Project(Bizz.strConnection, Convert.ToInt32(TextBoxCaseId.Text), TextBoxCaseName.Text, ComboBoxBuilder.SelectedIndex, 1, ComboBoxTenderForm.SelectedIndex, ComboBoxEnterpriseForm.SelectedIndex, ComboBoxExecutive.SelectedIndex);
             bool result = Bizz.CPR.InsertIntoProject(project);
 
             if (result)

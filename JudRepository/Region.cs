@@ -10,12 +10,14 @@ namespace JudRepository
     public class Region
     {
         #region Fields
-        private int id;
-        private string region;
-        private string zips;
-
         private static string strConnection;
         private Executor executor;
+
+        private int id;
+        private string regionName;
+        private string zips;
+
+        Region CRG = new Region(strConnection);
         #endregion
 
         #region Constructors
@@ -28,7 +30,7 @@ namespace JudRepository
             executor = new Executor(strConnection);
 
             this.id = 0;
-            this.region = "";
+            this.regionName = "";
             this.zips = "";
         }
 
@@ -43,7 +45,7 @@ namespace JudRepository
             executor = new Executor(strConnection);
 
             this.id = 0;
-            this.region = regionName;
+            this.regionName = regionName;
             this.zips = zips;
         }
 
@@ -59,7 +61,7 @@ namespace JudRepository
             executor = new Executor(strConnection);
 
             this.id = id;
-            this.region = regionName;
+            this.regionName = regionName;
             this.zips = zips;
         }
 
@@ -75,13 +77,13 @@ namespace JudRepository
             if (region != null)
             {
                 this.id = region.Id;
-                this.region = region.RegionName;
+                this.regionName = region.RegionName;
                 this.zips = region.Zips;
             }
             else
             {
                 this.id = 0;
-                this.region = "";
+                this.regionName = "";
                 this.zips = "";
             }
         }
@@ -89,6 +91,22 @@ namespace JudRepository
         #endregion
 
         #region Methods
+        public Region GetRegion(int regionId)
+        {
+            List<Region> regions = GetRegions();
+            Region result = new Region(strConnection);
+
+            foreach (Region region in regions)
+            {
+                if (region.Id == regionId)
+                {
+                    result = region;
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Retrieves a list of regions from Db
         /// </summary>
@@ -113,7 +131,7 @@ namespace JudRepository
         /// <returns></returns>
         public override string ToString()
         {
-            return region;
+            return regionName;
         }
 
         #endregion
@@ -121,22 +139,17 @@ namespace JudRepository
         #region Properties
         public int Id { get => id; }
 
-        public string RegionName
-        {
-            get => region;
+        public string RegionName {
+            get => regionName;
             set
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        region = value;
-                    }
+                    regionName = value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    regionName = "";
                 }
             }
         }
@@ -148,14 +161,11 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        zips = value;
-                    }
+                    zips = value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    throw ex;
+                    zips = "";
                 }
             }
         }

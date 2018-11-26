@@ -10,22 +10,27 @@ namespace JudRepository
     public class LegalEntity
     {
         #region Fields
+        private static string strConnection;
+        private Executor executor;
+
         private string id;
         private string name;
-        private int address;
-        private int contactInfo;
+        private Address address;
+        private ContactInfo contactInfo;
         private string url;
-        private int craftGroup1;
-        private int craftGroup2;
-        private int craftGroup3;
-        private int craftGroup4;
-        private int region;
+        private CraftGroup craftGroup1;
+        private CraftGroup craftGroup2;
+        private CraftGroup craftGroup3;
+        private CraftGroup craftGroup4;
+        private Region region;
         private bool countryWide;
         private bool cooperative;
         private bool active;
 
-        private static string strConnection;
-        private Executor executor;
+        Address CAD = new Address(strConnection);
+        CraftGroup CCG = new CraftGroup(strConnection);
+        ContactInfo CCI = new ContactInfo(strConnection);
+        Region CRG = new Region(strConnection);
         #endregion
 
         #region Constructors
@@ -39,14 +44,14 @@ namespace JudRepository
 
             this.id = "";
             name = "";
-            address = 0;
-            contactInfo = 0;
+            address = new Address(strConnection);
+            contactInfo = new ContactInfo(strConnection);
             url = "";
-            craftGroup1 = 0;
-            craftGroup2 = 0;
-            craftGroup3 = 0;
-            craftGroup4 = 0;
-            region = 0;
+            craftGroup1 = new CraftGroup(strConnection);
+            craftGroup2 = new CraftGroup(strConnection);
+            craftGroup3 = new CraftGroup(strConnection);
+            craftGroup4 = new CraftGroup(strConnection);
+            region = new Region(strConnection);
             countryWide = false;
             cooperative = false;
             active = false;
@@ -67,7 +72,7 @@ namespace JudRepository
         /// <param name="countryWide">bool</param>
         /// <param name="cooperative">bool</param>
         /// <param name="active"></param>
-        public LegalEntity(string strCon, string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int region, bool countryWide = false, bool cooperative = false, bool active=false)
+        public LegalEntity(string strCon, string name, Address address, ContactInfo contactInfo, string url, CraftGroup craftGroup1, CraftGroup craftGroup2, CraftGroup craftGroup3, CraftGroup craftGroup4, Region region, bool countryWide = false, bool cooperative = false, bool active=false)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
@@ -92,8 +97,8 @@ namespace JudRepository
         /// </summary>
         /// <param name="id">int</param>
         /// <param name="name">string</param>
-        /// <param name="address">int</param>
-        /// <param name="contactInfo">int</param>
+        /// <param name="addressId">int</param>
+        /// <param name="contactInfoId">int</param>
         /// <param name="url">string</param>
         /// <param name="craftGroup1">int</param>
         /// <param name="craftGroup2">int</param>
@@ -103,21 +108,21 @@ namespace JudRepository
         /// <param name="countryWide">bool</param>
         /// <param name="cooperative">bool</param>
         /// <param name="active"></param>
-        public LegalEntity(string strCon, string id, string name, int address, int contactInfo, string url, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4, int region, bool countryWide, bool cooperative, bool active)
+        public LegalEntity(string strCon, string id, string name, int addressId, int contactInfoId, string url, int craftGroup1Id, int craftGroup2Id, int craftGroup3Id, int craftGroup4Id, int regionId, bool countryWide, bool cooperative, bool active)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
 
             this.id = id;
             this.name = name;
-            this.address = address;
-            this.contactInfo = contactInfo;
+            this.address = CAD.GetAddress(addressId);
+            this.contactInfo = CCI.GetContactInfo(contactInfoId);
             this.url = url;
-            this.craftGroup1 = craftGroup1;
-            this.craftGroup2 = craftGroup2;
-            this.craftGroup3 = craftGroup3;
-            this.craftGroup4 = craftGroup4;
-            this.region = region;
+            this.craftGroup1 = CCG.GetCraftGroup(craftGroup1Id);
+            this.craftGroup2 = CCG.GetCraftGroup(craftGroup2Id);
+            this.craftGroup3 = CCG.GetCraftGroup(craftGroup3Id);
+            this.craftGroup4 = CCG.GetCraftGroup(craftGroup4Id);
+            this.region = CRG.GetRegion(regionId);
             this.countryWide = countryWide;
             this.cooperative = cooperative;
             this.active = active;
@@ -152,14 +157,14 @@ namespace JudRepository
             {
                 this.id = "";
                 name = "";
-                address = 0;
-                contactInfo = 0;
+                address = new Address(strConnection);
+                contactInfo = new ContactInfo(strConnection);
                 url = "";
-                craftGroup1 = 0;
-                craftGroup2 = 0;
-                craftGroup3 = 0;
-                craftGroup4 = 0;
-                region = 0;
+                craftGroup1 = new CraftGroup(strConnection);
+                craftGroup2 = new CraftGroup(strConnection);
+                craftGroup3 = new CraftGroup(strConnection);
+                craftGroup4 = new CraftGroup(strConnection);
+                region = new Region(strConnection);
                 countryWide = false;
                 cooperative = false;
                 active = false;
@@ -205,58 +210,17 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        name = value;
-                    }
+                    name = value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    name = "";
                 }
             }
         }
 
-        public int Address
-        {
-            get => address;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        address = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
-
-        public int ContactInfo
-        {
-            get => contactInfo;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        contactInfo = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
+        public Address Address { get; set; }
+        public ContactInfo ContactInfo { get; set; }
 
         public string Url
         {
@@ -265,119 +229,24 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value != null)
-                    {
                         url = value;
-                    }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    url = "";
                 }
             }
         }
 
-        public int CraftGroup1
-        {
-            get => craftGroup1;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        craftGroup1 = value;
-                    }
-                }
-                catch (Exception ex)
-                {
+        public CraftGroup CraftGroup1 { get; set; }
 
-                    throw ex;
-                }
-            }
-        }
+        public CraftGroup CraftGroup2 { get; set; }
 
-        public int CraftGroup2
-        {
-            get => craftGroup2;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        craftGroup2 = value;
-                    }
-                }
-                catch (Exception ex)
-                {
+        public CraftGroup CraftGroup3 { get; set; }
 
-                    throw ex;
-                }
-            }
-        }
+        public CraftGroup CraftGroup4 { get; set; }
 
-        public int CraftGroup3
-        {
-            get => craftGroup3;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        craftGroup3 = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
-
-        public int CraftGroup4
-        {
-            get => craftGroup4;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        craftGroup4 = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
-
-        public int Region
-        {
-            get => region;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        region = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
-
+        public Region Region { get; set; }
         public bool CountryWide
         {
             get => countryWide;
@@ -385,15 +254,11 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value.Equals(true) || value.Equals(false))
-                    {
-                        countryWide = value;
-                    }
+                    countryWide = value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    countryWide = false;
                 }
             }
         }
@@ -405,15 +270,11 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value.Equals(true) || value.Equals(false))
-                    {
-                        cooperative = value;
-                    }
+                    cooperative = value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    cooperative = false;
                 }
             }
         }
@@ -425,15 +286,11 @@ namespace JudRepository
             {
                 try
                 {
-                    if (value.Equals(true) || value.Equals(false))
-                    {
-                        active = value;
-                    }
+                    active = value;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    active = false;
                 }
             }
         }

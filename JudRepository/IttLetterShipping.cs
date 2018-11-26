@@ -12,14 +12,15 @@ namespace JudRepository
     public class IttLetterShipping
     {
         #region Fields
+        private static string strConnection;
+        private Executor executor;
+
         int id = 0;
-        int project = 0;
+        Project project;
         string commonPdfPath = "";
         string pdfPath = "";
 
-
-        private static string strConnection;
-        private Executor executor;
+        Project CPJ = new Project(strConnection);
 
         #endregion
 
@@ -33,7 +34,7 @@ namespace JudRepository
             executor = new Executor(strConnection);
 
             this.id = 0;
-            this.project = 0;
+            this.project = new Project(strConnection);
             this.commonPdfPath = @"PDF_Documents\";
             this.pdfPath = "";
         }
@@ -43,7 +44,7 @@ namespace JudRepository
         /// </summary>
         /// <param name="commmonPdfPath">string</param>
         /// <param name="pdfPath">string</param>
-        public IttLetterShipping(string strCon, int project, string commmonPdfPath, string pdfPath)
+        public IttLetterShipping(string strCon, Project project, string commmonPdfPath, string pdfPath)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
@@ -66,7 +67,7 @@ namespace JudRepository
             executor = new Executor(strConnection);
 
             this.id = id;
-            this.project = project;
+            this.project = CPJ.GetProject(project);
             this.commonPdfPath = commmonPdfPath;
             this.pdfPath = pdfPath;
         }
@@ -121,7 +122,7 @@ namespace JudRepository
             bool dbAnswer = false;
             List<IttLetterShipping> tempIttLetterShippingList = new List<IttLetterShipping>();
             //INSERT INTO [dbo].[IttLetterShippingList]([CommonPdfPath], [PdfPath]) VALUES(<CommonPdfPath, nvarchar(50),>, <PdfPath, nvarchar(50)>)
-            string strSql = @"INSERT INTO [dbo].[IttLetterShippingList]([Project], [CommonPdfPath], [PdfPath]) VALUES(" + shipping.Project + ", '" + shipping.CommonPdfPath + "', '" + shipping.PdfPath + "')";
+            string strSql = @"INSERT INTO [dbo].[IttLetterShippingList]([Project], [CommonPdfPath], [PdfPath]) VALUES(" + shipping.Project.Id + ", '" + shipping.CommonPdfPath + "', '" + shipping.PdfPath + "')";
             dbAnswer = executor.WriteToDataBase(strSql);
             if (!dbAnswer)
             {
@@ -159,6 +160,28 @@ namespace JudRepository
         }
 
         /// <summary>
+        /// Method, that retrieves an IttLetter Shipping
+        /// </summary>
+        /// <param name="shippingId"></param>
+        /// <returns></returns>
+        public IttLetterShipping GetIttLetterShipping(int shippingId)
+        {
+            List<IttLetterShipping> shippingList = new List<IttLetterShipping>();
+            IttLetterShipping result = new IttLetterShipping(strConnection);
+
+            foreach (IttLetterShipping shipping in shippingList)
+            {
+                if (shipping.Id == shippingId)
+                {
+                    result = shipping;
+                }
+
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Method, that retrieves a shipping id 
         /// </summary>
         /// <returns>int</returns>
@@ -193,6 +216,21 @@ namespace JudRepository
                 ittLetterShippingList.Add(ittLetterShipping);
             }
             return ittLetterShippingList;
+        }
+
+        public List<IttLetterShipping> GetIttLetterShippingList(int projectId)
+        {
+            List<IttLetterShipping> ittLetterShippingList = new List<IttLetterShipping>();
+            List<IttLetterShipping> result = new List<IttLetterShipping>();
+
+            foreach (IttLetterShipping ittLetterShipping in ittLetterShippingList)
+            {
+                if (ittLetterShipping.Project.Id == projectId)
+                {
+                    result.Add(ittLetterShipping);
+                }
+            }
+            return result;
         }
 
         /// <summary>
@@ -250,26 +288,7 @@ namespace JudRepository
         #region Properties
         public int Id { get => id; }
 
-        public int Project
-        {
-            get => project;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        project = value;
-                    }
-                    else
-                        project = 0;
-                }
-                catch (Exception)
-                {
-                    project = 0;
-                }
-            }
-        }
+        public Project Project { get; set; }
 
         public string CommonPdfPath
         {

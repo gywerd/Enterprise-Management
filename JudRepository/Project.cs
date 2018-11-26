@@ -208,6 +208,25 @@ namespace JudRepository
         }
 
         /// <summary>
+        /// Method that retrieves a Project from Db
+        /// </summary>
+        /// <param name="projectId">int</param>
+        /// <returns></returns>
+        public Project GetProject(int projectId)
+        {
+            List<Project> projects = GetProjects();
+            Project result = new Project(strConnection);
+            foreach (Project project in projects)
+            {
+                if (project.Id == projectId)
+                {
+                    result = project;
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Method that reads a Project List from Db
         /// </summary>
         /// <returns></returns>

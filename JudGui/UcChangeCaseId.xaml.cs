@@ -86,7 +86,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.strConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxName.Text = Bizz.TempProject.Name;
@@ -127,7 +127,7 @@ namespace JudGui
             {
                 if (tempProject.Status == 1)
                 {
-                    IndexableProject result = new IndexableProject(Bizz.StrConnection, i, tempProject);
+                    IndexableProject result = new IndexableProject(Bizz.strConnection, i, tempProject);
                     Bizz.ActiveProjects.Add(result);
                     i++;
                 }
@@ -143,7 +143,7 @@ namespace JudGui
             int i = 0;
             foreach (Project temp in Bizz.Projects)
             {
-                IndexableProject result = new IndexableProject(Bizz.StrConnection,i, temp);
+                IndexableProject result = new IndexableProject(Bizz.strConnection,i, temp);
                 Bizz.IndexableProjects.Add(result);
                 i++;
             }

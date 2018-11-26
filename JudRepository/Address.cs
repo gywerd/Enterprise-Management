@@ -55,6 +55,11 @@ namespace JudRepository
             this.zip = zip;
         }
 
+        internal Address GetAddress(int address)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Constructor to add address from Db to list
         /// </summary>

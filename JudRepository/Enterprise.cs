@@ -11,18 +11,21 @@ namespace JudRepository
     public class Enterprise
     {
         #region Fields
+        private static string strConnection;
+        private Executor executor;
+
         protected int id;
-        protected int project;
+        protected Project project;
         protected string name;
         protected string elaboration;
         protected string offerList;
-        protected int craftGroup1;
-        protected int craftGroup2;
-        protected int craftGroup3;
-        protected int craftGroup4;
+        protected CraftGroup craftGroup1;
+        protected CraftGroup craftGroup2;
+        protected CraftGroup craftGroup3;
+        protected CraftGroup craftGroup4;
 
-        private static string strConnection;
-        private Executor executor;
+        private Project CPJ = new Project(strConnection);
+        private CraftGroup CCG = new CraftGroup(strConnection);
 
         #endregion
 
@@ -36,14 +39,14 @@ namespace JudRepository
             executor = new Executor(strConnection);
 
             this.id = 0;
-            project = 0;
+            project = new Project(strConnection);
             name = "";
             elaboration = "";
             offerList = "";
-            craftGroup1 = 0;
-            craftGroup2 = 0;
-            craftGroup3 = 0;
-            craftGroup4 = 0;
+            craftGroup1 = new CraftGroup(strConnection);
+            craftGroup2 = new CraftGroup(strConnection);
+            craftGroup3 = new CraftGroup(strConnection);
+            craftGroup4 = new CraftGroup(strConnection);
         }
 
         /// <summary>
@@ -57,7 +60,7 @@ namespace JudRepository
         /// <param name="craftGroup2">int</param>
         /// <param name="craftGroup3">int</param>
         /// <param name="craftGroup4">int</param>
-        public Enterprise(string strCon, int project, string name, int craftGroup1, string elaboration = "", string offerList = "", int craftGroup2 = 0, int craftGroup3 = 0, int craftGroup4 = 0)
+        public Enterprise(string strCon, Project project, string name, CraftGroup craftGroup1, CraftGroup craftGroup2, CraftGroup craftGroup3, CraftGroup craftGroup4, string elaboration = "", string offerList = "")
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
@@ -77,28 +80,28 @@ namespace JudRepository
         /// Constructor for adding Enterprise from Db
         /// </summary>
         /// <param name="id">int</param>
-        /// <param name="project">int</param>
+        /// <param name="projectId">int</param>
         /// <param name="name">string</param>
         /// <param name="elaboration">string</param>
         /// <param name="offerList">string</param>
-        /// <param name="craftGroup1">int</param>
-        /// <param name="craftGroup2">int</param>
-        /// <param name="craftGroup3">int</param>
-        /// <param name="craftGroup4">int</param>
-        public Enterprise(string strCon, int id, int project, string name, string elaboration, string offerList, int craftGroup1, int craftGroup2, int craftGroup3, int craftGroup4)
+        /// <param name="craftGroup1Id">int</param>
+        /// <param name="craftGroup2Id">int</param>
+        /// <param name="craftGroup3Id">int</param>
+        /// <param name="craftGroup4Id">int</param>
+        public Enterprise(string strCon, int id, int projectId, string name, string elaboration, string offerList, int craftGroup1Id, int craftGroup2Id, int craftGroup3Id, int craftGroup4Id)
         {
             strConnection = strCon;
             executor = new Executor(strConnection);
 
             this.id = id;
-            this.project = project;
+            this.project = CPJ.GetProject(projectId);
             this.name = name;
             this.elaboration = elaboration;
             this.offerList = offerList;
-            this.craftGroup1 = craftGroup1;
-            this.craftGroup2 = craftGroup2;
-            this.craftGroup3 = craftGroup3;
-            this.craftGroup4 = craftGroup4;
+            this.craftGroup1 = CCG.GetCraftGroup(craftGroup1Id);
+            this.craftGroup2 = CCG.GetCraftGroup(craftGroup2Id);
+            this.craftGroup3 = CCG.GetCraftGroup(craftGroup3Id);
+            this.craftGroup4 = CCG.GetCraftGroup(craftGroup4Id);
         }
 
         /// <summary>
@@ -125,14 +128,14 @@ namespace JudRepository
             else
             {
                 this.id = 0;
-                this.project = 0;
+                project = new Project(strConnection);
                 this.name = "";
                 this.elaboration = "";
                 this.offerList = "";
-                this.craftGroup1 = 0;
-                this.craftGroup2 = 0;
-                this.craftGroup3 = 0;
-                this.craftGroup4 = 0;
+                craftGroup1 = new CraftGroup(strConnection);
+                craftGroup2 = new CraftGroup(strConnection);
+                craftGroup3 = new CraftGroup(strConnection);
+                craftGroup4 = new CraftGroup(strConnection);
             }
         }
 
@@ -208,6 +211,25 @@ namespace JudRepository
         }
 
         /// <summary>
+        /// Method, that reretrieves an Enterprise from Db
+        /// </summary>
+        /// <param name="enterpriseId">int</param>
+        /// <returns></returns>
+        public Enterprise GetEnterprise(int enterpriseId)
+        {
+            List<Enterprise> enterprises = new List<Enterprise>();
+            Enterprise result = new Enterprise(strConnection);
+            foreach (Enterprise enterprise in enterprises)
+            {
+                if (enterprise.Id == enterpriseId)
+                {
+                    result = enterprise ;
+                }
+            }
+            return enterprises[0];
+        }
+
+        /// <summary>
         /// Method, that reads the Enterprise List from Db
         /// </summary>
         /// <returns>List<Enterprise></returns>
@@ -223,6 +245,25 @@ namespace JudRepository
                 enterprises.Add(enterprise);
             }
             return enterprises;
+        }
+
+        /// <summary>
+        /// Method, that reads a Enterprise List for a Project from Db
+        /// </summary>
+        /// <param name="projectId">int</param>
+        /// <returns></returns>
+        public List<Enterprise> GetEnterpriseList(int projectId)
+        {
+            List<Enterprise> enterprises = GetEnterpriseList();
+            List<Enterprise> result = new List<Enterprise>();
+            foreach (Enterprise enterprise in enterprises)
+            {
+                if (enterprise.Project.Id == projectId)
+                {
+                    result.Add(enterprise);
+                }
+            }
+            return result;
         }
 
         /// <summary>
@@ -265,25 +306,7 @@ namespace JudRepository
         #region Properties
         public int Id { get => id; }
 
-        public int Project
-        {
-            get => project;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        project = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
+        public Project Project { get; set; }
 
         public string Name
         {
@@ -345,85 +368,13 @@ namespace JudRepository
             }
         }
 
-        public int CraftGroup1
-        {
-            get => craftGroup1;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        craftGroup1 = value;
-                    }
-                }
-                catch (Exception ex)
-                {
+        public CraftGroup CraftGroup1 { get; set; }
 
-                    throw ex;
-                }
-            }
-        }
+        public CraftGroup CraftGroup2 { get; set; }
 
-        public int CraftGroup2
-        {
-            get => craftGroup2;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        craftGroup2 = value;
-                    }
-                }
-                catch (Exception ex)
-                {
+        public CraftGroup CraftGroup3 { get; set; }
 
-                    throw ex;
-                }
-            }
-        }
-
-        public int CraftGroup3
-        {
-            get => craftGroup3;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        craftGroup3 = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
-
-        public int CraftGroup4
-        {
-            get => craftGroup4;
-            set
-            {
-                try
-                {
-                    if (value >= 0)
-                    {
-                        craftGroup4 = value;
-                    }
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
-            }
-        }
+        public CraftGroup CraftGroup4 { get; set; }
 
         #endregion
     }

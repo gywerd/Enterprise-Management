@@ -56,7 +56,7 @@ namespace JudGui
             {
                 bool dbAnswer = false;
                 Exception exception = new Exception();
-                Bizz.TempIttLetterBullet = new IttLetterBullet(Bizz.StrConnection, Bizz.TempIttLetterParagraph.Id, TextBoxNewBullet.Text);
+                Bizz.TempIttLetterBullet = new IttLetterBullet(Bizz.strConnection, Bizz.TempIttLetterParagraph.Id, TextBoxNewBullet.Text);
                 try
                 {
                     dbAnswer = Bizz.CIB.InsertIntoIttLetterBulletList(Bizz.TempIttLetterBullet);
@@ -121,7 +121,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.strConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxName.Text = Bizz.TempProject.Name;
@@ -142,7 +142,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempIttLetterParagraph = new IttLetterParagraph(Bizz.StrConnection, temp.Id, temp.Project, temp.Name);
+                    Bizz.TempIttLetterParagraph = new IttLetterParagraph(Bizz.strConnection, temp.Id, temp.Project, temp.Name);
                     break;
                 }
             }
@@ -170,7 +170,7 @@ namespace JudGui
             int i = 0;
             foreach (string name in names)
             {
-                IttLetterParagraph temp = new IttLetterParagraph(Bizz.StrConnection, Bizz.TempProject.Id, names[i]);
+                IttLetterParagraph temp = new IttLetterParagraph(Bizz.strConnection, Bizz.TempProject.Id, names[i]);
                 bool dbAnswer = Bizz.CIP.InsertIntoIttLetterParagraphList(temp);
                 if (!dbAnswer)
                 {
@@ -187,7 +187,7 @@ namespace JudGui
         /// <param name="id">int</param>
         private void AddShipping(int id)
         {
-            IttLetterShipping shipping = new IttLetterShipping(Bizz.StrConnection);
+            IttLetterShipping shipping = new IttLetterShipping(Bizz.strConnection);
             foreach (IttLetterShipping temp in Bizz.IttLetterShippingList)
             {
                 if (temp.Id == id)
@@ -236,13 +236,13 @@ namespace JudGui
         private void GetIndexableIttLetterBulletList()
         {
             IndexableIttLetterBulletList.Clear();
-            IndexableIttLetterBulletList.Add(new IndexableIttLetterBullet(Bizz.StrConnection, 0, Bizz.IttLetterBulletList[0]));
+            IndexableIttLetterBulletList.Add(new IndexableIttLetterBullet(Bizz.strConnection, 0, Bizz.IttLetterBulletList[0]));
             int i = 1;
             foreach (IttLetterBullet temp in Bizz.IttLetterBulletList)
             {
                 if (temp.Paragraph == Bizz.TempIttLetterParagraph.Id)
                 {
-                    IndexableIttLetterBullet other = new IndexableIttLetterBullet(Bizz.StrConnection, i, temp);
+                    IndexableIttLetterBullet other = new IndexableIttLetterBullet(Bizz.strConnection, i, temp);
                     IndexableIttLetterBulletList.Add(other);
                     i++;
                 }
@@ -255,7 +255,7 @@ namespace JudGui
         private void GetIndexableIttLetterParagraphList()
         {
             IndexableIttLetterParagraphList.Clear();
-            IndexableIttLetterParagraphList.Add(new IndexableIttLetterParagraph(Bizz.StrConnection, 0, Bizz.IttLetterParagraphList[0]));
+            IndexableIttLetterParagraphList.Add(new IndexableIttLetterParagraph(Bizz.strConnection, 0, Bizz.IttLetterParagraphList[0]));
             if (!ParagraphsExist())
             {
                 AddParagraphs();
@@ -265,7 +265,7 @@ namespace JudGui
             {
                 if (temp.Project == Bizz.TempProject.Id)
                 {
-                    IndexableIttLetterParagraph other = new IndexableIttLetterParagraph(Bizz.StrConnection, i, temp);
+                    IndexableIttLetterParagraph other = new IndexableIttLetterParagraph(Bizz.strConnection, i, temp);
                     IndexableIttLetterParagraphList.Add(other);
                     i++;
                 }
@@ -278,7 +278,7 @@ namespace JudGui
         private void GetIndexableLegalEntities()
         {
             List<LegalEntity> tempResult = new List<LegalEntity>();
-            IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.StrConnection, 0, Bizz.LegalEntities[0]);
+            IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.strConnection, 0, Bizz.LegalEntities[0]);
             IndexableLegalEntities.Clear();
             IndexableLegalEntities.Add(temp);
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
@@ -294,7 +294,7 @@ namespace JudGui
             int i = 1;
             foreach (LegalEntity sub in tempResult)
             {
-                temp = new IndexableLegalEntity(Bizz.StrConnection, i, sub);
+                temp = new IndexableLegalEntity(Bizz.strConnection, i, sub);
                 IndexableLegalEntities.Add(temp);
                 i++;
             }
@@ -314,7 +314,7 @@ namespace JudGui
             ShippingList.Clear();
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.TempProject.Id)
+                if (enterprise.Project.Id == Bizz.TempProject.Id)
                 {
                     foreach (SubEntrepeneur sub in Bizz.SubEntrepeneurs)
                     {
@@ -328,7 +328,7 @@ namespace JudGui
                             {
                                 foreach (IttLetterReceiver receiver in Bizz.IttLetterReceivers)
                                 {
-                                    if (receiver.CompanyId == sub.Entrepeneur && receiver.Project == Bizz.TempProject.Id)
+                                    if (receiver.CompanyId == sub.Entrepeneur && receiver.Project.Id == Bizz.TempProject.Id)
                                     {
                                         IttLetterReceivers.Add(receiver);
                                         AddShipping(receiver.Id);

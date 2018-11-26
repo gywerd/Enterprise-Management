@@ -27,6 +27,9 @@ namespace JudGui
         public UserControl UcRight;
         public List<Enterprise> IndexableEnterpriseList = new List<Enterprise>();
 
+        public static string strConnection = Bizz.strConnection;
+        CraftGroup CCG = new CraftGroup(strConnection);
+
         #endregion
 
         public UcEditEnterpriseList(Bizz bizz, UserControl ucRight)
@@ -54,7 +57,7 @@ namespace JudGui
         {
             //Code that deletes a project from Db
             bool result = Bizz.CEP.DeleteFromEnterpriseList(Bizz.TempEnterprise.Id);
-            Bizz.TempEnterprise = new Enterprise(Bizz.StrConnection);
+            Bizz.TempEnterprise = new Enterprise(Bizz.strConnection);
 
             if (result)
             {
@@ -126,7 +129,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.strConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             IndexableEnterpriseList = GetIndexableEnterpriseList();
@@ -135,35 +138,35 @@ namespace JudGui
 
         private void ComboBoxCraftGroup1_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.TempEnterprise.CraftGroup1 = ComboBoxCraftGroup1.SelectedIndex;
+            Bizz.TempEnterprise.CraftGroup1 = CCG.GetCraftGroup(ComboBoxCraftGroup1.SelectedIndex);
         }
 
         private void ComboBoxCraftGroup2_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.TempEnterprise.CraftGroup2 = ComboBoxCraftGroup2.SelectedIndex;
+            Bizz.TempEnterprise.CraftGroup2 = CCG.GetCraftGroup(ComboBoxCraftGroup2.SelectedIndex);
         }
 
         private void ComboBoxCraftGroup3_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.TempEnterprise.CraftGroup3 = ComboBoxCraftGroup3.SelectedIndex;
+            Bizz.TempEnterprise.CraftGroup3 = CCG.GetCraftGroup(ComboBoxCraftGroup3.SelectedIndex);
         }
 
         private void ComboBoxCraftGroup4_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Bizz.TempEnterprise.CraftGroup4 = ComboBoxCraftGroup4.SelectedIndex;
+            Bizz.TempEnterprise.CraftGroup4 = CCG.GetCraftGroup(ComboBoxCraftGroup4.SelectedIndex);
         }
 
         private void ListBoxEnterpriseList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Enterprise temp = new Enterprise(Bizz.StrConnection, (Enterprise)ListBoxEnterpriseList.SelectedItem);
+            Enterprise temp = new Enterprise(Bizz.strConnection, (Enterprise)ListBoxEnterpriseList.SelectedItem);
             Bizz.TempEnterprise = temp;
             TextBoxName.Text = temp.Name;
             TextBoxElaboration.Text = temp.Elaboration;
             TextBoxOfferList.Text = temp.OfferList;
-            ComboBoxCraftGroup1.SelectedIndex = temp.CraftGroup1;
-            ComboBoxCraftGroup2.SelectedIndex = temp.CraftGroup2;
-            ComboBoxCraftGroup3.SelectedIndex = temp.CraftGroup3;
-            ComboBoxCraftGroup4.SelectedIndex = temp.CraftGroup4;
+            ComboBoxCraftGroup1.SelectedIndex = temp.CraftGroup1.Id;
+            ComboBoxCraftGroup2.SelectedIndex = temp.CraftGroup2.Id;
+            ComboBoxCraftGroup3.SelectedIndex = temp.CraftGroup3.Id;
+            ComboBoxCraftGroup4.SelectedIndex = temp.CraftGroup4.Id;
         }
 
         private void TextBoxName_TextChanged(object sender, TextChangedEventArgs e)
@@ -235,9 +238,9 @@ namespace JudGui
             int i = 0;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.TempProject.Id)
+                if (enterprise.Project.Id == Bizz.TempProject.Id)
                 {
-                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
+                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.strConnection, i, enterprise);
                     result.Add(temp);
                 }
                 i++;

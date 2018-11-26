@@ -161,6 +161,9 @@
     <Compile Include="UcIttLettersPrepareCommonLetter.xaml.cs">
       <DependentUpon>UcIttLettersPrepareCommonLetter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UcIttLettersPreparePersonalLetters.xaml.cs">
+      <DependentUpon>UcIttLettersPreparePersonalLetters.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UcJobDescritions.xaml.cs">
       <DependentUpon>UcJobDescritions.xaml</DependentUpon>
     </Compile>
@@ -342,6 +345,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UcIttLettersPrepareCommonLetter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UcIttLettersPreparePersonalLetters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

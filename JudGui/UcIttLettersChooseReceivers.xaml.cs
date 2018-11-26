@@ -26,7 +26,7 @@ namespace JudGui
         public Bizz Bizz;
         public bool result;
         public UserControl UcRight;
-        public IttLetterShipping Shipping = new IttLetterShipping(Bizz.StrConnection);
+        public IttLetterShipping Shipping = new IttLetterShipping(Bizz.strConnection);
         public List<Contact> ProjectContacts = new List<Contact>();
         public List<Enterprise> ProjectEnterpriseList = new List<Enterprise>();
         public List<IndexableLegalEntity> IndexableLegalEntities = new List<IndexableLegalEntity>();
@@ -77,7 +77,7 @@ namespace JudGui
                 //Update lists and fields
                 Bizz.UpdateIttLetterReceivers();
                 Bizz.UpdateIttLetterShippingList();
-                Shipping = new IttLetterShipping(Bizz.StrConnection);
+                Shipping = new IttLetterShipping(Bizz.strConnection);
             }
             else
             {
@@ -118,7 +118,7 @@ namespace JudGui
                 {
                     if (temp.Index == selectedIndex)
                     {
-                        Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                        Bizz.TempProject = new Project(Bizz.strConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                         break;
                     }
                 }
@@ -237,20 +237,20 @@ namespace JudGui
         private IttLetterReceiver FillIttLetterReceiver(IndexableLegalEntity entity)
         {
             GetIttLetterShipping();
-            int shippingId = Shipping.Id;
-            int project = Shipping.Project;
+            IttLetterShipping shipping = Shipping;
+            Project project = Shipping.Project;
             string companyId = entity.Id;
             string companyName = entity.Name;
             Contact contact = GetContact(entity.Id);
             string attention = contact.Name;
-            Address address = GetAddress(entity.Address);
+            Address address = GetAddress(entity.Address.Id);
             string street = address.Street;
             string place = address.Place;
             ZipTown zipTown = address.GetZipTown(address.Zip);
             string zip = zipTown.ToString();
             string email = GetContactEmail(contact.ContactInfo);
 
-            IttLetterReceiver result = new IttLetterReceiver(Bizz.StrConnection, shippingId, project, companyId, companyName, attention, street, zip, email, place);
+            IttLetterReceiver result = new IttLetterReceiver(Bizz.strConnection, shipping, project, companyId, companyName, attention, street, zip, email, place);
 
             return result;
 
@@ -275,7 +275,7 @@ namespace JudGui
         /// <returns>Address</returns>
         private Address GetAddress(int id)
         {
-            Address result = new Address(Bizz.StrConnection);
+            Address result = new Address(Bizz.strConnection);
             foreach (Address temp in Bizz.Addresses)
             {
                 if (temp.Id == id)
@@ -306,7 +306,7 @@ namespace JudGui
         /// <returns>Contact</returns>
         private Contact GetContactFromList(int id)
         {
-            Contact result = new Contact(Bizz.StrConnection);
+            Contact result = new Contact(Bizz.strConnection);
             foreach (Contact contact in Bizz.Contacts)
             {
                 if (contact.Id == id)
@@ -347,7 +347,7 @@ namespace JudGui
             int i = 0;
             foreach (Enterprise enterprise in ProjectEnterpriseList)
             {
-                IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
+                IndexableEnterprise temp = new IndexableEnterprise(Bizz.strConnection, i, enterprise);
                 result.Add(temp);
                 i++;
             }
@@ -385,7 +385,7 @@ namespace JudGui
                 bool result = CheckEntityIttLetterReceivers(entity);
                 if (!result)
                 {
-                    IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.StrConnection, i, entity);
+                    IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.strConnection, i, entity);
                     IndexableLegalEntities.Add(temp);
                     i++;
                 }
@@ -400,7 +400,7 @@ namespace JudGui
         /// <returns></returns>
         private void GetIttLetterShipping()
         {
-            Shipping = new IttLetterShipping(Bizz.StrConnection, Bizz.TempProject.Id, @"PDF_Documents\", Bizz.MacAdresss);
+            Shipping = new IttLetterShipping(Bizz.strConnection, Bizz.TempProject, @"PDF_Documents\", Bizz.MacAdresss);
             try
             {
                 int id = Bizz.CIS.CreateIttLetterShippingInDb(Bizz.MacAdresss, Bizz.IttLetterShippingList, Shipping);
@@ -424,7 +424,7 @@ namespace JudGui
             ProjectSubEntrepeneurs.Clear();
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.TempProject.Id)
+                if (enterprise.Project.Id == Bizz.TempProject.Id)
                 {
                     ProjectEnterpriseList.Add(enterprise);
                     foreach (SubEntrepeneur sub in Bizz.SubEntrepeneurs)
@@ -440,7 +440,7 @@ namespace JudGui
 
         private SubEntrepeneur GetSubEntrepeneur(string entrepeneur)
         {
-            SubEntrepeneur tempSub = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
+            SubEntrepeneur tempSub = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
             foreach (SubEntrepeneur sub in ProjectSubEntrepeneurs)
             {
                 if (sub.Entrepeneur == entrepeneur)

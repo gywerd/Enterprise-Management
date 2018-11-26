@@ -107,6 +107,26 @@ namespace JudRepository
 
         #region Methods
         /// <summary>
+        /// Method, that reretrieves a CraftGroup from Db 
+        /// </summary>
+        /// <param name="craftGroupIid">int</param>
+        /// <returns></returns>
+        public CraftGroup GetCraftGroup(int craftGroupIid)
+        {
+            List<CraftGroup> craftGroups = GetCraftGroups();
+            CraftGroup result = new CraftGroup(strConnection);
+            foreach (CraftGroup craftGroup in craftGroups)
+            {
+                if (craftGroup.Id == craftGroupIid)
+                {
+                    result = craftGroup;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Method, that reads a List of CraftGroups from Db
         /// </summary>
         /// <returns>List<CraftGroup></returns>

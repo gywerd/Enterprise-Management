@@ -63,7 +63,7 @@ namespace JudGui
                 return;
             }
             string path = "";
-            PdfCreator pdfCreator = new PdfCreator(Bizz.StrConnection);
+            PdfCreator pdfCreator = new PdfCreator(Bizz.strConnection);
             if (RadioButtonShowAll.IsChecked.Value)
             {
                 path = pdfCreator.GenerateSubEntrepeneursPdf(Bizz, IndexableEnterpriseList, IndexableSubEntrepeneurs, Bizz.Users);
@@ -97,7 +97,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.strConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                 }
             }
             TextBoxCaseName.Text = Bizz.TempProject.Name;
@@ -244,9 +244,9 @@ namespace JudGui
             int i = 0;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.TempProject.Id)
+                if (enterprise.Project.Id == Bizz.TempProject.Id)
                 {
-                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
+                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.strConnection, i, enterprise);
                     result.Add(temp);
                     EnterpriseIds.Add(temp.Id);
                 }
@@ -269,7 +269,7 @@ namespace JudGui
                 {
                     if (entrepeneur.EnterpriseList == id)
                     {
-                        IndexableSubEntrepeneur temp = new IndexableSubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities, i, entrepeneur);
+                        IndexableSubEntrepeneur temp = new IndexableSubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities, i, entrepeneur);
                         result.Add(temp);
                     }
                     i++;

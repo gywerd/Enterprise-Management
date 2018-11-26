@@ -102,7 +102,7 @@ namespace JudBizz
             //Add body
             foreach (Enterprise temp in list)
             {
-                if (temp.Project == project.Id)
+                if (temp.Project.Id == project.Id)
                 {
                     AddCellToBodyLeft(tableLayout, temp.Name);
                     AddCellToBodyLeft(tableLayout, temp.Elaboration);
@@ -295,7 +295,7 @@ namespace JudBizz
             //Add body
             foreach (Enterprise temp in enterpriseList)
             {
-                if (temp.Project == project.Id)
+                if (temp.Project.Id == project.Id)
                 {
                     tableLayout.AddCell(new PdfPCell(new Phrase(temp.Name, new Font(Font.FontFamily.HELVETICA, 10, 1, iTextSharp.text.BaseColor.BLACK))) { Colspan = 9, HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = iTextSharp.text.BaseColor.WHITE });
                     foreach (IndexableSubEntrepeneur tempSub in entrepeneurList)
@@ -365,7 +365,7 @@ namespace JudBizz
             //Add body
             foreach (Enterprise temp in enterpriseList)
             {
-                if (temp.Project == project.Id)
+                if (temp.Project.Id == project.Id)
                 {
                     tableLayout.AddCell(new PdfPCell(new Phrase(temp.Name, new Font(Font.FontFamily.HELVETICA, 10, 1, iTextSharp.text.BaseColor.BLACK))) { Colspan = 9, HorizontalAlignment = Element.ALIGN_LEFT, Padding = 5, BackgroundColor = iTextSharp.text.BaseColor.WHITE });
                     foreach (IndexableSubEntrepeneur tempSub in entrepeneurList)
@@ -602,15 +602,15 @@ namespace JudBizz
 
         private string GetCompleteSetDescriptionLine()
         {
-            string result = "• " + letterData.CompleteSetDescriptions[0] + "\n";
-            if (letterData.CompleteSetDescriptions.Count > 1)
+            string result = "• " + letterData.DescriptionList[0] + "\n";
+            if (letterData.DescriptionList.Count > 1)
             {
-                int iMax = letterData.CompleteSetDescriptions.Count - 1;
+                int iMax = letterData.DescriptionList.Count - 1;
                 for (int i = 1; i < iMax; i++)
                 {
-                    result += "• " + letterData.CompleteSetDescriptions[i] + "\n";
+                    result += "• " + letterData.DescriptionList[i] + "\n";
                 }
-                result += "• " + letterData.CompleteSetDescriptions[iMax] + "\n";
+                result += "• " + letterData.DescriptionList[iMax] + "\n";
             }
             return result;
         }
@@ -707,15 +707,15 @@ namespace JudBizz
 
         private string GetMiscellaneusLine()
         {
-            string result = "• " + letterData.Miscellaneus[0] + "\n";
-            if (letterData.Miscellaneus.Count > 1)
+            string result = "• " + letterData.Miscellaneous[0] + "\n";
+            if (letterData.Miscellaneous.Count > 1)
             {
-                int iMax = letterData.Miscellaneus.Count - 1;
+                int iMax = letterData.Miscellaneous.Count - 1;
                 for (int i = 1; i < iMax; i++)
                 {
-                    result += "• " + letterData.Miscellaneus[i] + "\n";
+                    result += "• " + letterData.Miscellaneous[i] + "\n";
                 }
-                result += "• " + letterData.Miscellaneus[iMax] + "\n";
+                result += "• " + letterData.Miscellaneous[iMax] + "\n";
             }
             return result;
         }
@@ -766,15 +766,15 @@ namespace JudBizz
 
         private string GetProjectDocumentsLine()
         {
-            string result = "• " + letterData.ProjectDocuments[0] + "\n";
-            if (letterData.ProjectDocuments.Count > 1)
+            string result = "• " + letterData.IttLetterReceivers[0] + "\n";
+            if (letterData.IttLetterReceivers.Count > 1)
             {
-                int iMax = letterData.ProjectDocuments.Count - 1;
+                int iMax = letterData.IttLetterReceivers.Count - 1;
                 for (int i = 1; i < iMax; i++)
                 {
-                    result += "• " + letterData.ProjectDocuments[i] + "\n";
+                    result += "• " + letterData.IttLetterReceivers[i] + "\n";
                 }
-                result += "• " + letterData.ProjectDocuments[iMax] + "\n";
+                result += "• " + letterData.IttLetterReceivers[iMax] + "\n";
             }
             return result;
         }

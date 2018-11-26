@@ -74,7 +74,7 @@ namespace JudGui
             {
                 if (temp.Index == selectedIndex)
                 {
-                    Bizz.TempProject = new Project(Bizz.StrConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
+                    Bizz.TempProject = new Project(Bizz.strConnection, temp.Id, temp.CaseId, temp.Name, temp.Builder, temp.Status, temp.TenderForm, temp.EnterpriseForm, temp.Executive, temp.EnterpriseList, temp.Copy);
                     break;
                 }
             }
@@ -126,7 +126,7 @@ namespace JudGui
             }
             else
             {
-                Bizz.TempContact = new Contact(Bizz.StrConnection);
+                Bizz.TempContact = new Contact(Bizz.strConnection);
             }
         }
 
@@ -146,7 +146,7 @@ namespace JudGui
                 {
                     if (temp.Index == selectedIndex)
                     {
-                        Bizz.TempEnterprise = new Enterprise(Bizz.StrConnection, temp.Id, temp.Project, temp.Name, temp.Elaboration, temp.OfferList, temp.CraftGroup1, temp.CraftGroup2, temp.CraftGroup3, temp.CraftGroup4);
+                        Bizz.TempEnterprise = new Enterprise(Bizz.strConnection, temp.Id, temp.Project.Id, temp.Name, temp.Elaboration, temp.OfferList, temp.CraftGroup1.Id, temp.CraftGroup2.Id, temp.CraftGroup3.Id, temp.CraftGroup4.Id);
                         break;
                     }
                 }
@@ -187,7 +187,7 @@ namespace JudGui
                 else
                 {
                     ComboBoxRequest.SelectedIndex = -1;
-                    Bizz.TempRequest = new Request(Bizz.StrConnection);
+                    Bizz.TempRequest = new Request(Bizz.strConnection);
                     DateTime date = DateTime.Now;
                     DateRequest.DisplayDate = date;
                     DateRequest.Text = "";
@@ -365,7 +365,7 @@ namespace JudGui
                 int selectedIndex = ListBoxSubEntrepeneurs.SelectedIndex;
                 if (selectedIndex == -1)
                 {
-                    Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
+                    Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
                     TextBoxEntrepeneur.Text = "";
                     TextBoxOfferPrice.Text = "";
                     ResetComboBoxes();
@@ -379,7 +379,7 @@ namespace JudGui
                     ResetComboBoxes();
                     ResetRadioButtons();
                     OverrideControl = false;
-                    Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
+                    Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
                     IndexableSubEntrepeneurs.Clear();
                     IndexableSubEntrepeneurs = GetIndexableSubEntrepeneurs();
                     //ListBoxSubEntrepeneurs.ItemsSource = null;
@@ -855,28 +855,28 @@ namespace JudGui
         /// <returns>bool</returns>
         private bool CheckCraftGroups(LegalEntity entity)
         {
-            if (entity.CraftGroup4 != 0)
+            if (entity.CraftGroup4.Id != 0)
             {
                 if (entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup4 == Bizz.TempEnterprise.CraftGroup4)
                 {
                     return true;
                 }
             }
-            else if (entity.CraftGroup3 != 0)
+            else if (entity.CraftGroup3.Id != 0)
             {
                 if (entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup3 == Bizz.TempEnterprise.CraftGroup4)
                 {
                     return true;
                 }
             }
-            else if (entity.CraftGroup2 != 0)
+            else if (entity.CraftGroup2.Id != 0)
             {
                 if (entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup2 == Bizz.TempEnterprise.CraftGroup4)
                 {
                     return true;
                 }
             }
-            else if (entity.CraftGroup1 != 0)
+            else if (entity.CraftGroup1.Id != 0)
             {
                 if (entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup1 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup2 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup3 || entity.CraftGroup1 == Bizz.TempEnterprise.CraftGroup4)
                 {
@@ -903,11 +903,11 @@ namespace JudGui
             switch (type)
             {
                 case "JudBizz.IttLetter":
-                    IttLetter tempIttLetter = new IttLetter(Bizz.StrConnection, (IttLetter)temp);
+                    IttLetter tempIttLetter = new IttLetter(Bizz.strConnection, (IttLetter)temp);
                     tempDate = Convert.ToDateTime(tempIttLetter.SentDate);
                     break;
                 case "JudBizz.Offer":
-                    Offer tempOffer = new Offer(Bizz.StrConnection, (Offer)temp);
+                    Offer tempOffer = new Offer(Bizz.strConnection, (Offer)temp);
                     tempDate = Convert.ToDateTime(tempOffer.ReceivedDate);
                     break;
             }
@@ -1233,7 +1233,7 @@ namespace JudGui
         private bool CheckTempSubEntrepeneur()
         {
             bool result = false;
-            SubEntrepeneur temp = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
+            SubEntrepeneur temp = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
             if (Bizz.TempSubEntrepeneur != temp)
             {
                 result = true;
@@ -1246,11 +1246,11 @@ namespace JudGui
         /// </summary>
         private void ClearTempEntities()
         {
-            Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities);
-            Bizz.TempContact = new Contact(Bizz.StrConnection);
-            Bizz.TempRequest = new Request(Bizz.StrConnection);
-            Bizz.TempIttLetter = new IttLetter(Bizz.StrConnection);
-            Bizz.TempOffer = new Offer(Bizz.StrConnection);
+            Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities);
+            Bizz.TempContact = new Contact(Bizz.strConnection);
+            Bizz.TempRequest = new Request(Bizz.strConnection);
+            Bizz.TempIttLetter = new IttLetter(Bizz.strConnection);
+            Bizz.TempOffer = new Offer(Bizz.strConnection);
         }
 
         /// <summary>
@@ -1276,21 +1276,21 @@ namespace JudGui
                 if (!IdExistsInSubEntrepeneurs(Bizz.TempEnterprise.Id, temp.Id))
                 {
                     LegalEntity legalEntity = new LegalEntity(temp.Id, temp.Name, temp.Address, temp.ContactInfo, temp.Url, temp.CraftGroup1, temp.CraftGroup2, temp.CraftGroup3, temp.CraftGroup4, temp.Region, temp.CountryWide, temp.Cooperative, temp.Active);
-                    IndexableLegalEntity entity = new IndexableLegalEntity(Bizz.StrConnection, i, legalEntity);
+                    IndexableLegalEntity entity = new IndexableLegalEntity(Bizz.strConnection, i, legalEntity);
                     tempResult.Add(entity);
                 }
             }
-            int region = tempResult[1].Region;
+            int regionId = tempResult[1].Region.Id;
             foreach (IndexableLegalEntity entity in tempResult)
             {
-                if (entity.Region == region)
+                if (entity.Region.Id == regionId)
                 {
                     result.Add(entity);
                 }
             }
             foreach (IndexableLegalEntity entity in tempResult)
             {
-                if (entity.Region != region && entity.CountryWide.Equals(true))
+                if (entity.Region.Id != regionId && entity.CountryWide.Equals(true))
                 {
                     result.Add(entity);
                 }
@@ -1300,7 +1300,7 @@ namespace JudGui
 
         private IttLetter GetBizzTempIttLetter()
         {
-            IttLetter result = new IttLetter(Bizz.StrConnection);
+            IttLetter result = new IttLetter(Bizz.strConnection);
             Bizz.IttLetters.Clear();
             Bizz.IttLetters = Bizz.CIL.GetIttLetters();
             foreach (IttLetter tempIttLetter in Bizz.IttLetters)
@@ -1316,7 +1316,7 @@ namespace JudGui
 
         private Offer GetBizzTempOffer()
         {
-            Offer result = new Offer(Bizz.StrConnection);
+            Offer result = new Offer(Bizz.strConnection);
             Bizz.Offers.Clear();
             Bizz.Offers = Bizz.COF.GetOffers();
             foreach (Offer tempOffer in Bizz.Offers)
@@ -1332,7 +1332,7 @@ namespace JudGui
 
         private Request GetBizzTempRequest()
         {
-            Request result = new Request(Bizz.StrConnection);
+            Request result = new Request(Bizz.strConnection);
             Bizz.Requests.Clear();
             Bizz.Requests = Bizz.CRQ.GetRequests();
             foreach (Request tempRequest in Bizz.Requests)
@@ -1353,7 +1353,7 @@ namespace JudGui
         {
             List<IndexableContact> result = new List<IndexableContact>();
             string id = Bizz.TempSubEntrepeneur.Entrepeneur;
-            IndexableContact notSpecified = new IndexableContact(Bizz.StrConnection, 0, Bizz.Contacts[0]);
+            IndexableContact notSpecified = new IndexableContact(Bizz.strConnection, 0, Bizz.Contacts[0]);
             result.Add(notSpecified);
             int i = 1;
             Bizz.Contacts.Clear();
@@ -1363,7 +1363,7 @@ namespace JudGui
             {
                 if (contact.LegalEntity == id)
                 {
-                    IndexableContact temp = new IndexableContact(Bizz.StrConnection, i, contact);
+                    IndexableContact temp = new IndexableContact(Bizz.strConnection, i, contact);
                     result.Add(temp);
                     i++;
                 }
@@ -1378,14 +1378,14 @@ namespace JudGui
         private List<Enterprise> GetIndexableEnterpriseList()
         {
             List<Enterprise> result = new List<Enterprise>();
-            Enterprise notSpecified = new IndexableEnterprise(Bizz.StrConnection, 0, Bizz.EnterpriseList[0]);
+            Enterprise notSpecified = new IndexableEnterprise(Bizz.strConnection, 0, Bizz.EnterpriseList[0]);
             result.Add(notSpecified);
             int i = 1;
             foreach (Enterprise enterprise in Bizz.EnterpriseList)
             {
-                if (enterprise.Project == Bizz.TempProject.Id)
+                if (enterprise.Project.Id == Bizz.TempProject.Id)
                 {
-                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.StrConnection, i, enterprise);
+                    IndexableEnterprise temp = new IndexableEnterprise(Bizz.strConnection, i, enterprise);
                     result.Add(temp);
                     i++;
                 }
@@ -1400,14 +1400,14 @@ namespace JudGui
         private List<IndexableLegalEntity> GetIndexableLegalEntities()
         {
             List<IndexableLegalEntity> result = new List<IndexableLegalEntity>();
-            IndexableLegalEntity notSpecified = new IndexableLegalEntity(Bizz.StrConnection, 0, Bizz.LegalEntities[0]);
+            IndexableLegalEntity notSpecified = new IndexableLegalEntity(Bizz.strConnection, 0, Bizz.LegalEntities[0]);
             result.Add(notSpecified);
             int i = 1;
             foreach (LegalEntity entity in Bizz.LegalEntities)
             {
                 if (CheckCraftGroups(entity))
                 {
-                    IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.StrConnection, i, entity);
+                    IndexableLegalEntity temp = new IndexableLegalEntity(Bizz.strConnection, i, entity);
                     result.Add(temp);
                     i++;
                 }
@@ -1429,7 +1429,7 @@ namespace JudGui
             {
                 if (subEntrepeneur.EnterpriseList == id)
                 {
-                    IndexableSubEntrepeneur temp = new IndexableSubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities, i, subEntrepeneur);
+                    IndexableSubEntrepeneur temp = new IndexableSubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities, i, subEntrepeneur);
                     result.Add(temp);
                     i++;
                 }
@@ -1516,7 +1516,7 @@ namespace JudGui
         /// <returns>Request</returns>
         private Request GetSelectedRequest(int id)
         {
-            Request result = new Request(Bizz.StrConnection);
+            Request result = new Request(Bizz.strConnection);
             foreach (Request temp in Bizz.Requests)
             {
                 try
@@ -1610,12 +1610,12 @@ namespace JudGui
         {
             ComboBoxContact.SelectedIndex = -1;
             ComboBoxContact.ItemsSource = null;
-            Bizz.TempContact = new Contact(Bizz.StrConnection);
+            Bizz.TempContact = new Contact(Bizz.strConnection);
             ComboBoxRequest.SelectedIndex = -1;
             ComboBoxRequest.ItemsSource = Bizz.RequestStatusList;
             DateRequest.DisplayDate = DateTime.Now;
             DateRequest.Text = "";
-            Bizz.TempRequest = new Request(Bizz.StrConnection);
+            Bizz.TempRequest = new Request(Bizz.strConnection);
         }
 
         /// <summary>
@@ -1667,7 +1667,7 @@ namespace JudGui
         /// </summary>
         private void ResetRadioButtonsIttLetterSent()
         {
-            Bizz.TempIttLetter = new IttLetter(Bizz.StrConnection);
+            Bizz.TempIttLetter = new IttLetter(Bizz.strConnection);
             DateIttLetter.DisplayDate = DateTime.Now;
             DateIttLetter.Text = "";
             RadioButtonIttLetterSentYes.IsChecked = false;
@@ -1688,7 +1688,7 @@ namespace JudGui
         /// </summary>
         private void ResetRadioButtonsOfferReceived()
         {
-            Bizz.TempOffer = new Offer(Bizz.StrConnection);
+            Bizz.TempOffer = new Offer(Bizz.strConnection);
             DateOffer.DisplayDate = DateTime.Now;
             DateOffer.Text = "";
             RadioButtonOfferReceivedYes.IsChecked = false;
@@ -1759,7 +1759,7 @@ namespace JudGui
         {
             try
             {
-                IttLetter tempIttLetter = new IttLetter(Bizz.StrConnection);
+                IttLetter tempIttLetter = new IttLetter(Bizz.strConnection);
                 if (Bizz.TempIttLetter == tempIttLetter && Bizz.TempSubEntrepeneur.IttLetter != 0)
                 {
                     foreach (IttLetter temp in Bizz.IttLetters)
@@ -1774,7 +1774,7 @@ namespace JudGui
             }
             catch (Exception)
             {
-                Bizz.TempIttLetter = new IttLetter(Bizz.StrConnection);
+                Bizz.TempIttLetter = new IttLetter(Bizz.strConnection);
             }
         }
 
@@ -1786,7 +1786,7 @@ namespace JudGui
         {
             try
             {
-                Offer tempOffer = new Offer(Bizz.StrConnection);
+                Offer tempOffer = new Offer(Bizz.strConnection);
                 if (Bizz.TempOffer == tempOffer && Bizz.TempSubEntrepeneur.IttLetter != 0)
                 {
                     foreach (Offer temp in Bizz.Offers)
@@ -1800,7 +1800,7 @@ namespace JudGui
             }
             catch (Exception)
             {
-                Bizz.TempOffer = new Offer(Bizz.StrConnection);
+                Bizz.TempOffer = new Offer(Bizz.strConnection);
             }
         }
 
@@ -1810,7 +1810,7 @@ namespace JudGui
         private void SetBizzTempSubEntrepeneur(int index)
         {
             IndexableSubEntrepeneur temp = IndexableSubEntrepeneurs[index];
-            Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.StrConnection, Bizz.LegalEntities, temp.Id, temp.EnterpriseList, temp.Entrepeneur, temp.Contact, temp.Request, temp.IttLetter, temp.Offer, temp.Reservations, temp.Uphold, temp.AgreementConcluded, temp.Active);
+            Bizz.TempSubEntrepeneur = new SubEntrepeneur(Bizz.strConnection, Bizz.LegalEntities, temp.Id, temp.EnterpriseList, temp.Entrepeneur, temp.Contact, temp.Request, temp.IttLetter, temp.Offer, temp.Reservations, temp.Uphold, temp.AgreementConcluded, temp.Active);
             if (!Bizz.TempSubEntrepeneur.Active)
             {
                 Bizz.TempSubEntrepeneur.ToggleActive();
