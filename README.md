@@ -1,2 +1,2 @@
-# Jorton Underentrepenør Database
-Danish program to handle tenders by a danish entrepeneur
+# Enterprise Management
+Danish application to handle tenders by an entrepeneur
