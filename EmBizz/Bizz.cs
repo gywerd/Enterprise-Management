@@ -42,6 +42,7 @@ namespace EmBizz
 
             #region Ordinary Lists
             public List<Address> Addresses = MEFW.Addresses;
+            public List<BluePrint> BluePrints = MEFW.BluePrints;
             public List<Builder> Builders = MEFW.Builders;
             public List<Category> Categories = MEFW.Categories;
             public List<Contact> Contacts = MEFW.Contacts;
@@ -51,13 +52,14 @@ namespace EmBizz
             public List<Enterprise> EnterpriseList = MEFW.EnterpriseList;
             public List<EnterpriseForm> EnterpriseForms = MEFW.EnterpriseForms;
             public List<IttLetter> IttLetters = MEFW.IttLetters;
-            public List<IttLetterBullet> IttLetterBulletList = MEFW.IttLetterBullets;
-            public List<IttLetterParagraph> IttLetterParagraphList = MEFW.IttLetterParagraphs;
+            public List<IttLetterBullet> IttLetterBullets = MEFW.IttLetterBullets;
+            public List<IttLetterParagraph> IttLetterParagraphs = MEFW.IttLetterParagraphs;
             public List<IttLetterPdfData> IttLetterPdfDataList = MEFW.IttLetterPdfDataList;
             public List<IttLetterReceiver> IttLetterReceivers = MEFW.IttLetterReceivers;
             public List<IttLetterShipping> IttLetterShippingList = MEFW.IttLetterShippingList;
             public List<JobDescription> JobDescriptions = MEFW.JobDescriptions;
             public List<LegalEntity> LegalEntities = MEFW.LegalEntities;
+            public List<Miscellaneous> MiscellaneousList = MEFW.MiscellaneousList;
             public List<Offer> Offers = MEFW.Offers;
             public List<Project> Projects = MEFW.Projects;
             public List<ProjectStatus> ProjectStatusList = MEFW.ProjectStatusList;
@@ -66,6 +68,7 @@ namespace EmBizz
             public List<RequestStatus> RequestStatusList = MEFW.RequestStatusList;
             public List<SubEntrepeneur> SubEntrepeneurs = MEFW.SubEntrepeneurs;
             public List<TenderForm> TenderForms = MEFW.TenderForms;
+            public List<TimeSchedule> TimeSchedules = MEFW.TimeSchedules;
             public List<User> Users = MEFW.Users;
             public List<ZipTown> ZipTownList = MEFW.ZipTownList;
 

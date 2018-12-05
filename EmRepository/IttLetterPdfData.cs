@@ -41,13 +41,6 @@ namespace EmRepository
             this.materialUrl = "";
             this.conditionUrl = "";
             this.passWord = "";
-            this.enterprises = new List<Enterprise>();
-            this.descriptionList = new List<Description>();
-            this.ittLetterReceivers = new List<IttLetterReceiver>();
-            this.ittLetterShippingList = new List<IttLetterShipping>();
-            this.bluePrints = new List<BluePrint>();
-            this.timeSchedules = new List<TimeSchedule>();
-            this.miscellaneusList = new List<Miscellaneous>();
         }
 
         /// <summary>
