@@ -492,9 +492,8 @@
     <Resource Include="Images\ceo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\jorton-logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Images\your-logo.png" />
+    <Resource Include="Images\your-watermark.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

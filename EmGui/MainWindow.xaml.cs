@@ -221,7 +221,7 @@ namespace EmGui
             }
         }
 
-        private void ButtonJortonSubEntrepeneurDatabaseV10_Click(object sender, RoutedEventArgs e)
+        private void ButtonFirmaSubEntrepeneurDatabaseV10_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Endnu ikke implementeret", "Enterprise Management 1.0", MessageBoxButton.OK, MessageBoxImage.Information);
         }

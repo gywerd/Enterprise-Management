@@ -86,11 +86,11 @@
                 <!-- News Group-->
                 <RibbonGroup x:Name="News" Header="Nyheder">
                     <RibbonSplitButton 
-                        Click="ButtonJortonSubEntrepeneurDatabaseV10_Click" 
+                        Click="ButtonFirmaSubEntrepeneurDatabaseV10_Click" 
                         LargeImageSource="images/news.png" 
                         Label="Aktuelt">
-                        <RibbonButton x:Name="ButtonJortonSubEntrepeneurDatabaseV10" 
-                                      Click="ButtonJortonSubEntrepeneurDatabaseV10_Click"
+                        <RibbonButton x:Name="ButtonFirmaSubEntrepeneurDatabaseV10" 
+                                      Click="ButtonFirmaSubEntrepeneurDatabaseV10_Click"
                                       Label="Enterprise Manager V. 1.0" 
                                       SmallImageSource="images/news-small.png" />
                     </RibbonSplitButton>
